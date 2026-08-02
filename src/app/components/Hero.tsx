@@ -6,6 +6,8 @@ import avatarImg from '../../assets/2d14d34cc2c291f0d8b60d9b13506b1995d59f5f.png
 import lightAvatarImg from '../../assets/ef9cb82bf32c8b9e3dfe70e9c1705569056e55ee.png';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCms } from '../contexts/CmsContext';
+import { Button } from './ui/button';
+import { DecorativeShape } from './DecorativeShape';
 
 interface HeroProps {
   isDark: boolean;
@@ -77,8 +79,11 @@ export function Hero({ isDark }: HeroProps) {
   return (
     <section
       id="home"
-      className="relative w-full overflow-hidden flex items-center justify-center"
-      style={{ minHeight: '100vh', background: dark ? '#080810' : '#f5f5fa' }}
+      className="relative flex flex-col items-center justify-center min-h-[100vh] overflow-hidden px-6"
+      style={{
+        background: dark ? '#0b0822' : '#f5f5fa',
+        transition: 'background 0.4s ease',
+      }}
     >
       <HexGrid isDark={dark} />
 
@@ -91,6 +96,15 @@ export function Hero({ isDark }: HeroProps) {
         }}
       />
 
+      {/* Decorative 3D Shape */}
+      <DecorativeShape
+        shape="icosahedron"
+        position="bottom-left"
+        size={280}
+        rotationOffset={[0.1, 0.2, 0]}
+        isDark={dark}
+      />
+
       <div className="relative z-20 flex flex-col items-center text-center px-6 w-full max-w-[780px] mx-auto py-24">
 
         {/* Avatar */}
@@ -99,10 +113,10 @@ export function Hero({ isDark }: HeroProps) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
           style={{
-            width: 'clamp(200px, 26vw, 320px)',
             marginBottom: 'clamp(28px, 4vh, 44px)',
             flexShrink: 0,
           }}
+          className="w-[280px] sm:w-[320px] md:w-[26vw] md:min-w-[240px] md:max-w-[320px]"
         >
           <img
             src={dark
@@ -111,8 +125,8 @@ export function Hero({ isDark }: HeroProps) {
             }
             alt="Osama Tammam"
             style={dark
-              ? { width: '480px', height: '320px', display: 'block', marginBottom: '-70px', clipPath: 'inset(0 0 20px 0)' }
-              : { display: 'block' }
+              ? { width: '100%', height: 'auto', maxWidth: '480px', display: 'block', marginBottom: '-15%', clipPath: 'inset(0 0 20px 0)' }
+              : { width: '100%', height: 'auto', maxWidth: '480px', display: 'block' }
             }
           />
         </motion.div>
@@ -142,31 +156,15 @@ export function Hero({ isDark }: HeroProps) {
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75, delay: 0.18, ease: [0.4, 0, 0.2, 1] }}
-          style={{
-            fontFamily: fontHeading,
-            letterSpacing: isRTL ? '-0.01em' : '-0.025em',
-            lineHeight: 1.08,
-            marginBottom: '24px',
-          }}
+          className="font-heading mb-6 leading-tight tracking-tight"
         >
-          <span className="italic" style={{
-            display: 'block',
-            fontWeight: 400,
-            fontSize: 'clamp(2rem, 5.2vw, 4rem)',
+          <span className="italic block font-normal text-[clamp(2rem,5.2vw,4rem)]" style={{
             color: dark ? 'rgba(240,240,255,0.7)' : 'rgba(15,15,30,0.6)',
             fontStyle: isRTL ? 'normal' : 'italic',
           }}>
             {heroHeadline1}
           </span>
-          <span style={{
-            display: 'block',
-            fontWeight: 800,
-            fontSize: 'clamp(2.2rem, 5.6vw, 4.4rem)',
-            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 55%, #06b6d4 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}>
+          <span className="block font-extrabold text-[clamp(2.2rem,5.6vw,4.4rem)] bg-clip-text text-transparent bg-gradient-to-r from-[#6366f1] to-[#06b6d4]">
             {heroHeadline2}
           </span>
         </motion.h1>
@@ -216,17 +214,9 @@ export function Hero({ isDark }: HeroProps) {
             </span>
 
             <span
+              className="font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)] bg-gradient-to-r from-indigo-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent"
               style={{
-                fontFamily: fontHeading,
-                fontWeight: 600,
-                fontSize: 'clamp(1.05rem, 2vw, 1.4rem)',
-                letterSpacing: isRTL ? '-0.01em' : '-0.01em',
-                backgroundImage: dark
-                  ? 'linear-gradient(90deg, #a5b4fc 0%, #c4b5fd 60%, #67e8f9 100%)'
-                  : 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 60%, #06b6d4 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                letterSpacing: '-0.01em',
                 direction: isRTL ? 'rtl' : 'ltr',
               }}
             >
@@ -262,14 +252,9 @@ export function Hero({ isDark }: HeroProps) {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.34, ease: [0.4, 0, 0.2, 1] }}
+          className="font-body text-[0.98rem] leading-[1.78] max-w-[540px] mb-6"
           style={{
-            fontFamily: fontBody,
-            fontWeight: 400,
-            fontSize: '0.98rem',
-            lineHeight: 1.78,
             color: dark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
-            maxWidth: '540px',
-            marginBottom: '24px',
             whiteSpace: 'pre-line',
           }}
         >
@@ -284,43 +269,26 @@ export function Hero({ isDark }: HeroProps) {
           className="flex flex-wrap items-center justify-center gap-3"
           style={{ marginBottom: '52px' }}
         >
-          <motion.button
+          <Button
             onClick={() => scrollToSection('work')}
-            className="relative flex items-center gap-2 px-7 py-3 rounded-xl text-white overflow-hidden group"
-            style={{
-              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              fontFamily: fontBody,
-              fontWeight: 600,
-              fontSize: '0.92rem',
-              boxShadow: '0 4px 20px rgba(99,102,241,0.35)',
-            }}
-            whileHover={{ scale: 1.04, boxShadow: '0 6px 28px rgba(99,102,241,0.5)' }}
-            whileTap={{ scale: 0.97 }}
+            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-[0.92rem] bg-gradient-to-br from-indigo-500 to-purple-600 hover:scale-[1.04] transition-transform"
           >
             {heroCta1}
-            <ArrowRight size={15} className={`group-hover:${isRTL ? '-translate-x-1' : 'translate-x-1'} transition-transform duration-200`} style={{ transform: isRTL ? 'scaleX(-1)' : undefined }} />
-          </motion.button>
+            <ArrowRight size={15} className={`transition-transform duration-200 ${isRTL ? '-scale-x-100' : ''}`} />
+          </Button>
 
-          <motion.button
+          <Button
             onClick={() => scrollToSection('contact')}
-            className="flex items-center gap-2 px-7 py-3 rounded-xl"
+            variant="outline"
+            className="flex items-center gap-2 px-7 py-6 rounded-xl font-body font-medium text-[0.92rem] border-[rgba(255,255,255,0.14)] hover:scale-[1.04] transition-transform"
             style={{
               background: 'transparent',
-              border: dark ? '1px solid rgba(255,255,255,0.14)' : '1px solid rgba(0,0,0,0.14)',
               color: dark ? 'rgba(224,224,255,0.85)' : '#0f0f1e',
-              fontFamily: fontBody,
-              fontWeight: 500,
-              fontSize: '0.92rem',
             }}
-            whileHover={{
-              scale: 1.04,
-              borderColor: dark ? 'rgba(99,102,241,0.5)' : 'rgba(99,102,241,0.4)',
-            }}
-            whileTap={{ scale: 0.97 }}
           >
             <Mail size={15} />
             {heroCta2}
-          </motion.button>
+          </Button>
         </motion.div>
       </div>
 
@@ -331,14 +299,7 @@ export function Hero({ isDark }: HeroProps) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4 }}
       >
-        <p style={{
-          fontFamily: fontBody,
-          fontWeight: 400,
-          fontSize: '0.68rem',
-          letterSpacing: isRTL ? '0.06em' : '0.18em',
-          color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)',
-          textTransform: isRTL ? 'none' : 'uppercase',
-        }}>
+        <p className={`font-body text-[0.68rem] tracking-widest text-text-secondary uppercase`} style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)' }}>
           {heroScroll}
         </p>
         <motion.div

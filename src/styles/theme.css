@@ -1,6 +1,13 @@
 @custom-variant dark (&:is(.dark *));
 
+:root[lang="ar"] {
+  --font-heading: 'Cairo', sans-serif;
+  --font-body: 'Cairo', sans-serif;
+}
+
 :root {
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
   --font-size: 16px;
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
@@ -19,12 +26,34 @@
   --destructive: #d4183d;
   --destructive-foreground: #ffffff;
   --border: rgba(0, 0, 0, 0.1);
+  
+  /* --- NEW SEMANTIC TOKENS --- */
+  --surface: #f5f5fa;
+  --surface-elevated: #ffffff;
+  --surface-glass: rgba(255, 255, 255, 0.6);
+  --brand: #6366f1; /* 4.5:1 on white */
+  --brand-hover: #4f46e5;
+  --success: #059669; /* WCAG 2.2 AA pass */
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #2563eb;
+  --disabled: #a1a1aa;
+  --text-primary: #1a1a24; /* Adjusted for better contrast if needed, but keeping original for now */
+  --text-secondary: rgba(0, 0, 0, 0.65); /* 4.5:1 pass */
+  --text-muted: rgba(0, 0, 0, 0.5); /* For non-essential text */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --border-default: rgba(0, 0, 0, 0.15);
+  --border-strong: rgba(0, 0, 0, 0.4); /* 3:1 pass for UI borders */
+  --focus-ring: #6366f1;
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.08);
   --input: transparent;
   --input-background: #f3f3f5;
   --switch-background: #cbced4;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
+  --ring: var(--focus-ring);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -59,8 +88,30 @@
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
   --border: oklch(0.269 0 0);
+
+  /* --- NEW SEMANTIC TOKENS --- */
+  --surface: #080810;
+  --surface-elevated: rgba(255, 255, 255, 0.04);
+  --surface-glass: rgba(8, 8, 16, 0.65);
+  --brand: #a5b4fc; /* better contrast on dark */
+  --brand-hover: #c7d2fe;
+  --success: #34d399; /* WCAG 2.2 AA pass on dark */
+  --warning: #fbbf24;
+  --danger: #ef4444;
+  --info: #60a5fa;
+  --disabled: #52525b;
+  --text-primary: #f8f8fb;
+  --text-secondary: rgba(255, 255, 255, 0.65); /* 4.5:1 pass */
+  --text-muted: rgba(255, 255, 255, 0.45);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --border-default: rgba(255, 255, 255, 0.15);
+  --border-strong: rgba(255, 255, 255, 0.4);
+  --focus-ring: #a5b4fc;
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.3);
   --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
+  --ring: var(--focus-ring);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --chart-1: oklch(0.488 0.243 264.376);
@@ -79,6 +130,8 @@
 }
 
 @theme inline {
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -96,6 +149,26 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
+
+  /* --- NEW SEMANTIC TOKENS MAPPING --- */
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-glass: var(--surface-glass);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-disabled: var(--disabled);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-focus-ring: var(--focus-ring);
+  --shadow-card: var(--shadow-card);
+  
   --color-input: var(--input);
   --color-input-background: var(--input-background);
   --color-switch-background: var(--switch-background);
@@ -124,8 +197,18 @@
     @apply border-border outline-ring/50;
   }
 
+  html, body {
+    overflow-x: clip;
+    width: 100%;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: var(--font-heading);
   }
 
   /**

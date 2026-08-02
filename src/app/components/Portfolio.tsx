@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
+import { DecorativeShape } from './DecorativeShape';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCms } from '../contexts/CmsContext';
 
@@ -98,152 +99,84 @@ function ProjectCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-      // Use flex instead of grid + direction tricks so RTL dir="rtl" handles the mirroring
-      style={{
-        display: 'flex',
-        flexDirection: isReversed ? 'row-reverse' : 'row',
-        gap: '3rem',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-      }}
+      className={`flex flex-wrap items-center gap-12 ${isReversed ? 'flex-row-reverse' : 'flex-row'}`}
     >
       {/* ── Image ── */}
       <div
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          borderRadius: '1rem',
-          aspectRatio: '16/10',
-          flex: '1 1 340px',
-          cursor: 'none',
-        }}
+        className="relative overflow-hidden rounded-2xl aspect-[16/10] flex-1 min-w-[340px] cursor-none group"
         onMouseMove={(e) => onCursorChange(true, e.clientX, e.clientY)}
         onMouseLeave={() => onCursorChange(false, 0, 0)}
       >
         <div
-          style={{ width: '100%', height: '100%', transform: `translateY(${parallaxOffset}px)`, transition: 'transform 0.1s linear' }}
+          className="w-full h-full"
+          style={{ transform: `translateY(${parallaxOffset}px)`, transition: 'transform 0.1s linear' }}
         >
           <img
             src={project.image}
             alt={project.title}
-            style={{ width: '100%', objectFit: 'cover', height: '110%', marginTop: '-5%', transition: 'transform 0.7s ease' }}
+            className="w-full h-[110%] -mt-[5%] object-cover transition-transform duration-700"
           />
         </div>
         {/* Hover overlay */}
         <div
-          className="group-hover:opacity-100"
-          style={{ position: 'absolute', inset: 0, opacity: 0, background: project.grad, borderRadius: '1rem', transition: 'opacity 0.5s ease' }}
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-500"
+          style={{ background: project.grad }}
         />
-        {/* Corner tag — uses insetInlineStart so it auto-flips in RTL */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 16,
-            insetInlineStart: 16,
-            padding: '6px 12px',
-            borderRadius: '0.5rem',
-            background: 'rgba(0,0,0,0.5)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255,255,255,0.1)',
-          }}
-        >
-          <span style={{ fontFamily: fontBody, fontWeight: 500, fontSize: '0.75rem', color: '#fff' }}>
+        {/* Corner tag — auto-flips in RTL */}
+        <div className="absolute top-4 start-4 px-3 py-1.5 rounded-lg bg-black/50 backdrop-blur-md border border-white/10">
+          <span className="font-medium text-xs text-white" >
             {projectLabel} {projectNum}
           </span>
         </div>
       </div>
 
       {/* ── Text ── */}
-      <div
-        style={{
-          flex: '1 1 300px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1.25rem',
-          // Text alignment follows the HTML dir attribute — no override needed
-        }}
-      >
+      <div className="flex-1 min-w-[300px] flex flex-col gap-5">
         {/* Tags */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <div className="flex flex-wrap gap-2">
           {project.tags.map((tag) => (
             <span
               key={tag}
-              style={{
-                padding: '4px 12px',
-                borderRadius: '9999px',
-                fontSize: '0.75rem',
-                background: dark ? 'rgba(99,102,241,0.12)' : 'rgba(99,102,241,0.08)',
-                border: `1px solid ${dark ? 'rgba(99,102,241,0.25)' : 'rgba(99,102,241,0.2)'}`,
-                color: dark ? '#a5b4fc' : '#6366f1',
-                fontFamily: 'Inter, sans-serif',
-                fontWeight: 500,
-              }}
+              className="px-3 py-1 rounded-full text-xs font-medium bg-brand/10 border border-brand/20 text-brand dark:text-[#a5b4fc]"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        {/* Title — product names stay in English */}
+        {/* Title */}
         <h3
-          style={{
-            fontFamily: fontHeading,
-            fontWeight: 700,
-            fontSize: 'clamp(1.5rem,2.5vw,2rem)',
-            color: dark ? '#f0f0ff' : '#0f0f1e',
-            letterSpacing: '-0.02em',
-            lineHeight: 1.2,
-            margin: 0,
-          }}
+          className="font-bold text-[clamp(1.5rem,2.5vw,2rem)] text-text-primary tracking-tight leading-tight m-0"
+          
         >
           {project.title}
         </h3>
 
         {/* Description */}
         <p
-          style={{
-            fontFamily: fontBody,
-            fontWeight: 400,
-            fontSize: '0.95rem',
-            color: dark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.55)',
-            lineHeight: 1.75,
-            margin: 0,
-          }}
+          className="text-[0.95rem] text-text-secondary leading-relaxed m-0"
+          
         >
           {desc}
         </p>
 
-        <div style={{ height: 1, background: dark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)' }} />
+        <div className="h-px w-full bg-border-default" />
 
-        {/* CTA */}
         <motion.button
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            fontFamily: fontBody,
-            fontWeight: 600,
-            fontSize: '0.9rem',
-            color: dark ? '#a5b4fc' : '#6366f1',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: 0,
-            // Align to the inline-start so it sits at the text edge in both LTR and RTL
-            alignSelf: 'flex-start',
-          }}
+          onClick={() => onViewCase(project.id, project.title)}
+          className="inline-flex items-center gap-2 font-semibold text-[0.9rem] text-brand hover:text-brand-hover transition-colors bg-transparent border-none cursor-pointer p-0 self-start"
+          
           whileHover={{ x: isRTL ? -4 : 4 }}
           transition={{ duration: 0.2 }}
-          onClick={() => onViewCase(project.id, project.title)}
         >
           {isRTL && (
             <ArrowUpRight
               size={16}
-              style={{ transform: 'scaleX(-1)', flexShrink: 0 }}
+              className="shrink-0 -scale-x-100"
             />
           )}
           {viewCaseLabel}
-          {!isRTL && <ArrowUpRight size={16} style={{ flexShrink: 0 }} />}
+          {!isRTL && <ArrowUpRight size={16} className="shrink-0" />}
         </motion.button>
       </div>
     </motion.div>
@@ -256,8 +189,6 @@ export function Portfolio({ isDark, onCursorChange, onViewCase }: PortfolioProps
   const dark = isDark;
 
   const portfolioLabel = lang === 'en' ? 'Selected Work' : 'الأعمال المختارة';
-  const portfolioHeading1 = lang === 'en' ? 'Products I helped' : 'المنتجات التي ساعدت بها';
-  const portfolioHeading2 = lang === 'en' ? 'go from stuck to shipped.' : 'من محطة إلى الشحن';
   const projectLabel = lang === 'en' ? 'Project' : 'مشروع';
   const viewCaseLabel = lang === 'en' ? 'View Case' : 'عرض الحالة';
   const caseStudiesLabel =
@@ -268,12 +199,12 @@ export function Portfolio({ isDark, onCursorChange, onViewCase }: PortfolioProps
     .filter((project) => project.visible)
     .map((project, idx) => ({
       id: project.id,
-      title: project.title[lang] || project.title.en,
-      tags: project.tags[lang] || [],
+      title: project.title?.[lang] || project.title?.en || '',
+      tags: project.tags?.[lang] || project.tags?.en || [],
       image: project.image || PROJECTS_STATIC[idx % PROJECTS_STATIC.length].image,
       accent: project.accent || ['#6366f1', '#8b5cf6', '#06b6d4', '#a78bfa'][idx % 4],
       grad: `linear-gradient(135deg,${project.accent || ['#6366f1', '#8b5cf6', '#06b6d4', '#a78bfa'][idx % 4]}cc,${project.accent || ['#6366f1', '#8b5cf6', '#06b6d4', '#a78bfa'][idx % 4]}80)`,
-      desc: project.desc[lang] || project.desc.en,
+      desc: project.desc?.[lang] || project.desc?.en || '',
     }));
 
   const fallbackProjects = PROJECTS_STATIC.map((project, idx) => ({
@@ -286,19 +217,26 @@ export function Portfolio({ isDark, onCursorChange, onViewCase }: PortfolioProps
   return (
     <section
       id="work"
-      className="relative w-full py-24 md:py-32 overflow-hidden"
-      style={{ background: dark ? '#0c0c18' : '#eeeef6' }}
+      className="relative w-full py-24 md:py-32 bg-surface transition-colors duration-300"
     >
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none opacity-5 dark:opacity-10"
         style={{
-          backgroundImage: dark
-            ? 'radial-gradient(circle at 50% 0%, rgba(99,102,241,0.1) 0%, transparent 60%)'
-            : 'radial-gradient(circle at 50% 0%, rgba(99,102,241,0.07) 0%, transparent 60%)',
+          backgroundImage: 'radial-gradient(circle at 50% 0%, var(--color-brand) 0%, transparent 60%)'
         }}
       />
 
-      <div className="relative max-w-[1200px] mx-auto px-6 md:px-10">
+      {/* Decorative 3D shape — bottom-right */}
+      <DecorativeShape
+        shape="octahedron"
+        position="bottom-right"
+        size={430}
+        cropAmount={30}
+        rotationOffset={[-0.3, 0.8, 0.15]}
+        isDark={dark}
+      />
+
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -307,35 +245,25 @@ export function Portfolio({ isDark, onCursorChange, onViewCase }: PortfolioProps
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="text-center mb-20"
         >
-          <span
-            className="inline-block px-4 py-1.5 rounded-full text-sm mb-4"
-            style={{
-              background: dark ? 'rgba(99,102,241,0.15)' : 'rgba(99,102,241,0.1)',
-              border: `1px solid ${dark ? 'rgba(99,102,241,0.3)' : 'rgba(99,102,241,0.25)'}`,
-              color: dark ? '#a5b4fc' : '#6366f1',
-              fontFamily: fontBody,
-              fontWeight: 500,
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-block px-4 py-1.5 rounded-full text-sm mb-4 font-medium bg-brand/10 border border-brand/30 text-brand"
+            
           >
             {caseStudiesLabel}
-          </span>
+          </motion.div>
           <h2
-            className="mt-2"
-            style={{
-              fontFamily: fontHeading,
-              fontWeight: 700,
-              fontSize: 'clamp(2rem,4vw,3.25rem)',
-              color: dark ? '#f0f0ff' : '#0f0f1e',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.15,
-            }}
+            className="mt-2 font-bold text-[clamp(2rem,4vw,3.25rem)] text-text-primary tracking-tight leading-[1.15]"
+            
           >
             {portfolioLabel}
           </h2>
         </motion.div>
 
         {/* Projects */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6rem' }}>
+        <div className="flex flex-col gap-24">
           {renderedProjects.map((project, index) => (
             <ProjectCard
               key={project.id}

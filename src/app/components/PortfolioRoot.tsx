@@ -32,8 +32,19 @@ function AppInner() {
     document.documentElement.style.scrollBehavior = 'smooth';
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.overflowX = 'hidden';
+    document.body.style.overflowX = 'clip';
   }, []);
+
+  useEffect(() => {
+    // When the section order changes, DOM nodes are reordered.
+    // We must refresh ScrollTrigger so it recalculates all trigger offsets.
+    import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+      // Small timeout to ensure React has flushed the DOM updates
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
+    });
+  }, [cmsData.sectionOrder]);
 
   const handleCursorChange = (visible: boolean, x: number, y: number) => {
     setCursor({ visible, x, y });
@@ -50,11 +61,9 @@ function AppInner() {
   return (
     <div
       dir={isRTL ? 'rtl' : 'ltr'}
+      className="min-h-screen bg-surface transition-colors duration-400"
       style={{
-        minHeight: '100vh',
-        background: isDark ? '#080810' : '#f5f5fa',
-        fontFamily: fontBody,
-        transition: 'background 0.4s ease',
+        
         cursor: cursor.visible ? 'none' : 'default',
       }}
     >
@@ -67,28 +76,17 @@ function AppInner() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed z-[9999] pointer-events-none flex items-center justify-center rounded-full"
+            className="fixed z-[9999] pointer-events-none flex items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-hover opacity-90 backdrop-blur-sm shadow-[0_8px_30px_var(--color-brand)]"
             style={{
               left: cursor.x - 40,
               top: cursor.y - 40,
               width: 80,
               height: 80,
-              background: 'linear-gradient(135deg,rgba(99,102,241,0.92),rgba(139,92,246,0.92))',
-              backdropFilter: 'blur(8px)',
-              boxShadow: '0 8px 30px rgba(99,102,241,0.5)',
             }}
           >
             <span
-              style={{
-                fontFamily: fontBody,
-                fontWeight: 600,
-                fontSize: '0.62rem',
-                color: '#fff',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                textAlign: 'center',
-                lineHeight: 1.3,
-              }}
+              className="text-white text-center uppercase tracking-wider leading-snug font-semibold text-[0.62rem]"
+              
             >
               View<br />Project
             </span>
@@ -97,7 +95,7 @@ function AppInner() {
       </AnimatePresence>
 
       {error && (
-        <div style={{ padding: '16px', background: '#ff4444', color: '#fff', textAlign: 'center' }}>
+        <div className="p-4 bg-danger text-white text-center font-medium">
           CMS Error: {error.message}
         </div>
       )}
@@ -105,21 +103,21 @@ function AppInner() {
       <Navigation isDark={isDark} onToggleDark={() => setIsDark(d => !d)} />
 
       <main>
-        {cmsData.sections.hero && <Hero isDark={isDark} />}
-        {cmsData.sections.whyHireMe && <WhyHireMe isDark={isDark} />}
-        {cmsData.sections.skills && <Skills isDark={isDark} />}
-        {cmsData.sections.portfolio && (
-          <Portfolio
-            isDark={isDark}
-            onCursorChange={handleCursorChange}
-            onViewCase={handleViewCase}
-          />
-        )}
-        {cmsData.sections.tools && <Tools isDark={isDark} />}
-        {cmsData.sections.contact && <Contact isDark={isDark} />}
+        {(cmsData.sectionOrder || ['hero', 'whyHireMe', 'skills', 'portfolio', 'tools', 'contact', 'footer']).map(id => {
+          if (!cmsData.sections[id as keyof typeof cmsData.sections]) return null;
+          
+          switch(id) {
+            case 'hero': return <Hero key={id} isDark={isDark} />;
+            case 'whyHireMe': return <WhyHireMe key={id} isDark={isDark} />;
+            case 'skills': return <Skills key={id} isDark={isDark} />;
+            case 'portfolio': return <Portfolio key={id} isDark={isDark} onCursorChange={handleCursorChange} onViewCase={handleViewCase} />;
+            case 'tools': return <Tools key={id} isDark={isDark} />;
+            case 'contact': return <Contact key={id} isDark={isDark} />;
+            case 'footer': return <Footer key={id} isDark={isDark} />;
+            default: return null;
+          }
+        })}
       </main>
-
-      {cmsData.sections.footer && <Footer isDark={isDark} />}
 
       {/* Case Study overlay */}
       <AnimatePresence>

@@ -2,62 +2,82 @@ import { useState, useEffect } from 'react';
 import { Sun, Moon, Menu, X, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useCms } from '../contexts/CmsContext';
 
 interface NavigationProps {
   isDark: boolean;
   onToggleDark: () => void;
 }
 
-// Fixed outside component — IDs never change between languages
-const SECTION_IDS = ['home', 'why-me', 'skills', 'work', 'tools', 'contact'];
+// Map CMS keys to actual DOM IDs used on the page
+const CMS_TO_DOM_IDS: Record<string, string> = {
+  hero: 'home',
+  whyHireMe: 'why-me',
+  skills: 'skills',
+  portfolio: 'work',
+  tools: 'tools',
+  contact: 'contact'
+};
 
 export function Navigation({ isDark, onToggleDark }: NavigationProps) {
   const { lang, toggleLang, isRTL, fontBody, fontHeading, t } = useLanguage();
+  const { cmsData } = useCms();
+
+  const activeOrder = cmsData?.sectionOrder || ['hero', 'whyHireMe', 'skills', 'portfolio', 'tools', 'contact'];
+  const SECTION_IDS = activeOrder
+    .filter(k => cmsData?.sections[k as keyof typeof cmsData.sections])
+    .map(k => CMS_TO_DOM_IDS[k])
+    .filter(Boolean);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState(SECTION_IDS[0] || 'home');
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const NAV_LINKS = [
-    { label: t.nav.home, href: '#home' },
-    { label: t.nav.whyMe, href: '#why-me' },
-    { label: t.nav.skills, href: '#skills' },
-    { label: t.nav.work, href: '#work' },
-    { label: t.nav.tools, href: '#tools' },
-    { label: t.nav.contact, href: '#contact' },
-  ];
+  const CMS_TO_LABEL_KEY: Record<string, keyof typeof t.nav> = {
+    hero: 'home',
+    whyHireMe: 'whyMe',
+    skills: 'skills',
+    portfolio: 'work',
+    tools: 'tools',
+    contact: 'contact'
+  };
+
+  const NAV_LINKS = activeOrder
+    .filter(k => k !== 'footer' && CMS_TO_DOM_IDS[k] && cmsData?.sections[k as keyof typeof cmsData.sections])
+    .map(k => ({
+      label: t.nav[CMS_TO_LABEL_KEY[k]],
+      href: `#${CMS_TO_DOM_IDS[k]}`
+    }));
 
   useEffect(() => {
     const detect = () => {
       setScrolled(window.scrollY > 20);
 
-      // If within 80px of the page bottom, always highlight the last section
-      const nearBottom =
-        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 80;
+      if (SECTION_IDS.length === 0) return;
+
+      const nearBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 80;
       if (nearBottom) {
         setActiveSection(SECTION_IDS[SECTION_IDS.length - 1]);
         return;
       }
 
-      // Use 40% from the top of the viewport as the detection point
-      const viewportCenter = window.scrollY + window.innerHeight * 0.4;
-
+      const threshold = window.innerHeight * 0.4;
       for (const id of [...SECTION_IDS].reverse()) {
         const el = document.getElementById(id);
-        if (el && viewportCenter >= el.offsetTop) {
-          setActiveSection(id);
-          return;
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= threshold) {
+            setActiveSection(id);
+            return;
+          }
         }
       }
-      setActiveSection('home');
+      setActiveSection(SECTION_IDS[0] || 'home');
     };
 
-    // Run immediately so active state is correct after language switch
     detect();
-
     window.addEventListener('scroll', detect, { passive: true });
     return () => window.removeEventListener('scroll', detect);
-  // Re-run when language changes so labels refresh — but IDs come from stable constant
-  }, [lang]);
+  }, [lang, SECTION_IDS.join(',')]);
 
   const scrollTo = (href: string) => {
     const id = href.slice(1);
@@ -88,11 +108,11 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
             className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm"
             style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}
           >
-            <span style={{ fontFamily: fontHeading, fontWeight: 700 }}>OT</span>
+            <span style={{  fontWeight: 700 }}>OT</span>
           </div>
           <span
             className={`transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-900'}`}
-            style={{ fontFamily: fontHeading, fontWeight: 600, fontSize: '1rem' }}
+            style={{  fontWeight: 600, fontSize: '1rem' }}
           >
             {isRTL ? 'أسامة تمام' : 'Osama Tammam'}
           </span>
@@ -108,7 +128,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
                 onClick={() => scrollTo(link.href)}
                 className="relative px-4 py-2 rounded-lg transition-colors duration-200 group"
                 style={{
-                  fontFamily: fontBody,
+                  
                   fontWeight: 500,
                   fontSize: '0.9rem',
                   color: isActive
@@ -212,7 +232,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
                 onClick={() => scrollTo(link.href)}
                 className="px-4 py-3 rounded-xl transition-colors duration-200"
                 style={{
-                  fontFamily: fontBody,
+                  
                   fontWeight: 500,
                   color: isDark ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)',
                   background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',

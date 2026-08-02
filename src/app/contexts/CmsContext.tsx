@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { projectId, publicAnonKey } from '../../utils/supabase/info';
 import { translations } from '../translations';
 import type { CmsData } from '../types/cms';
 import { DEFAULT_CMS_DATA } from '../types/cms';
@@ -25,8 +24,8 @@ type CmsContextType = {
 
 const CmsContext = createContext<CmsContextType | undefined>(undefined);
 
-const API_BASE = `https://${projectId}.supabase.co/functions/v1/server`;
-const STORAGE_KEY = 'cms:portfolio:v1:local';
+const API_BASE = '/api';
+const STORAGE_KEY = 'cms:portfolio:v2:local';
 
 function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value));
@@ -191,13 +190,13 @@ function mapCmsDataToLegacyContent(data: CmsData): ContentData {
       caseStudies: data.projects.map((project) => ({
         id: project.id,
         is_visible: project.visible,
-        title_en: project.title.en,
-        title_ar: project.title.ar,
-        tags_en: project.tags.en.join(', '),
-        tags_ar: project.tags.ar.join(', '),
-        summary_en: project.desc.en,
-        summary_ar: project.desc.ar,
-        featured_image_url: project.image,
+        title_en: project.title?.en ?? '',
+        title_ar: project.title?.ar ?? '',
+        tags_en: (Array.isArray(project.tags?.en) ? project.tags.en : []).join(', '),
+        tags_ar: (Array.isArray(project.tags?.ar) ? project.tags.ar : []).join(', '),
+        summary_en: project.desc?.en ?? '',
+        summary_ar: project.desc?.ar ?? '',
+        featured_image_url: project.image ?? '',
       })),
     },
     contact: {
@@ -292,7 +291,6 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${publicAnonKey}`,
         },
       });
 

@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { DecorativeShape } from './DecorativeShape';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCms } from '../contexts/CmsContext';
 
@@ -107,7 +108,7 @@ export function Contact({ isDark }: ContactProps) {
   return (
     <section
       id="contact"
-      className="relative w-full py-24 md:py-36 overflow-hidden"
+      className="relative w-full py-24 md:py-36"
       style={{ background: dark ? '#080810' : '#f5f5fa' }}
     >
       {/* Background blobs */}
@@ -139,12 +140,22 @@ export function Contact({ isDark }: ContactProps) {
         />
       </div>
 
+      {/* Decorative 3D shape — top-left */}
+      <DecorativeShape
+        shape="torusKnot"
+        position="top-left"
+        size={370}
+        cropAmount={32}
+        rotationOffset={[0.5, -0.3, 0.4]}
+        isDark={dark}
+      />
+
       <div className="relative max-w-[1200px] mx-auto px-6 md:px-10 w-full">
         {/* Two-column layout */}
         <div className="grid grid-cols-1 md:grid-cols-[1fr_1px_1fr] gap-12 md:gap-0 items-start">
 
           {/* ── Left: Personal message ── */}
-          <div style={{ paddingInlineEnd: '4rem' }}>
+          <div className="md:pe-16">
             {/* Availability pill */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -163,7 +174,7 @@ export function Contact({ isDark }: ContactProps) {
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5" style={{ background: '#22c55e' }} />
               </span>
               <span style={{
-                fontFamily: fontBody,
+                
                 fontWeight: 500,
                 fontSize: '0.82rem',
                 color: dark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)',
@@ -180,7 +191,7 @@ export function Contact({ isDark }: ContactProps) {
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.05, ease: [0.4, 0, 0.2, 1] }}
               style={{
-                fontFamily: fontHeading,
+                
                 fontWeight: 700,
                 fontSize: 'clamp(2rem, 3.5vw, 3rem)',
                 color: dark ? '#f0f0ff' : '#0f0f1e',
@@ -209,7 +220,7 @@ export function Contact({ isDark }: ContactProps) {
               transition={{ duration: 0.6, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
               className="mt-6"
               style={{
-                fontFamily: fontBody,
+                
                 fontWeight: 400,
                 fontSize: '1rem',
                 lineHeight: 1.8,
@@ -237,7 +248,7 @@ export function Contact({ isDark }: ContactProps) {
             >
               <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>✦</span>
               <p style={{
-                fontFamily: fontBody,
+                
                 fontWeight: 400,
                 fontSize: '0.85rem',
                 lineHeight: 1.65,
@@ -264,7 +275,7 @@ export function Contact({ isDark }: ContactProps) {
           />
 
           {/* ── Right: Contact options ── */}
-          <div style={{ paddingInlineStart: '4rem' }} className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 md:ps-16">
 
             {/* Email card */}
             <motion.a
@@ -291,7 +302,7 @@ export function Contact({ isDark }: ContactProps) {
             >
               <div className="flex items-center justify-between mb-3">
                 <span style={{
-                  fontFamily: fontBody,
+                  
                   fontWeight: 500,
                   fontSize: '0.75rem',
                   letterSpacing: '0.1em',
@@ -317,7 +328,7 @@ export function Contact({ isDark }: ContactProps) {
                 </svg>
               </div>
               <p style={{
-                fontFamily: fontHeading,
+                
                 fontWeight: 600,
                 fontSize: 'clamp(0.95rem, 1.5vw, 1.1rem)',
                 color: dark ? '#e0e0ff' : '#0f0f1e',
@@ -364,7 +375,7 @@ export function Contact({ isDark }: ContactProps) {
                 >
                   {social.icon}
                   <span style={{
-                    fontFamily: fontBody,
+                    
                     fontWeight: 600,
                     fontSize: '0.85rem',
                     color: dark ? '#c4c4d4' : '#0f0f1e',
@@ -382,7 +393,7 @@ export function Contact({ isDark }: ContactProps) {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.45 }}
               style={{
-                fontFamily: fontBody,
+                
                 fontWeight: 400,
                 fontSize: '0.8rem',
                 color: dark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.3)',

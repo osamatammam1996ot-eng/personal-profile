@@ -4,6 +4,8 @@ import svgPaths from '../../imports/svg-nh6weynufu';
 import imgPortrait from '../../assets/e31509a0541824cfeda89ddabf83753388778df0.png';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCms } from '../contexts/CmsContext';
+import { DecorativeShape } from './DecorativeShape';
+import { Button } from './ui/button';
 
 interface WhyHireMeProps {
   isDark: boolean;
@@ -38,7 +40,7 @@ const CARDS_VISUAL = [
     iconGrad: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
     iconShadow: 'rgba(99,102,241,0.26)',
     ambientStop: 'rgba(99,102,241,0.08)',
-    accentLine: 'rgba(99,102,241,0.4)',
+    accentLine: 'color-mix(in srgb, var(--color-brand) 40%, transparent)',
     rotate: -2,
     renderIcon: () => (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -168,7 +170,6 @@ function SmallDotsSvg() {
 
 const FLOATS = [
   { id: 'anchor',   SVG: AnchorPointSvg, left: '4.2%',  top: '18.8%', depth: 0.7,  dur: 6,   del: 0    },
-  { id: 'bezier',   SVG: BezierSvg,      left: '62.1%', top: '9.4%',  depth: 0.45, dur: 8,   del: 1.2  },
   { id: 'cursor1',  SVG: FigmaCursorSvg, left: '83.3%', top: '46.6%', depth: 1.1,  dur: 7,   del: 2    },
   { id: 'grid',     SVG: GridSvg,        left: '3.1%',  top: '72.8%', depth: 0.55, dur: 9,   del: 0.5  },
   { id: 'diamond1', SVG: DiamondSvg,     left: '51.2%', top: '3.8%',  depth: 0.9,  dur: 5,   del: 1.8  },
@@ -250,16 +251,7 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
     >
       {/* Card surface */}
       <div
-        className="relative rounded-2xl overflow-hidden"
-        style={{
-          background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.85)',
-          border: isDark ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(99,102,241,0.15)',
-          boxShadow: isDark
-            ? '0 8px 40px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04)'
-            : '0 8px 32px rgba(99,102,241,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
-          padding: '20px 21px 24px',
-          minHeight: 200,
-        }}
+        className="relative rounded-2xl overflow-hidden px-[21px] pt-[20px] pb-[24px] min-h-[200px] bg-surface-elevated border border-brand/15 dark:border-white/10 shadow-[0_8px_32px_rgba(99,102,241,0.1),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.04)]"
       >
         {/* Ambient radial glow */}
         <div
@@ -285,29 +277,16 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
 
         {/* Title */}
         <h3
-          style={{
-            fontFamily: fontHeading,
-            fontWeight: 700,
-            fontSize: 14.72,
-            color: isDark ? '#f0f0ff' : '#0f0f1e',
-            lineHeight: '19.136px',
-            marginBottom: 8,
-            whiteSpace: 'normal',
-          }}
+          className="font-bold text-[14.72px] text-text-primary leading-[19.136px] mb-2 whitespace-normal"
+          
         >
           {card.title}
         </h3>
 
         {/* Body */}
         <p
-          style={{
-            fontFamily: fontBody,
-            fontWeight: 400,
-            fontSize: 12.16,
-            color: isDark ? 'rgba(255,255,255,0.42)' : 'rgba(0,0,0,0.50)',
-            lineHeight: '20.064px',
-            margin: 0,
-          }}
+          className="text-[12.16px] text-text-secondary leading-[20.064px] m-0"
+          
         >
           {card.desc}
         </p>
@@ -475,16 +454,15 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
       ref={sectionRef}
       id="why-me"
       onMouseMove={onMouseMove}
-      className="relative w-full overflow-hidden"
-      style={{ background: isDark ? '#07071a' : '#f5f5fa', transition: 'background 0.3s ease' }}
+      className="relative w-full bg-surface transition-colors duration-300 overflow-hidden"
     >
       {/* ── Background grid overlay ── */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: [
-            `linear-gradient(rgba(99,102,241,${isDark ? '0.04' : '0.06'}) 1px, transparent 1px)`,
-            `linear-gradient(90deg, rgba(99,102,241,${isDark ? '0.04' : '0.06'}) 1px, transparent 1px)`,
+            `linear-gradient(color-mix(in srgb, var(--color-brand) 5%, transparent) 1px, transparent 1px)`,
+            `linear-gradient(90deg, color-mix(in srgb, var(--color-brand) 5%, transparent) 1px, transparent 1px)`,
           ].join(', '),
           backgroundSize: '60px 60px',
           WebkitMaskImage: 'radial-gradient(ellipse 90% 80% at 50% 35%, black 0%, transparent 70%)',
@@ -515,6 +493,16 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
         <FloatEl key={f.id} {...f} smX={smX} smY={smY} />
       ))}
 
+      {/* Decorative 3D shape — bottom-left */}
+      <DecorativeShape
+        shape="octahedron"
+        position="bottom-left"
+        size={460}
+        cropAmount={28}
+        rotationOffset={[0.5, -0.2, 0.4]}
+        isDark={isDark}
+      />
+
       {/* ── CONTENT ─ */}
       <div
         className="relative w-full flex flex-col items-center"
@@ -527,40 +515,23 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-          className="select-none text-center"
-          style={{ marginBottom: '7vh' }}
+          className="select-none text-center mb-[7vh]"
         >
           <div
-            style={{
-              fontFamily: fontHeading,
-              fontWeight: 700,
-              fontSize: 'clamp(2rem, 5vw, 4.5rem)',
-              lineHeight: 1,
-              letterSpacing: isRTL ? '-0.02em' : '-0.046em',
-              display: 'flex',
-              gap: '0.14em',
-              alignItems: 'baseline',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-            }}
+            className="font-bold text-[clamp(2rem,5vw,4.5rem)] leading-none tracking-tighter flex gap-[0.14em] items-baseline flex-wrap justify-center"
+            
           >
-            <span style={{ color: isDark ? '#f0f0ff' : '#0f0f1e' }}>{word1}</span>
-            <span
-              style={{
-                color: '#6366f1',
-                textShadow: isDark
-                  ? '0 0 60px rgba(99,102,241,0.55), 0 0 120px rgba(99,102,241,0.2)'
-                  : '0 0 40px rgba(99,102,241,0.25)',
-              }}
-            >{word2}</span>
-            {word3 && <span style={{ color: isDark ? '#f0f0ff' : '#0f0f1e' }}>{word3}</span>}
+            <span className="text-text-primary">{word1}</span>
+            <span className="text-brand dark:drop-shadow-[0_0_60px_rgba(99,102,241,0.55)] drop-shadow-[0_0_40px_rgba(99,102,241,0.25)]">
+              {word2}
+            </span>
+            {word3 && <span className="text-text-primary">{word3}</span>}
           </div>
         </motion.div>
 
         {/* ── CARDS ROW ── */}
         <div
-          className="w-full px-6 md:px-10 lg:px-24"
-          style={{ maxWidth: 1200, margin: '0 auto' }}
+          className="w-full max-w-[1200px] mx-auto px-6 md:px-10"
         >
           <CardsRow isDark={isDark} />
         </div>
@@ -631,7 +602,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
         className="absolute bottom-0 left-0 right-0 pointer-events-none"
         style={{
           height: 200,
-          background: `linear-gradient(to bottom, transparent 0%, ${isDark ? 'rgba(7,7,26,0.6)' : 'rgba(245,245,250,0.6)'} 40%, ${isDark ? '#07071a' : '#f5f5fa'} 100%)`,
+          background: `linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 60%, transparent) 40%, var(--color-surface) 100%)`,
           zIndex: 10,
         }}
       />

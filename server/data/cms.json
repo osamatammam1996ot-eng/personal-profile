@@ -1,0 +1,635 @@
+{
+  "sectionOrder": [
+    "hero",
+    "whyHireMe",
+    "tools",
+    "portfolio",
+    "skills",
+    "contact",
+    "footer"
+  ],
+  "sections": {
+    "hero": true,
+    "whyHireMe": true,
+    "skills": true,
+    "portfolio": true,
+    "tools": true,
+    "contact": true,
+    "footer": true
+  },
+  "hero": {
+    "label": {
+      "en": "Osama Tammam · UX/UI Design Specialist at Link Development",
+      "ar": "أسامة تمام · مصمم UI  / UX متخصص في شركة لينك"
+    },
+    "headline1": {
+      "en": "Designing Products..",
+      "ar": "تصميم المنتجات.."
+    },
+    "headline2": {
+      "en": "The Right Way..",
+      "ar": "كما ينبغي ان تكون.."
+    },
+    "roles": {
+      "en": [
+        "Senior UX Designer",
+        "Senior UI Designer",
+        "AI Product Designer"
+      ],
+      "ar": [
+        "مصمم UX أول",
+        "مصمم UI أول",
+        "مصمم منتجات AI"
+      ]
+    },
+    "desc": {
+      "en": "Seven years building products for teams that couldn't afford to ship the wrong thing.\nI work closest to the problem when the stakes are highest.",
+      "ar": "سبع سنوات من بناء المنتجات لفرق لم تكن تتحمل الخطأ في القرار.\nأكون أقرب للمشكلة حين تكون المخاطر في أعلاها."
+    },
+    "cta1": {
+      "en": "See my work",
+      "ar": "شاهد أعمالي"
+    },
+    "cta2": {
+      "en": "Let's talk",
+      "ar": "لنتحدث"
+    }
+  },
+  "whyHireMe": {
+    "word1": {
+      "en": "WHY",
+      "ar": "لماذا"
+    },
+    "word2": {
+      "en": "HIRE",
+      "ar": "تختارني"
+    },
+    "word3": {
+      "en": "ME",
+      "ar": ""
+    },
+    "cards": [
+      {
+        "title": {
+          "en": "Systems Thinking",
+          "ar": "التفكير المنظومي"
+        },
+        "desc": {
+          "en": "Scalable design systems and component libraries that maintain consistency as your product grows across teams.",
+          "ar": "أنظمة تصميم قابلة للتطور ومكتبات مكونات تحافظ على الاتساق مع نمو منتجك عبر الفرق."
+        }
+      },
+      {
+        "title": {
+          "en": "AI-Driven Process",
+          "ar": "العملية المدفوعة بالذكاء الاصطناعي"
+        },
+        "desc": {
+          "en": "Leveraging cutting-edge AI tools to accelerate ideation, validate designs, and surface insights that manual research misses.",
+          "ar": "توظيف أحدث أدوات الذكاء الاصطناعي لتسريع الأفكار والتحقق من التصاميم واستخراج رؤى يفوتها البحث التقليدي."
+        }
+      },
+      {
+        "title": {
+          "en": "Enterprise-Grade Execution",
+          "ar": "تنفيذ بمعايير المؤسسات"
+        },
+        "desc": {
+          "en": "From complex SaaS dashboards to multi-platform enterprise tools — polished, production-ready, every time.",
+          "ar": "من لوحات SaaS المعقدة إلى أدوات المؤسسات متعددة المنصات — مصقولة وجاهزة للإنتاج في كل مرة."
+        }
+      },
+      {
+        "title": {
+          "en": "Conversion-Focused UX",
+          "ar": "تجربة مستخدم تحقق التحويل"
+        },
+        "desc": {
+          "en": "Every decision rooted in psychology and business metrics — crafting flows that turn visitors into loyal users.",
+          "ar": "كل قرار مبني على علم النفس ومقاييس العمل — مسارات تحوّل الزوار إلى مستخدمين مخلصين."
+        }
+      }
+    ]
+  },
+  "skills": {
+    "heading1": {
+      "en": "Seven years.",
+      "ar": "سبع سنوات."
+    },
+    "heading2": {
+      "en": "Three disciplines.",
+      "ar": "ثلاثة تخصصات."
+    },
+    "desc": {
+      "en": "Not a list of tools! This is how I actually spend my time — the things I can lead, the methods I reach for first, the work I take responsibility for end-to-end.",
+      "ar": "ليست قائمة أدوات. هذه هي كيفية قضاء وقتي فعلياً — ما أقوده، والأساليب التي أبدأ بها، والعمل الذي أتحمل مسؤوليته من البداية للنهاية."
+    },
+    "disciplines": [
+      {
+        "title": {
+          "en": "Research &\nUnderstanding",
+          "ar": "البحث\nوالفهم"
+        },
+        "tagline": {
+          "en": "I start by figuring out what question I'm actually trying to answer.",
+          "ar": "أبدأ بتحديد السؤال الذي أسعى حقاً للإجابة عنه."
+        },
+        "tags": {
+          "en": [
+            "User Interviews",
+            "Usability Testing",
+            "Journey Mapping",
+            "Heuristic Evaluation",
+            "Affinity Diagrams",
+            "Research Synthesis",
+            "Stakeholder Alignment",
+            "Competitive Analysis"
+          ],
+          "ar": [
+            "مقابلات المستخدمين",
+            "اختبار قابلية الاستخدام",
+            "رسم خرائط الرحلة",
+            "التقييم الاستكشافي",
+            "مخططات التقارب",
+            "تركيب البحوث",
+            "مواءمة أصحاب المصلحة",
+            "التحليل التنافسي"
+          ]
+        }
+      },
+      {
+        "title": {
+          "en": "Design &\nSystems",
+          "ar": "التصميم والأنظمة"
+        },
+        "tagline": {
+          "en": "I build for the designer who comes after me, not just the sprint I'm in.",
+          "ar": "أبني للمصمم الذي سيأتي بعدي، لا فقط للسبرينت الحالي."
+        },
+        "tags": {
+          "en": [
+            "Design Tokens",
+            "Component Libraries",
+            "Dark / Light Theming",
+            "Figma Governance",
+            "Responsive Grids",
+            "Multi-team Systems",
+            "Documentation",
+            "Accessibility"
+          ],
+          "ar": [
+            "رموز التصميم",
+            "مكتبات المكونات",
+            "السمات الفاتحة والداكنة",
+            "حوكمة Figma",
+            "الشبكات المتجاوبة",
+            "أنظمة متعددة الفرق",
+            "التوثيق",
+            "إمكانية الوصول"
+          ]
+        }
+      },
+      {
+        "title": {
+          "en": "Prototyping\n& Delivery",
+          "ar": "النماذج الأولية\nوالتسليم"
+        },
+        "tagline": {
+          "en": "A prototype I can't hand to a developer isn't done.",
+          "ar": "النموذج الذي لا أستطيع تسليمه للمطوّر ليس جاهزاً بعد."
+        },
+        "tags": {
+          "en": [
+            "Advanced Figma",
+            "Micro-interactions",
+            "Developer Handoff",
+            "Motion Design",
+            "AI-Augmented Workflow",
+            "ChatGPT Integration"
+          ],
+          "ar": [
+            "Figma المتقدمة",
+            "Framer",
+            "التفاعلات الدقيقة",
+            "تسليم المطوّرين",
+            "تصميم الحركة",
+            "سير عمل بـ AI",
+            "Midjourney",
+            "تكامل ChatGPT"
+          ]
+        }
+      }
+    ]
+  },
+  "tools": {
+    "title": {
+      "en": "My Arsenal!",
+      "ar": "ترسانتي!"
+    },
+    "desc": {
+      "en": "Twelve tools. One cohesive workflow.",
+      "ar": "اثنا عشرة أداة. سير عمل متكامل."
+    },
+    "clickHint": {
+      "en": "Click any card to explore",
+      "ar": "انقر على أي بطاقة للاستكشاف"
+    },
+    "proficiency": {
+      "en": "Proficiency",
+      "ar": "الإتقان"
+    }
+  },
+  "footer": {
+    "copyright": {
+      "en": "© 2026 Osama Tammam. All rights reserved.",
+      "ar": "© ٢٠٢٦ أسامة تمام. جميع الحقوق محفوظة."
+    },
+    "links": {
+      "en": [
+        "Home",
+        "Portfolio",
+        "About",
+        "Contact"
+      ],
+      "ar": [
+        "الرئيسية",
+        "المشاريع",
+        "عني",
+        "تواصل"
+      ]
+    }
+  },
+  "contact": {
+    "email": "osamatammam1996ot.eng@gmail.com",
+    "availability": {
+      "en": "Open to new work · Replies within 24h",
+      "ar": "متاح للمشاريع الجديدة · يرد خلال ٢٤ ساعة"
+    },
+    "headline1": {
+      "en": "Got a problem",
+      "ar": "لديك تحدٍ"
+    },
+    "headline2": {
+      "en": "worth solving?",
+      "ar": "يستحق الحل؟"
+    },
+    "headline3": {
+      "en": "Let's talk about it.",
+      "ar": "لنتحدث عنه."
+    },
+    "body": {
+      "en": "I take on a small number of projects at a time — enough to give each one real attention. If you have something that needs clarity, a product stuck between good and great, or an idea you haven't been able to articulate yet, that's exactly the kind of thing I like to work on.",
+      "ar": "أتولى عدداً محدوداً من المشاريع في آنٍ واحد — ما يكفي لمنح كلٍ منها اهتماماً حقيقياً. إن كان لديك ما يحتاج إلى وضوح، أو منتج بين الجيد والرائع، أو فكرة لم تستطع صياغتها بعد، فهذا بالضبط ما أحب العمل عليه."
+    },
+    "note": {
+      "en": "No pitch decks needed. Just tell me what you're working on and where it's breaking down.",
+      "ar": "لا تحتاج إلى عروض تقديمية. فقط أخبرني بما تعمل عليه وأين تعثّر."
+    },
+    "signoff1": {
+      "en": "Based in Egypt · Works with clients worldwide.",
+      "ar": "مقيم في مصر · يعمل مع عملاء حول العالم."
+    },
+    "signoff2": {
+      "en": "No agencies. No middlemen. Just me.",
+      "ar": "لا وكالات. لا وسطاء. أنا فقط."
+    },
+    "emailLabel": {
+      "en": "Email",
+      "ar": "البريد الإلكتروني"
+    },
+    "socials": {
+      "whatsapp": "",
+      "linkedin": "https://linkedin.com/in/osamatammam",
+      "behance": "https://behance.net/osamatammam",
+      "facebook": ""
+    }
+  },
+  "projects": [
+    {
+      "id": 1,
+      "visible": true,
+      "title": {
+        "en": "Nexus Analytics",
+        "ar": "نيكسس أناليتكس"
+      },
+      "image": "",
+      "tags": {
+        "en": [
+          "SaaS",
+          "Analytics",
+          "AI-UX Strategy",
+          "B2B"
+        ],
+        "ar": [
+          "SaaS",
+          "تحليلات",
+          "استراتيجية UX بالذكاء الاصطناعي",
+          "B2B"
+        ]
+      },
+      "desc": {
+        "en": "End-to-end redesign of a B2B SaaS analytics suite — reducing cognitive load by 40% and boosting user activation by 28% through AI-assisted UX strategy.",
+        "ar": "إعادة تصميم كامل لحزمة تحليلات SaaS للشركات — تقليل التحميل المعرفي 40٪ وزيادة تفعيل المستخدمين 28٪."
+      },
+      "accent": "#6366f1"
+    },
+    {
+      "id": 2,
+      "visible": true,
+      "title": {
+        "en": "Orion Enterprise",
+        "ar": "أوريون إنتربرايز"
+      },
+      "image": "",
+      "tags": {
+        "en": [
+          "Enterprise",
+          "Design System",
+          "Fortune 500",
+          "Multi-platform"
+        ],
+        "ar": [
+          "مؤسسات",
+          "نظام تصميم",
+          "Fortune 500",
+          "متعدد المنصات"
+        ]
+      },
+      "desc": {
+        "en": "Comprehensive design system and UX overhaul for a Fortune 500 enterprise productivity platform — serving 50,000+ daily active users across 12 product areas.",
+        "ar": "نظام تصميم شامل وتحديث UX لمنصة إنتاجية لمؤسسة Fortune 500 — تخدم أكثر من 50,000 مستخدم نشط يومياً."
+      },
+      "accent": "#8b5cf6"
+    },
+    {
+      "id": 3,
+      "visible": true,
+      "title": {
+        "en": "Lumina AI",
+        "ar": "لومينا إيه آي"
+      },
+      "image": "",
+      "tags": {
+        "en": [
+          "AI",
+          "Product Design",
+          "Zero-to-Launch",
+          "Content Platform"
+        ],
+        "ar": [
+          "ذكاء اصطناعي",
+          "تصميم منتج",
+          "من الصفر",
+          "منصة محتوى"
+        ]
+      },
+      "desc": {
+        "en": "From zero to launch — product design for an AI-powered content generation platform. Shipped in 8 weeks with a 4.8/5 user satisfaction score.",
+        "ar": "من الصفر حتى الإطلاق — تصميم منتج لمنصة إنشاء محتوى بالذكاء الاصطناعي. أطلق خلال 8 أسابيع بدرجة رضا 4.8/5."
+      },
+      "accent": "#06b6d4"
+    },
+    {
+      "id": 4,
+      "visible": true,
+      "title": {
+        "en": "HealthBridge",
+        "ar": "هيلثبريدج"
+      },
+      "image": "",
+      "tags": {
+        "en": [
+          "Healthcare",
+          "Mobile App",
+          "Accessibility",
+          "Patient UX"
+        ],
+        "ar": [
+          "رعاية صحية",
+          "تطبيق محمول",
+          "إمكانية الوصول",
+          "تجربة المريض"
+        ]
+      },
+      "desc": {
+        "en": "Patient-centric UX for a healthcare management app — accessibility-first design serving diverse user demographics, resulting in 65% reduction in support tickets.",
+        "ar": "تجربة مستخدم متمحورة حول المريض لتطبيق إدارة الرعاية الصحية — تصميم إمكانية الوصول أولاً مما أدى إلى تقليل تذاكر الدعم 65٪."
+      },
+      "accent": "#10b981"
+    }
+  ],
+  "caseStudies": [
+    {
+      "id": 1,
+      "visible": true,
+      "title": {
+        "en": "Nexus Analytics",
+        "ar": "نيكسس أناليتكس"
+      },
+      "tagline": {
+        "en": "Redesigning a B2B SaaS analytics suite to reduce cognitive load and boost activation",
+        "ar": "إعادة تصميم حزمة تحليلات SaaS لتقليل التحميل المعرفي وزيادة التفعيل"
+      },
+      "heroImage": "",
+      "meta": {
+        "role": {
+          "en": "Lead UX/UI Designer",
+          "ar": "مصمم UX/UI رئيسي"
+        },
+        "timeline": "6 months",
+        "team": {
+          "en": "3 designers, 8 engineers",
+          "ar": "3 مصممين، 8 مهندسين"
+        },
+        "industry": {
+          "en": "Technology / SaaS",
+          "ar": "تكنولوجيا / SaaS"
+        }
+      },
+      "metrics": [
+        {
+          "value": "-40%",
+          "label": {
+            "en": "Cognitive Load Reduction",
+            "ar": "تقليل التحميل المعرفي"
+          }
+        },
+        {
+          "value": "+28%",
+          "label": {
+            "en": "User Activation",
+            "ar": "تفعيل المستخدمين"
+          }
+        },
+        {
+          "value": "4.6/5",
+          "label": {
+            "en": "Satisfaction Score",
+            "ar": "درجة الرضا"
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "visible": true,
+      "title": {
+        "en": "Orion Enterprise",
+        "ar": "أوريون إنتربرايز"
+      },
+      "tagline": {
+        "en": "Design system and UX overhaul for a Fortune 500 enterprise productivity platform",
+        "ar": "نظام تصميم وتحديث UX لمنصة إنتاجية لمؤسسة Fortune 500"
+      },
+      "heroImage": "",
+      "meta": {
+        "role": {
+          "en": "Senior Product Designer",
+          "ar": "مصمم منتجات أول"
+        },
+        "timeline": "8 months",
+        "team": {
+          "en": "5 designers, 20+ engineers",
+          "ar": "5 مصممين، 20+ مهندس"
+        },
+        "industry": {
+          "en": "Enterprise Software",
+          "ar": "برمجيات المؤسسات"
+        }
+      },
+      "metrics": [
+        {
+          "value": "50K+",
+          "label": {
+            "en": "Daily Active Users",
+            "ar": "مستخدم نشط يومياً"
+          }
+        },
+        {
+          "value": "12",
+          "label": {
+            "en": "Product Areas Unified",
+            "ar": "منطقة منتج موحدة"
+          }
+        },
+        {
+          "value": "-35%",
+          "label": {
+            "en": "Design Debt Reduction",
+            "ar": "تقليل ديون التصميم"
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "visible": true,
+      "title": {
+        "en": "Lumina AI",
+        "ar": "لومينا إيه آي"
+      },
+      "tagline": {
+        "en": "Zero-to-launch product design for an AI-powered content generation platform",
+        "ar": "تصميم منتج من الصفر لمنصة إنشاء محتوى بالذكاء الاصطناعي"
+      },
+      "heroImage": "",
+      "meta": {
+        "role": {
+          "en": "Product Designer (Solo)",
+          "ar": "مصمم منتج (منفرد)"
+        },
+        "timeline": "8 weeks",
+        "team": {
+          "en": "1 designer, 4 engineers",
+          "ar": "مصمم واحد، 4 مهندسين"
+        },
+        "industry": {
+          "en": "AI / Content",
+          "ar": "الذكاء الاصطناعي / المحتوى"
+        }
+      },
+      "metrics": [
+        {
+          "value": "4.8/5",
+          "label": {
+            "en": "User Satisfaction",
+            "ar": "رضا المستخدمين"
+          }
+        },
+        {
+          "value": "8 wks",
+          "label": {
+            "en": "Time to Launch",
+            "ar": "وقت الإطلاق"
+          }
+        },
+        {
+          "value": "+62%",
+          "label": {
+            "en": "Retention Rate",
+            "ar": "معدل الاحتفاظ"
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "visible": true,
+      "title": {
+        "en": "HealthBridge",
+        "ar": "هيلثبريدج"
+      },
+      "tagline": {
+        "en": "Accessibility-first healthcare management app for diverse patient demographics",
+        "ar": "تطبيق إدارة الرعاية الصحية بإمكانية وصول أولاً"
+      },
+      "heroImage": "",
+      "meta": {
+        "role": {
+          "en": "Lead UX Designer",
+          "ar": "مصمم UX رئيسي"
+        },
+        "timeline": "7 months",
+        "team": {
+          "en": "2 designers, 6 engineers",
+          "ar": "مصممان، 6 مهندسين"
+        },
+        "industry": {
+          "en": "Healthcare",
+          "ar": "الرعاية الصحية"
+        }
+      },
+      "metrics": [
+        {
+          "value": "-65%",
+          "label": {
+            "en": "Support Tickets",
+            "ar": "تذاكر الدعم"
+          }
+        },
+        {
+          "value": "98%",
+          "label": {
+            "en": "WCAG Compliance",
+            "ar": "امتثال WCAG"
+          }
+        },
+        {
+          "value": "+45%",
+          "label": {
+            "en": "Task Completion",
+            "ar": "إكمال المهام"
+          }
+        }
+      ]
+    }
+  ],
+  "global": {
+    "seoTitle": "Osama Tammam — Senior UX/UI & AI Product Designer",
+    "seoDescription": "Seven years building products for teams that couldn’t afford to ship the wrong thing. Senior UX/UI Designer & AI Product Designer based in Cairo, Egypt.",
+    "ownerName": "Osama Tammam",
+    "ownerEmail": "osamatammam1996ot.eng@gmail.com",
+    "footerTagline": "Making hard products feel inevitable."
+  },
+  "updatedAt": "2026-08-01T21:54:02.269Z"
+}

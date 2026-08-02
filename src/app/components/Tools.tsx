@@ -10,6 +10,7 @@ import gsap from 'gsap';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCms } from '../contexts/CmsContext';
+import { DecorativeShape } from './DecorativeShape';
 
 interface ToolsProps { isDark?: boolean; }
 
@@ -54,7 +55,7 @@ const FACE_NORMALS_NORMALIZED = FACE_NORMALS_RAW.map(normalize3);
 // REMAP removed — face fi holds TOOLS[fi], goTo(i) brings face i to front directly
 
 /* ─── Dust particles (2-D canvas) ────────────────────────────────────────────── */
-function useDustCanvas(canvasRef: React.RefObject<HTMLCanvasElement>, isDark: boolean) {
+function useDustCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>, isDark: boolean) {
   useEffect(() => {
     const cv = canvasRef.current;
     if (!cv) return;
@@ -524,6 +525,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}
       />
 
+
       {/* ── Header ── */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -541,7 +543,7 @@ export function Tools({ isDark = false }: ToolsProps) {
             color: eyebrowC,
             background: eyebrowBg,
             border: `1px solid ${eyebrowBd}`,
-            fontFamily: 'Inter, sans-serif',
+            
             marginBottom: 16,
           }}
         >
@@ -551,7 +553,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         {/* heading — Space Grotesk to match Skills */}
         <h2
           style={{
-            fontFamily: fontHeading,
+            
             fontWeight: 700,
             fontSize: 'clamp(2rem,4vw,3.25rem)',
             letterSpacing: '-0.02em',
@@ -567,7 +569,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         </h2>
 
         <p style={{
-          fontFamily: fontBody,
+          
           fontWeight: 400,
           fontSize: '1rem',
           color: bodyC,
@@ -630,7 +632,7 @@ export function Tools({ isDark = false }: ToolsProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.34,1.56,0.64,1] }}
-              className="tools-desktop-card"
+              className="hidden lg:block tools-desktop-card"
               style={{
                 position: 'absolute',
                 right: -8, top: '50%',
@@ -643,7 +645,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                 backdropFilter: 'blur(24px)',
                 boxShadow: cardShadow,
                 zIndex: 100,
-                fontFamily: 'Inter, sans-serif',
+                
               }}
             >
               {/* icon badge */}
@@ -652,7 +654,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 17, fontWeight: 700, marginBottom: 12,
                 letterSpacing: '-0.02em',
-                fontFamily: 'Space Grotesk, sans-serif',
+                
                 background: `rgba(${tool.rgb.map(v=>Math.round(v*255)).join(',')},0.18)`,
                 border: `1px solid ${tool.glow}66`,
                 color: tool.glow,
@@ -662,7 +664,7 @@ export function Tools({ isDark = false }: ToolsProps) {
 
               <div style={{
                 fontSize: '0.95rem', fontWeight: 600,
-                fontFamily: 'Space Grotesk, sans-serif',
+                
                 color: headingC, marginBottom: 2,
               }}>
                 {tool.name}
@@ -691,7 +693,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                   </span>
                   <span style={{
                     fontSize: '0.7rem', fontWeight: 700,
-                    fontFamily: 'Space Grotesk, sans-serif',
+                    
                     background: `linear-gradient(90deg,#6366f1,#8b5cf6)`,
                     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
                   }}>
@@ -729,7 +731,10 @@ export function Tools({ isDark = false }: ToolsProps) {
           )}
         </AnimatePresence>
 
-        {/* Mobile card — below canvas */}
+      </div>
+
+      {/* Mobile card — below canvas, taking up exact layout space */}
+      <div className="block lg:hidden relative w-full max-w-[340px] mx-auto min-h-[220px] mb-6">
         <AnimatePresence>
           {cardVisible && (
             <motion.div
@@ -741,16 +746,13 @@ export function Tools({ isDark = false }: ToolsProps) {
               className="tools-mobile-card"
               style={{
                 position: 'absolute',
-                right: 'auto', top: 'auto', bottom: -10, left: '50%',
-                transform: 'translateX(-50%) translateY(106%)',
-                width: '90vw', maxWidth: 340,
+                top: 0, left: 0, width: '100%',
                 background: cardBg,
                 border: `1px solid ${cardBd}`,
                 borderRadius: 16,
                 padding: 20, backdropFilter: 'blur(24px)',
                 boxShadow: cardShadow,
                 zIndex: 100,
-                fontFamily: 'Inter, sans-serif',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
@@ -758,14 +760,12 @@ export function Tools({ isDark = false }: ToolsProps) {
                   width: 40, height: 40, borderRadius: 12, flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 15, fontWeight: 700, letterSpacing: '-0.02em',
-                  fontFamily: 'Space Grotesk, sans-serif',
                   background: `rgba(${tool.rgb.map(v=>Math.round(v*255)).join(',')},0.18)`,
                   border: `1px solid ${tool.glow}66`, color: tool.glow,
                 }}>{tool.abbr}</div>
                 <div>
                   <div style={{
                     fontSize: '0.9rem', fontWeight: 600,
-                    fontFamily: 'Space Grotesk, sans-serif',
                     color: headingC,
                   }}>
                     {tool.name}
@@ -786,7 +786,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
                   <span style={{ fontSize: '0.6rem', letterSpacing: '0.10em', textTransform: 'uppercase', color: mutedC }}>{proficiencyLabel}</span>
                   <span style={{
-                    fontSize: '0.7rem', fontWeight: 700, fontFamily: 'Space Grotesk, sans-serif',
+                    fontSize: '0.7rem', fontWeight: 700, 
                     background: 'linear-gradient(90deg,#6366f1,#8b5cf6)',
                     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
                   }}>{pct}%</span>
@@ -854,7 +854,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         marginTop: 14, fontSize: '0.75rem', color: hintC,
         letterSpacing: '0.04em', textAlign: 'center',
         position: 'relative', zIndex: 10,
-        fontFamily: fontBody,
+        
       }}>
         {clickHint}
       </p>
@@ -863,12 +863,6 @@ export function Tools({ isDark = false }: ToolsProps) {
         @keyframes tools-pulse {
           0%,100%{opacity:1;transform:scale(1)}
           50%{opacity:.5;transform:scale(.7)}
-        }
-        @media(min-width:701px){
-          .tools-mobile-card{display:none!important;}
-        }
-        @media(max-width:700px){
-          .tools-desktop-card{display:none!important;}
         }
       `}</style>
     </section>

@@ -227,7 +227,7 @@ export function HexGrid({ isDark }: HexGridProps) {
 
   return (
     <div ref={wrapperRef} className="absolute inset-0 overflow-hidden pointer-events-none">
-      <canvas ref={canvasRef} className="absolute inset-0" />
+      <canvas ref={canvasRef} className="absolute inset-0" style={{ filter: 'blur(4px)' }} />
     </div>
   );
 }

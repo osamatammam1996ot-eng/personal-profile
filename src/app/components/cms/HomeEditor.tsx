@@ -1,4 +1,6 @@
 import type { CmsData } from '../../types/cms';
+import { useState } from 'react';
+import { Button } from '../ui/button';
 
 interface HomeEditorProps {
   draft: CmsData;
@@ -85,6 +87,8 @@ function BilingualField({
 }
 
 export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProps) {
+  const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
+
   const updateProject = (index: number, updater: (project: CmsData['projects'][number]) => CmsData['projects'][number]) => {
     updateDraft((prev) => {
       const projects = [...prev.projects];
@@ -172,36 +176,91 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
   };
 
   if (activeSection === 'home-visibility') {
-    const toggles: Array<{ key: keyof CmsData['sections']; label: string }> = [
-      { key: 'hero', label: 'Hero' },
-      { key: 'whyHireMe', label: 'Why Hire Me' },
-      { key: 'skills', label: 'Skills' },
-      { key: 'portfolio', label: 'Portfolio' },
-      { key: 'tools', label: 'Tools' },
-      { key: 'contact', label: 'Contact' },
-      { key: 'footer', label: 'Footer' },
-    ];
+    const defaultOrder = ['hero', 'whyHireMe', 'skills', 'portfolio', 'tools', 'contact', 'footer'];
+    const currentOrder = draft.sectionOrder || defaultOrder;
+
+    const labelMap: Record<string, string> = {
+      hero: 'Hero',
+      whyHireMe: 'Why Hire Me',
+      skills: 'Skills',
+      portfolio: 'Portfolio',
+      tools: 'Tools',
+      contact: 'Contact',
+      footer: 'Footer'
+    };
+
+    const handleDragStart = (index: number, e: React.DragEvent) => {
+      setDraggedIdx(index);
+      if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', ''); 
+      }
+    };
+
+    const handleDragEnter = (index: number) => {
+      if (draggedIdx === null || draggedIdx === index) return;
+      
+      updateDraft(prev => {
+        const newOrder = [...(prev.sectionOrder || defaultOrder)];
+        const item = newOrder.splice(draggedIdx, 1)[0];
+        newOrder.splice(index, 0, item);
+        return { ...prev, sectionOrder: newOrder };
+      });
+      setDraggedIdx(index);
+    };
+
+    const handleDragEnd = () => {
+      setDraggedIdx(null);
+    };
 
     return (
       <div>
-        <h2 style={{ color: '#fff', marginTop: 0 }}>Section Visibility</h2>
-        <p style={{ color: '#a0a0a8', marginTop: 0 }}>Toggle any section on/off without deleting its content.</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(180px, 1fr))', gap: 12 }}>
-          {toggles.map((toggle) => (
-            <label key={toggle.key} style={{ ...cardStyle, display: 'flex', alignItems: 'center', gap: 10 }}>
-              <input
-                type="checkbox"
-                checked={draft.sections[toggle.key]}
-                onChange={(e) =>
-                  updateDraft((prev) => ({
-                    ...prev,
-                    sections: { ...prev.sections, [toggle.key]: e.target.checked },
-                  }))
-                }
-              />
-              <span style={{ color: '#fff' }}>{toggle.label}</span>
-            </label>
-          ))}
+        <h2 style={{ color: '#fff', marginTop: 0 }}>Section Visibility & Order</h2>
+        <p style={{ color: '#a0a0a8', marginTop: 0 }}>Toggle any section on/off, and drag them to reorder your homepage.</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 400 }}>
+          {currentOrder.map((key, index) => {
+            const sectionKey = key as keyof CmsData['sections'];
+            const isDragging = index === draggedIdx;
+            return (
+              <div 
+                key={key} 
+                draggable
+                onDragStart={(e) => handleDragStart(index, e)}
+                onDragEnter={() => handleDragEnter(index)}
+                onDragEnd={handleDragEnd}
+                onDragOver={(e) => e.preventDefault()}
+                style={{ 
+                  ...cardStyle, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  padding: '12px 16px',
+                  cursor: isDragging ? 'grabbing' : 'grab',
+                  opacity: isDragging ? 0.3 : 1,
+                  transform: isDragging ? 'scale(0.98)' : 'scale(1)',
+                  transition: 'opacity 0.2s, transform 0.2s',
+                  border: isDragging ? '1px dashed #6366f1' : cardStyle.border,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
+                  <div style={{ cursor: isDragging ? 'grabbing' : 'grab', color: '#6366f1', display: 'flex' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={draft.sections[sectionKey] ?? true}
+                    onChange={(e) =>
+                      updateDraft((prev) => ({
+                        ...prev,
+                        sections: { ...prev.sections, [sectionKey]: e.target.checked },
+                      }))
+                    }
+                    style={{ cursor: 'pointer', width: 16, height: 16, accentColor: '#6366f1' }}
+                  />
+                  <span style={{ color: '#fff', userSelect: 'none', fontWeight: 500 }}>{labelMap[key] || key}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     );

@@ -4,15 +4,39 @@ import {
   Save, CheckCircle, AlertCircle, Loader2, LayoutDashboard, FileText,
   Settings, ChevronRight, Eye, EyeOff, ArrowLeft, Menu, X, RefreshCw,
 } from 'lucide-react';
-import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import type { CmsData } from '../../types/cms';
 import { DEFAULT_CMS_DATA } from '../../types/cms';
 import { HomeEditor } from './HomeEditor';
 import { CaseStudiesEditor } from './CaseStudiesEditor';
 import { GlobalSettingsEditor } from './GlobalSettingsEditor';
-import { C } from './CmsUI';
+import { Button } from '../ui/button';
 
-const API_BASE = `https://${projectId}.supabase.co/functions/v1/server`;
+const API_BASE = '/api';
+
+// Deep-merge helper: ensures every key from `base` exists in the result,
+// filling in missing fields from DEFAULT_CMS_DATA.
+function mergeDeep<T>(base: T, override: any): T {
+  if (override === undefined || override === null) {
+    return JSON.parse(JSON.stringify(base));
+  }
+  if (Array.isArray(base)) {
+    return (Array.isArray(override) ? JSON.parse(JSON.stringify(override)) : JSON.parse(JSON.stringify(base))) as T;
+  }
+  if (typeof base === 'object' && base !== null) {
+    const result: Record<string, any> = {};
+    const baseObj = base as Record<string, any>;
+    const overrideObj = typeof override === 'object' && override !== null ? override : {};
+    for (const key of Object.keys(baseObj)) {
+      result[key] = mergeDeep(baseObj[key], overrideObj[key]);
+    }
+    return result as T;
+  }
+  return (override as T) ?? base;
+}
+
+function normalizeCmsData(input: unknown): CmsData {
+  return mergeDeep(DEFAULT_CMS_DATA, input);
+}
 
 // ─── Nav items structure ──────────────────────────────────────────────────────
 type NavSection = {
@@ -33,6 +57,8 @@ const NAV: NavSection[] = [
       { id: 'home-visibility', label: 'Section Visibility', icon: '👁️' },
       { id: 'home-hero', label: 'Hero', icon: '🏠' },
       { id: 'home-whyhireme', label: 'Why Hire Me', icon: '⭐' },
+      { id: 'home-skills', label: 'Skills (Craft Engine)', icon: '🔮' },
+      { id: 'home-tools', label: 'Tools', icon: '🛠️' },
       { id: 'home-portfolio', label: 'Portfolio Projects', icon: '💼' },
       { id: 'home-contact', label: 'Contact', icon: '✉️' },
     ],
@@ -84,12 +110,11 @@ export function AdminDashboard() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${publicAnonKey}`
         },
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
-      const data: CmsData = json.data ?? DEFAULT_CMS_DATA;
+      const data: CmsData = normalizeCmsData(json.data ?? DEFAULT_CMS_DATA);
       setDraft(JSON.parse(JSON.stringify(data)));
       setOriginal(JSON.parse(JSON.stringify(data)));
       // Save to local storage
@@ -100,7 +125,7 @@ export function AdminDashboard() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
-          const data = JSON.parse(saved);
+          const data = normalizeCmsData(JSON.parse(saved));
           setDraft(JSON.parse(JSON.stringify(data)));
           setOriginal(JSON.parse(JSON.stringify(data)));
           setFetchError('Using local storage (backend unavailable)');
@@ -135,7 +160,6 @@ export function AdminDashboard() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${publicAnonKey}`,
         },
         body: JSON.stringify(draft),
       });
@@ -174,6 +198,19 @@ export function AdminDashboard() {
     setDraft(prev => prev ? updater(prev) : prev);
   }, []);
 
+  // Keyboard shortcut for saving
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [draft, hasChanges]); // depend on draft and hasChanges so handleSave gets latest state
+
+
   // Toggle group
   const toggleGroup = (id: string) => {
     setExpandedGroups(prev => {
@@ -208,16 +245,16 @@ export function AdminDashboard() {
     <div style={{
       display: 'flex',
       height: '100vh',
-      background: C.bg,
-      fontFamily: C.font,
+      background: '#0f0f12',
+      fontFamily: 'var(--font-body)',
       overflow: 'hidden',
     }}>
       {/* ── Sidebar ─────────────────────────────────────────────────────────── */}
       <aside style={{
         width: sidebarOpen ? 240 : 0,
         minWidth: sidebarOpen ? 240 : 0,
-        background: C.sidebar,
-        borderRight: `1px solid ${C.border}`,
+        background: '#1a1a1e',
+        borderRight: `1px solid ${'#2a2a2f'}`,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -227,7 +264,7 @@ export function AdminDashboard() {
         {/* Sidebar header */}
         <div style={{
           padding: '20px 16px 16px',
-          borderBottom: `1px solid ${C.border}`,
+          borderBottom: `1px solid ${'#2a2a2f'}`,
           display: 'flex',
           alignItems: 'center',
           gap: 10,
@@ -242,10 +279,10 @@ export function AdminDashboard() {
             <span style={{ fontSize: 14 }}>✦</span>
           </div>
           <div>
-            <p style={{ fontFamily: C.font, fontWeight: 700, fontSize: 13, color: C.text, margin: 0, letterSpacing: '-0.01em' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 13, color: '#ffffff', margin: 0, letterSpacing: '-0.01em' }}>
               CMS Dashboard
             </p>
-            <p style={{ fontFamily: C.font, fontSize: 10.5, color: C.textSub, margin: '1px 0 0' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10.5, color: '#808086', margin: '1px 0 0' }}>
               Osama Tammam Portfolio
             </p>
           </div>
@@ -264,17 +301,17 @@ export function AdminDashboard() {
                   background: 'none', cursor: 'pointer', borderRadius: 0,
                 }}
               >
-                <span style={{ color: C.textSub }}>{group.icon}</span>
+                <span style={{ color: '#808086' }}>{group.icon}</span>
                 <span style={{
-                  fontFamily: C.font, fontWeight: 600, fontSize: 11,
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 11,
                   letterSpacing: '0.07em', textTransform: 'uppercase',
-                  color: C.textSub, flex: 1, textAlign: 'left',
+                  color: '#808086', flex: 1, textAlign: 'left',
                 }}>
                   {group.label}
                 </span>
                 <ChevronRight
                   size={12}
-                  color={C.textSub}
+                  color={'#808086'}
                   style={{
                     transform: expandedGroups.has(group.id) ? 'rotate(90deg)' : 'rotate(0deg)',
                     transition: 'transform 0.2s',
@@ -295,21 +332,21 @@ export function AdminDashboard() {
                         style={{
                           display: 'flex', alignItems: 'center', gap: 8,
                           width: '100%', padding: '8px 12px',
-                          background: isActive ? C.accentMuted : 'none',
-                          border: isActive ? `1px solid ${C.borderAccent}` : '1px solid transparent',
+                          background: isActive ? 'rgba(99, 102, 241, 0.1)' : 'none',
+                          border: isActive ? `1px solid ${'#6366f1'}` : '1px solid transparent',
                           borderRadius: 8, cursor: 'pointer', marginBottom: 2,
                         }}
                       >
                         <span style={{ fontSize: 13 }}>{item.icon}</span>
                         <span style={{
-                          fontFamily: C.font, fontSize: 12.5, fontWeight: isActive ? 600 : 400,
-                          color: isActive ? C.accentHover : C.textMuted,
+                          fontFamily: 'var(--font-body)', fontSize: 12.5, fontWeight: isActive ? 600 : 400,
+                          color: isActive ? '#a5b4fc' : '#a0a0a8',
                           flex: 1, textAlign: 'left',
                         }}>
                           {item.label}
                         </span>
                         {vis === false && (
-                          <EyeOff size={10} color={C.textSub} />
+                          <EyeOff size={10} color={'#808086'} />
                         )}
                       </button>
                     );
@@ -323,26 +360,22 @@ export function AdminDashboard() {
         {/* Sidebar footer */}
         <div style={{
           padding: '12px 16px',
-          borderTop: `1px solid ${C.border}`,
+          borderTop: `1px solid ${'#2a2a2f'}`,
           flexShrink: 0,
         }}>
-          <button
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-2 h-9"
             onClick={() => navigate('/')}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              width: '100%', padding: '9px 12px',
-              background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`,
-              borderRadius: 8, cursor: 'pointer',
-            }}
           >
-            <ArrowLeft size={13} color={C.textMuted} />
-            <span style={{ fontFamily: C.font, fontSize: 12.5, color: C.textMuted, fontWeight: 500 }}>
+            <ArrowLeft size={14} className="text-muted-foreground" />
+            <span className="font-medium text-muted-foreground">
               View Portfolio
             </span>
-          </button>
+          </Button>
 
           {draft?.updatedAt && (
-            <p style={{ fontFamily: C.font, fontSize: 10.5, color: C.textSub, marginTop: 8, textAlign: 'center' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10.5, color: '#808086', marginTop: 8, textAlign: 'center' }}>
               Last saved {new Date(draft.updatedAt).toLocaleString()}
             </p>
           )}
@@ -354,8 +387,8 @@ export function AdminDashboard() {
         {/* Top bar */}
         <header style={{
           height: 60,
-          background: C.sidebar,
-          borderBottom: `1px solid ${C.border}`,
+          background: '#1a1a1e',
+          borderBottom: `1px solid ${'#2a2a2f'}`,
           display: 'flex',
           alignItems: 'center',
           gap: 12,
@@ -366,7 +399,7 @@ export function AdminDashboard() {
             onClick={() => setSidebarOpen(o => !o)}
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              color: C.textMuted, display: 'flex', padding: 4, borderRadius: 6,
+              color: '#a0a0a8', display: 'flex', padding: 4, borderRadius: 6,
             }}
           >
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
@@ -374,9 +407,9 @@ export function AdminDashboard() {
 
           {/* Breadcrumb */}
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontFamily: C.font, fontSize: 13, color: C.textSub }}>CMS</span>
-            <ChevronRight size={12} color={C.textSub} />
-            <span style={{ fontFamily: C.font, fontSize: 13, fontWeight: 600, color: C.text }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#808086' }}>CMS</span>
+            <ChevronRight size={12} color={'#808086'} />
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, color: '#ffffff' }}>
               {getActiveSectionLabel(activeSection)}
             </span>
           </div>
@@ -386,24 +419,24 @@ export function AdminDashboard() {
             {/* Unsaved indicator */}
             {hasChanges && saveStatus === 'idle' && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: C.warning, display: 'inline-block' }} />
-                <span style={{ fontFamily: C.font, fontSize: 12, color: C.warning, fontWeight: 500 }}>
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#f59e0b', fontWeight: 500 }}>
                   Unsaved changes
                 </span>
               </div>
             )}
             {saveStatus === 'saved' && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <CheckCircle size={14} color={C.success} />
-                <span style={{ fontFamily: C.font, fontSize: 12, color: C.success, fontWeight: 500 }}>
+                <CheckCircle size={14} color={'#22c55e'} />
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#22c55e', fontWeight: 500 }}>
                   Changes saved
                 </span>
               </div>
             )}
             {saveStatus === 'error' && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <AlertCircle size={14} color={C.danger} />
-                <span style={{ fontFamily: C.font, fontSize: 12, color: C.danger, fontWeight: 500 }}>
+                <AlertCircle size={14} color={'#ef4444'} />
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#ef4444', fontWeight: 500 }}>
                   Save failed
                 </span>
               </div>
@@ -415,40 +448,31 @@ export function AdminDashboard() {
               disabled={loading}
               title="Reload from server"
               style={{
-                background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`,
+                background: 'rgba(255,255,255,0.04)', border: `1px solid ${'#2a2a2f'}`,
                 borderRadius: 8, padding: '7px', cursor: loading ? 'wait' : 'pointer',
-                color: C.textMuted, display: 'flex', alignItems: 'center',
+                color: '#a0a0a8', display: 'flex', alignItems: 'center',
               }}
             >
               <RefreshCw size={14} style={{ animation: loading ? 'spin 0.8s linear infinite' : 'none' }} />
             </button>
 
             {/* Save button */}
-            <button
+            <Button
               onClick={handleSave}
               disabled={!hasChanges || saveStatus === 'saving' || loading}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 7,
-                padding: '8px 16px', borderRadius: 8, cursor: (!hasChanges || saveStatus === 'saving') ? 'default' : 'pointer',
-                background: (!hasChanges || saveStatus === 'saving')
-                  ? 'rgba(255,255,255,0.06)'
-                  : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                border: (!hasChanges || saveStatus === 'saving')
-                  ? `1px solid ${C.border}`
-                  : '1px solid transparent',
-                color: (!hasChanges || saveStatus === 'saving') ? C.textSub : '#fff',
-                fontFamily: C.font, fontWeight: 600, fontSize: 13,
-                transition: 'all 0.2s',
-                boxShadow: (!hasChanges || saveStatus === 'saving') ? 'none' : '0 4px 14px rgba(99,102,241,0.35)',
-              }}
+              className={`gap-2 h-9 px-4 ${
+                (!hasChanges || saveStatus === 'saving') 
+                  ? 'bg-white/5 border border-border text-muted-foreground shadow-none'
+                  : 'bg-gradient-to-br from-brand to-[#8b5cf6] text-white shadow-card hover:shadow-card/80'
+              }`}
             >
               {saveStatus === 'saving' ? (
-                <Loader2 size={14} style={{ animation: 'spin 0.8s linear infinite' }} />
+                <Loader2 size={14} className="animate-spin" />
               ) : (
                 <Save size={14} />
               )}
               {saveStatus === 'saving' ? 'Saving…' : 'Save Changes'}
-            </button>
+            </Button>
           </div>
         </header>
 
@@ -457,12 +481,12 @@ export function AdminDashboard() {
           {/* Fetch error banner */}
           {fetchError && (
             <div style={{
-              background: C.dangerMuted, border: `1px solid rgba(239,68,68,0.25)`,
+              background: 'rgba(239, 68, 68, 0.1)', border: `1px solid rgba(239,68,68,0.25)`,
               borderRadius: 10, padding: '12px 16px', marginBottom: 20,
               display: 'flex', gap: 10, alignItems: 'center',
             }}>
-              <AlertCircle size={16} color={C.danger} />
-              <span style={{ fontFamily: C.font, fontSize: 13, color: C.danger }}>
+              <AlertCircle size={16} color={'#ef4444'} />
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#ef4444' }}>
                 Could not load data from server — showing defaults. {fetchError}
               </span>
             </div>
@@ -473,10 +497,10 @@ export function AdminDashboard() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, paddingTop: 80 }}>
               <div style={{
                 width: 36, height: 36, border: `3px solid rgba(99,102,241,0.2)`,
-                borderTopColor: C.accent, borderRadius: '50%',
+                borderTopColor: '#6366f1', borderRadius: '50%',
                 animation: 'spin 0.8s linear infinite',
               }} />
-              <span style={{ fontFamily: C.font, color: C.textMuted, fontSize: 14 }}>Loading CMS data…</span>
+              <span style={{ fontFamily: 'var(--font-body)', color: '#a0a0a8', fontSize: 14 }}>Loading CMS data…</span>
             </div>
           )}
 
@@ -511,7 +535,7 @@ export function AdminDashboard() {
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; background: ${C.bg}; }
+        body { margin: 0; padding: 0; background: ${'#0f0f12'}; }
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
@@ -526,6 +550,8 @@ function getActiveSectionLabel(id: string): string {
     'home-visibility': 'Section Visibility',
     'home-hero': 'Hero',
     'home-whyhireme': 'Why Hire Me',
+    'home-skills': 'Skills (Craft Engine)',
+    'home-tools': 'Tools',
     'home-portfolio': 'Portfolio Projects',
     'home-contact': 'Contact',
     'cs-1': 'Nexus Analytics Platform',
