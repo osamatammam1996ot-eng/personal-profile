@@ -1,16 +1,18 @@
+"use client";
+
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router';
+import { useRouter } from 'next/navigation';
 import {
   Save, CheckCircle, AlertCircle, Loader2, LayoutDashboard, FileText,
   Settings, ChevronRight, Eye, EyeOff, ArrowLeft, Menu, X, RefreshCw,
 } from 'lucide-react';
-import type { CmsData } from '../types/cms';
-import { DEFAULT_CMS_DATA } from '../types/cms';
-import { HomeEditor } from '../components/cms/editors/HomeEditor';
-import { CaseStudiesEditor } from '../components/cms/editors/CaseStudiesEditor';
-import { GlobalSettingsEditor } from '../components/cms/editors/GlobalSettingsEditor';
-import { Button } from '../components/ui/button';
-import { Login } from '../components/cms/Login';
+import type { CmsData } from '../../types/cms';
+import { DEFAULT_CMS_DATA } from '../../types/cms';
+import { HomeEditor } from '../../components/cms/editors/HomeEditor';
+import { CaseStudiesEditor } from '../../components/cms/editors/CaseStudiesEditor';
+import { GlobalSettingsEditor } from '../../components/cms/editors/GlobalSettingsEditor';
+import { Button } from '../../components/ui/button';
+import { Login } from '../../components/cms/Login';
 
 const API_BASE = '/api';
 
@@ -90,8 +92,8 @@ const NAV: NavSection[] = [
 // ─── Status type ──────────────────────────────────────────────────────────────
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
-export function AdminDashboard() {
-  const navigate = useNavigate();
+export default function AdminDashboard() {
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState('home-visibility');
   const [draft, setDraft] = useState<CmsData | null>(null);
   const [original, setOriginal] = useState<CmsData | null>(null);
@@ -100,7 +102,9 @@ export function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['home', 'casestudies', 'global']));
-  const [token, setToken] = useState<string | null>(localStorage.getItem('admin_token'));
+  const [token, setToken] = useState<string | null>(
+    typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null
+  );
 
   // Fetch CMS data
   const fetchData = useCallback(async () => {
@@ -383,7 +387,7 @@ export function AdminDashboard() {
           <Button
             variant="outline"
             className="w-full justify-start gap-2 h-9"
-            onClick={() => navigate('/')}
+            onClick={() => router.push('/')}
           >
             <ArrowLeft size={14} className="text-muted-foreground" />
             <span className="font-medium text-muted-foreground">

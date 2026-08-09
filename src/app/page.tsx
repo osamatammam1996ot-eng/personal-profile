@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Navigation } from '../components/layout/Navigation';
@@ -13,7 +15,7 @@ import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { CmsProvider, useCms } from '../contexts/CmsContext';
 import { ErrorBoundary } from '../components/layout/ErrorBoundary';
 
-function AppInner() {
+export default function Home() {
   const [isDark, setIsDark] = useState(true);
   const [cursor, setCursor] = useState({ visible: false, x: 0, y: 0 });
   const [caseStudy, setCaseStudy] = useState<{ id: number; title: string } | null>(null);
@@ -26,6 +28,30 @@ function AppInner() {
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'F12') {
+        e.preventDefault();
+      }
+      if (e.ctrlKey && e.shiftKey && ['i', 'I', 'j', 'J', 'c', 'C'].includes(e.key)) {
+        e.preventDefault();
+      }
+      if (e.ctrlKey && ['u', 'U', 's', 'S'].includes(e.key)) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isDark]);
 
   useEffect(() => {
@@ -131,17 +157,5 @@ function AppInner() {
         )}
       </AnimatePresence>
     </div>
-  );
-}
-
-export function PortfolioRoot() {
-  return (
-    <ErrorBoundary>
-      <LanguageProvider>
-        <CmsProvider>
-          <AppInner />
-        </CmsProvider>
-      </LanguageProvider>
-    </ErrorBoundary>
   );
 }

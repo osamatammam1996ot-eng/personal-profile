@@ -571,7 +571,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
               style={{ paddingBottom: '35%' }}
             >
               <img
-                src={imgPortrait}
+                src={typeof imgPortrait === 'string' ? imgPortrait : (imgPortrait as any).src}
                 alt="Osama Tammam"
                 style={{
                   position: 'absolute',

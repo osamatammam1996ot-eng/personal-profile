@@ -121,7 +121,7 @@ export function Hero({ isDark }: HeroProps) {
           <img
             src={dark
               ? "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnhtMHpidGVkY205d3l3MjVhZ3lxbHo1N3Y0M2tjMW1hNGZiZ3dmbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/xrYXNJcnSJkhB02STp/giphy.gif"
-              : lightAvatarImg
+              : typeof lightAvatarImg === 'string' ? lightAvatarImg : (lightAvatarImg as any).src
             }
             alt="Osama Tammam"
             style={dark
