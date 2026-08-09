@@ -25,7 +25,6 @@ type CmsContextType = {
 
 const CmsContext = createContext<CmsContextType | undefined>(undefined);
 
-const API_BASE = '/api';
 const STORAGE_KEY = 'cms:portfolio:v2:local';
 
 function clone<T>(value: T): T {
@@ -288,19 +287,14 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      const response = await fetch(`${API_BASE}/cms/data`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const { getCmsDataAction } = await import('@/app/actions/cms');
+      const response = await getCmsDataAction();
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+      if (response.error) {
+        throw new Error(response.error);
       }
 
-      const json = await response.json();
-      const data = json.data ?? DEFAULT_CMS_DATA;
+      const data = response.data ?? DEFAULT_CMS_DATA;
       const normalized = applyCmsData(data);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
     } catch (fetchError) {

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-const API_BASE = '/api';
+import { loginAction } from '@/app/actions/auth';
 
 interface LoginProps {
-  onLogin: (token: string) => void;
+  onLogin: () => void;
 }
 
 export function Login({ onLogin }: LoginProps) {
@@ -17,15 +17,10 @@ export function Login({ onLogin }: LoginProps) {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      });
-      const data = await res.json();
+      const data = await loginAction(password);
 
-      if (res.ok && data.success && data.token) {
-        onLogin(data.token);
+      if (data.success) {
+        onLogin();
       } else {
         setError(data.error || 'Invalid password');
       }

@@ -14,8 +14,6 @@ import { GlobalSettingsEditor } from '../../components/cms/editors/GlobalSetting
 import { Button } from '../../components/ui/button';
 import { Login } from '../../components/cms/Login';
 
-const API_BASE = '/api';
-
 // Deep-merge helper: ensures every key from `base` exists in the result,
 // filling in missing fields from DEFAULT_CMS_DATA.
 function mergeDeep<T>(base: T, override: any): T {
@@ -102,25 +100,25 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['home', 'casestudies', 'global']));
-  const [token, setToken] = useState<string | null>(
-    typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
+  useEffect(() => {
+    import('@/app/actions/auth').then(({ verifyAuthAction }) => {
+      verifyAuthAction().then(res => setIsAuthenticated(res));
+    });
+  }, []);
   // Fetch CMS data
   const fetchData = useCallback(async () => {
     setLoading(true);
     setFetchError(null);
     const STORAGE_KEY = 'cms:portfolio:v1:local';
     try {
-      const res = await fetch(`${API_BASE}/cms/data`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      const data: CmsData = normalizeCmsData(json.data ?? DEFAULT_CMS_DATA);
+      const { getCmsDataAction } = await import('@/app/actions/cms');
+      const response = await getCmsDataAction();
+      
+      if (response.error) throw new Error(response.error);
+      
+      const data: CmsData = normalizeCmsData(response.data ?? DEFAULT_CMS_DATA);
       setDraft(JSON.parse(JSON.stringify(data)));
       setOriginal(JSON.parse(JSON.stringify(data)));
       // Save to local storage
@@ -162,25 +160,20 @@ export default function AdminDashboard() {
     const STORAGE_KEY = 'cms:portfolio:v1:local';
     
     try {
-      const res = await fetch(`${API_BASE}/cms/data`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(draft),
-      });
-      if (!res.ok) {
-        if (res.status === 401 || res.status === 403) {
-          setToken(null);
-          localStorage.removeItem('admin_token');
+      const { saveCmsDataAction } = await import('@/app/actions/cms');
+      const response = await saveCmsDataAction(draft);
+
+      if (response.error) {
+        if (response.error === 'Unauthorized') {
+          const { logoutAction } = await import('@/app/actions/auth');
+          await logoutAction();
+          setIsAuthenticated(false);
           throw new Error('Session expired. Please log in again.');
         }
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error ?? `HTTP ${res.status}`);
+        throw new Error(response.error);
       }
-      const json = await res.json();
-      const saved = { ...draft, updatedAt: json.updatedAt };
+
+      const saved = { ...draft, updatedAt: response.updatedAt };
       setOriginal(JSON.parse(JSON.stringify(saved)));
       setDraft(JSON.parse(JSON.stringify(saved)));
       // Also save to local storage as backup
@@ -253,13 +246,18 @@ export default function AdminDashboard() {
     return match ? parseInt(match[1]) : 1;
   };
 
-  const handleLogout = () => {
-    setToken(null);
-    localStorage.removeItem('admin_token');
+  const handleLogout = async () => {
+    const { logoutAction } = await import('@/app/actions/auth');
+    await logoutAction();
+    setIsAuthenticated(false);
   };
 
-  if (!token) {
-    return <Login onLogin={(t: any) => { setToken(t); localStorage.setItem('admin_token', t); }} />;
+  if (isAuthenticated === null) {
+    return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f0f12', color: 'white' }}>Checking authentication...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
   }
 
   return (
