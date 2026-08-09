@@ -87,7 +87,7 @@ export default function Home() {
   return (
     <div
       dir={isRTL ? 'rtl' : 'ltr'}
-      className="min-h-screen bg-surface transition-colors duration-400"
+      className="min-h-screen bg-surface transition-colors duration-400 overflow-clip"
       style={{
         
         cursor: cursor.visible ? 'none' : 'default',

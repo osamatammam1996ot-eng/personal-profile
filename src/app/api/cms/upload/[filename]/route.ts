@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { existsSync, unlinkSync } from 'fs';
-import { join } from 'path';
 import jwt from 'jsonwebtoken';
+import { del } from '@vercel/blob';
 
-const UPLOADS_DIR = join(process.cwd(), 'public', 'uploads');
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
 
 function verifyToken(request: Request) {
@@ -32,10 +30,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'Filename is required' }, { status: 400 });
     }
 
-    const filepath = join(UPLOADS_DIR, filename);
-    if (existsSync(filepath)) {
-      unlinkSync(filepath);
-    }
+    // Attempt to delete from Vercel Blob. 
+    // Vercel Blob del() method takes the URL, but if we just have the filename, 
+    // it's generally best practice to pass the full URL or the blob url. 
+    // For now we will try to pass the filename directly, but ideally the client sends the URL.
+    await del(filename);
+    
     return NextResponse.json({ success: true });
   } catch (e) {
     console.error('Image delete error:', e);

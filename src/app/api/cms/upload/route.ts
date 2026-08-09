@@ -1,15 +1,8 @@
 import { NextResponse } from 'next/server';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
 import jwt from 'jsonwebtoken';
+import { put } from '@vercel/blob';
 
-const UPLOADS_DIR = join(process.cwd(), 'public', 'uploads');
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
-
-// Ensure uploads directory exists inside public/ for Next.js to serve it
-if (!existsSync(UPLOADS_DIR)) {
-  mkdirSync(UPLOADS_DIR, { recursive: true });
-}
 
 function verifyToken(request: Request) {
   const authHeader = request.headers.get('authorization');
@@ -36,17 +29,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
     const safeName = `cms-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
-    const filepath = join(UPLOADS_DIR, safeName);
     
-    writeFileSync(filepath, buffer);
-    const publicUrl = `/uploads/${safeName}`;
+    const blob = await put(safeName, file, { access: 'public' });
 
-    return NextResponse.json({ url: publicUrl, filename: safeName });
+    return NextResponse.json({ url: blob.url, filename: safeName });
   } catch (e) {
     console.error('Image upload error:', e);
     return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
