@@ -17,6 +17,12 @@ function verifyToken(request: Request) {
 
 export async function GET() {
   try {
+    // If KV variables are missing (e.g., local dev without linking Vercel), gracefully return null
+    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+      console.warn('Vercel KV not configured locally. Using default data.');
+      return NextResponse.json({ data: null });
+    }
+
     const raw = await kv.get('cms_data');
     if (!raw) {
       return NextResponse.json({ data: null });
@@ -38,6 +44,12 @@ export async function PUT(request: Request) {
   try {
     const body = await request.json();
     body.updatedAt = new Date().toISOString();
+
+    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+      console.warn('Vercel KV not configured locally. Saving skipped.');
+      return NextResponse.json({ success: true, updatedAt: body.updatedAt, warning: 'Saved locally only' });
+    }
+
     await kv.set('cms_data', body);
     return NextResponse.json({ success: true, updatedAt: body.updatedAt });
   } catch (e) {
