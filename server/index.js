@@ -4,9 +4,18 @@ import multer from 'multer';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, unlinkSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import rateLimit from 'express-rate-limit';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+dotenv.config({ path: join(__dirname, '../.env.local') });
+
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey';
 
 const app = express();
 const PORT = 3001;
@@ -72,6 +81,48 @@ function writeCmsData(data) {
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
+// ─── Authentication ───────────────────────────────────────────────────────────
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 login requests per windowMs
+  message: { error: 'Too many login attempts, please try again after 15 minutes' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.post('/api/auth/login', loginLimiter, async (req, res) => {
+  const { password } = req.body;
+  
+  if (!password || !ADMIN_PASSWORD_HASH) {
+    return res.status(401).json({ error: 'Invalid password or configuration missing' });
+  }
+
+  try {
+    const match = await bcrypt.compare(password, ADMIN_PASSWORD_HASH);
+    if (match) {
+      const token = jwt.sign({ role: 'admin' }, JWT_SECRET, { expiresIn: '24h' });
+      res.json({ success: true, token });
+    } else {
+      res.status(401).json({ error: 'Invalid password' });
+    }
+  } catch (err) {
+    console.error('Bcrypt error:', err);
+    res.status(500).json({ error: 'Internal server error during login' });
+  }
+});
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'Forbidden' });
+    req.user = user;
+    next();
+  });
+}
+
 // ─── API Routes ───────────────────────────────────────────────────────────────
 
 // Health check
@@ -91,7 +142,7 @@ app.get('/api/cms/data', (_req, res) => {
 });
 
 // PUT CMS data
-app.put('/api/cms/data', (req, res) => {
+app.put('/api/cms/data', authenticateToken, (req, res) => {
   try {
     const body = req.body;
     body.updatedAt = new Date().toISOString();
@@ -105,7 +156,7 @@ app.put('/api/cms/data', (req, res) => {
 });
 
 // POST upload image
-app.post('/api/cms/upload', upload.single('file'), (req, res) => {
+app.post('/api/cms/upload', authenticateToken, upload.single('file'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file provided in form data' });
@@ -120,7 +171,7 @@ app.post('/api/cms/upload', upload.single('file'), (req, res) => {
 });
 
 // DELETE uploaded image
-app.delete('/api/cms/upload/:filename', (req, res) => {
+app.delete('/api/cms/upload/:filename', authenticateToken, (req, res) => {
   try {
     const filepath = join(UPLOADS_DIR, req.params.filename);
     if (existsSync(filepath)) {

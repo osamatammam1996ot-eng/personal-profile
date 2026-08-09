@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Sun, Moon, Menu, X, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useLanguage } from '../contexts/LanguageContext';
-import { useCms } from '../contexts/CmsContext';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useCms } from '../../contexts/CmsContext';
 
 interface NavigationProps {
   isDark: boolean;

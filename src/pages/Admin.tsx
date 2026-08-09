@@ -4,12 +4,13 @@ import {
   Save, CheckCircle, AlertCircle, Loader2, LayoutDashboard, FileText,
   Settings, ChevronRight, Eye, EyeOff, ArrowLeft, Menu, X, RefreshCw,
 } from 'lucide-react';
-import type { CmsData } from '../../types/cms';
-import { DEFAULT_CMS_DATA } from '../../types/cms';
-import { HomeEditor } from './HomeEditor';
-import { CaseStudiesEditor } from './CaseStudiesEditor';
-import { GlobalSettingsEditor } from './GlobalSettingsEditor';
-import { Button } from '../ui/button';
+import type { CmsData } from '../types/cms';
+import { DEFAULT_CMS_DATA } from '../types/cms';
+import { HomeEditor } from '../components/cms/editors/HomeEditor';
+import { CaseStudiesEditor } from '../components/cms/editors/CaseStudiesEditor';
+import { GlobalSettingsEditor } from '../components/cms/editors/GlobalSettingsEditor';
+import { Button } from '../components/ui/button';
+import { Login } from '../components/cms/Login';
 
 const API_BASE = '/api';
 
@@ -99,6 +100,7 @@ export function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['home', 'casestudies', 'global']));
+  const [token, setToken] = useState<string | null>(localStorage.getItem('admin_token'));
 
   // Fetch CMS data
   const fetchData = useCallback(async () => {
@@ -160,10 +162,16 @@ export function AdminDashboard() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(draft),
       });
       if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          setToken(null);
+          localStorage.removeItem('admin_token');
+          throw new Error('Session expired. Please log in again.');
+        }
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error ?? `HTTP ${res.status}`);
       }
@@ -240,6 +248,15 @@ export function AdminDashboard() {
     const match = activeSection.match(/^cs-(\d+)$/);
     return match ? parseInt(match[1]) : 1;
   };
+
+  const handleLogout = () => {
+    setToken(null);
+    localStorage.removeItem('admin_token');
+  };
+
+  if (!token) {
+    return <Login onLogin={(t: any) => { setToken(t); localStorage.setItem('admin_token', t); }} />;
+  }
 
   return (
     <div style={{
@@ -372,6 +389,14 @@ export function AdminDashboard() {
             <span className="font-medium text-muted-foreground">
               View Portfolio
             </span>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-2 h-9 mt-2 text-red-400 hover:text-red-300 hover:bg-red-950/20"
+            onClick={handleLogout}
+          >
+            <span className="font-medium">Logout</span>
           </Button>
 
           {draft?.updatedAt && (

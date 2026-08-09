@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ArrowLeft, ArrowUpRight, ChevronRight, Play, Maximize2, ZoomIn } from 'lucide-react';
 import { DecorativeShape } from './DecorativeShape';
-import { useCms } from '../contexts/CmsContext';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useCms } from '../../contexts/CmsContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface CaseStudyProps {
   projectId: number;

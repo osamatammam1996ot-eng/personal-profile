@@ -1,5 +1,5 @@
-import { useLanguage } from '../contexts/LanguageContext';
-import { useCms } from '../contexts/CmsContext';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useCms } from '../../contexts/CmsContext';
 
 interface FooterProps {
   isDark: boolean;
@@ -41,7 +41,7 @@ export function Footer({ isDark }: FooterProps) {
 
         {/* Right */}
         <nav className="flex items-center gap-1">
-          {(cmsData.footer.links[lang] || (lang === 'en' ? ['Home', 'Work', 'About', 'Contact'] : ['الرئيسية', 'الأعمال', 'عني', 'تواصل'])).map((label, i) => (
+          {(cmsData.footer.links[lang] || (lang === 'en' ? ['Home', 'Work', 'About', 'Contact'] : ['الرئيسية', 'الأعمال', 'عني', 'تواصل'])).map((label: any, i: number) => (
             <button
               key={LINK_HREFS[i]}
               onClick={() => scrollTo(LINK_HREFS[i])}

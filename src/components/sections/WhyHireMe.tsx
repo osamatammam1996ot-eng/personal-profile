@@ -2,10 +2,10 @@ import { useRef, useCallback, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'motion/react';
 import svgPaths from '../../imports/svg-nh6weynufu';
 import imgPortrait from '../../assets/e31509a0541824cfeda89ddabf83753388778df0.png';
-import { useLanguage } from '../contexts/LanguageContext';
-import { useCms } from '../contexts/CmsContext';
-import { DecorativeShape } from './DecorativeShape';
-import { Button } from './ui/button';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useCms } from '../../contexts/CmsContext';
+import { DecorativeShape } from '../shared/DecorativeShape';
+import { Button } from '../ui/button';
 
 interface WhyHireMeProps {
   isDark: boolean;

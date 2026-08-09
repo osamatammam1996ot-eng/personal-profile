@@ -8,9 +8,10 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { motion, AnimatePresence } from 'motion/react';
-import { useLanguage } from '../contexts/LanguageContext';
-import { useCms } from '../contexts/CmsContext';
-import { DecorativeShape } from './DecorativeShape';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useCms } from '../../contexts/CmsContext';
+import { DecorativeShape } from '../shared/DecorativeShape';
+import type { CmsToolItem } from '../../types/cms';
 
 interface ToolsProps { isDark?: boolean; }
 
@@ -109,7 +110,7 @@ function useDustCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>, isD
 }
 
 /* ─── Face sprite builder ───────────────────────────────────────────────────── */
-function makeFaceSprite(tool: typeof TOOLS[0]): THREE.Sprite {
+function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar'): THREE.Sprite {
   const SZ = 256;
   const cv = document.createElement('canvas');
   cv.width = SZ; cv.height = SZ;
@@ -149,7 +150,7 @@ function makeFaceSprite(tool: typeof TOOLS[0]): THREE.Sprite {
 
   cx.font = '400 14px "Inter",Arial,sans-serif';
   cx.fillStyle = 'rgba(136,146,170,.8)';
-  cx.fillText(tool.cat, 128, 188);
+  cx.fillText(tool.cat[lang] || tool.cat.en, 128, 188);
 
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({
     map: new THREE.CanvasTexture(cv),
@@ -176,6 +177,9 @@ function rotForFace(i: number): { rx: number; ry: number } {
 
 /* ─── Main component ─────────────────────────────────────────────────────────── */
 export function Tools({ isDark = false }: ToolsProps) {
+  const { lang } = useLanguage();
+  const { cmsData } = useCms();
+  const TOOLS = cmsData.tools.toolsList || [];
   const dustRef      = useRef<HTMLCanvasElement>(null);
   const glRef        = useRef<HTMLCanvasElement>(null);
   const wrapRef      = useRef<HTMLDivElement>(null);
@@ -265,7 +269,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         new THREE.Vector3(nx, ny, nz),
       );
       grp.quaternion.copy(quat);
-      const sp = makeFaceSprite(TOOLS[fi]);
+      const sp = makeFaceSprite(TOOLS[fi], lang);
       sp.position.set(0, 0, 0.018);
       grp.add(sp);
       PANELS.push({ sprite: sp, grp, idx: fi });
@@ -277,7 +281,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         old.material.map?.dispose();
         old.material.dispose();
         PANELS[fi].grp.remove(old);
-        const sp = makeFaceSprite(TOOLS[fi]);
+        const sp = makeFaceSprite(TOOLS[fi], lang);
         sp.position.set(0, 0, 0.018);
         PANELS[fi].grp.add(sp);
         PANELS[fi].sprite = sp;
@@ -454,12 +458,12 @@ export function Tools({ isDark = false }: ToolsProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, [prev, next]);
 
-  const tool = TOOLS[activeIdx];
-  const pct  = SKILL_LEVELS[tool.name] ?? 80;
+  const tool = TOOLS[activeIdx] || { name: 'Figma', abbr: 'Fi', cat: { en: 'Design', ar: 'تصميم' }, desc: { en: '', ar: '' }, tags: { en: [], ar: [] }, rgb: [0.62,0.28,1], glow: '#a855f7', proficiency: 98 };
+  const pct  = tool.proficiency ?? 50;
 
   /* ─── Theme tokens (matching Skills.tsx and rest of site) ────────────────── */
-  const { fontHeading, fontBody, isRTL, lang } = useLanguage();
-  const { cmsData } = useCms();
+  const { fontHeading, fontBody, isRTL } = useLanguage();
+
   
   // Static tool data - no CMS
   const toolNames = ['Figma', 'Framer', 'Midjourney', 'ChatGPT', 'Advanced', 'Lottie', 'Webflow', 'Design', 'Prototyping', 'Delivery', 'Systems', 'Workflows'];
@@ -673,13 +677,13 @@ export function Tools({ isDark = false }: ToolsProps) {
                 fontSize: '0.65rem', letterSpacing: '0.10em', textTransform: 'uppercase',
                 color: mutedC, marginBottom: 10,
               }}>
-                {toolI18n.cat}
+                {(tool.cat?.[lang] || tool.cat?.en)}
               </div>
               <div style={{
                 fontSize: '0.75rem', lineHeight: 1.65,
                 color: bodyC, marginBottom: 12,
               }}>
-                {toolI18n.desc}
+                {(tool.desc?.[lang] || tool.desc?.en)}
               </div>
 
               {/* skill bar */}
@@ -719,7 +723,7 @@ export function Tools({ isDark = false }: ToolsProps) {
               </div>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                {tool.tags.map(tag => (
+                {(tool.tags?.[lang] || tool.tags?.en || []).map(tag => (
                   <span key={tag} style={{
                     fontSize: '0.6rem', fontWeight: 500, padding: '3px 8px', borderRadius: 100,
                     background: tagBg, color: tagC,
@@ -774,12 +778,12 @@ export function Tools({ isDark = false }: ToolsProps) {
                     fontSize: '0.6rem', letterSpacing: '0.10em',
                     textTransform: 'uppercase', color: mutedC, marginTop: 2,
                   }}>
-                    {toolI18n.cat}
+                    {(tool.cat?.[lang] || tool.cat?.en)}
                   </div>
                 </div>
               </div>
               <div style={{ fontSize: '0.75rem', lineHeight: 1.65, color: bodyC, marginBottom: 10 }}>
-                {toolI18n.desc}
+                {(tool.desc?.[lang] || tool.desc?.en)}
               </div>
               {/* skill bar mobile */}
               <div style={{ marginBottom: 10 }}>
@@ -805,7 +809,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                 </div>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                {tool.tags.map(tag => (
+                {(tool.tags?.[lang] || tool.tags?.en || []).map(tag => (
                   <span key={tag} style={{
                     fontSize: '0.6rem', fontWeight: 500, padding: '3px 8px', borderRadius: 100,
                     background: tagBg, color: tagC, border: `1px solid ${tagBd}`,
@@ -828,7 +832,7 @@ export function Tools({ isDark = false }: ToolsProps) {
 
         {/* dots */}
         <div style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
-          {TOOLS.map((t, i) => (
+          {TOOLS.map((t: any, i: number) => (
             <button
               key={t.name}
               onClick={() => goTo(i)}

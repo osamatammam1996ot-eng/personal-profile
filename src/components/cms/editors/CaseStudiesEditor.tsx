@@ -1,39 +1,14 @@
 import { useState } from 'react';
-import { Button } from '../ui/button';
-import type { CmsData } from '../../types/cms';
+import { Button } from '../../ui/button';
+import type { CmsData } from '../../../types/cms';
 import { Trash2, Plus } from 'lucide-react';
 
+import { cardClasses, inputClasses, labelClasses } from '../../../components/cms/shared/BilingualField';
 interface CaseStudiesEditorProps {
   draft: CmsData;
   updateDraft: (updater: (prev: CmsData) => CmsData) => void;
   activeCsId: number;
 }
-
-const cardStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.03)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 12,
-  padding: 16,
-  marginBottom: 16,
-};
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  borderRadius: 8,
-  border: '1px solid rgba(255,255,255,0.18)',
-  background: 'rgba(0,0,0,0.2)',
-  color: '#fff',
-  padding: '10px 12px',
-  fontSize: 13,
-};
-
-const labelStyle: React.CSSProperties = {
-  fontSize: 12,
-  fontWeight: 600,
-  color: '#c7c7d0',
-  marginBottom: 6,
-  display: 'block',
-};
 
 const tabStyle = (active: boolean): React.CSSProperties => ({
   padding: '8px 16px',
@@ -59,7 +34,7 @@ type FieldDef =
 export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudiesEditorProps) {
   const [activeTab, setActiveTab] = useState('basic');
 
-  const index = draft.caseStudies.findIndex((item) => item.id === activeCsId);
+  const index = draft.caseStudies.findIndex((item: any) => item.id === activeCsId);
   const rawCaseStudy = draft.caseStudies[index];
 
   const caseStudy = {
@@ -94,7 +69,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
   const updateCaseStudy = (updater: (value: typeof caseStudy) => typeof caseStudy) => {
     updateDraft((prev) => {
       const caseStudies = [...prev.caseStudies];
-      const currentIndex = caseStudies.findIndex((item) => item.id === activeCsId);
+      const currentIndex = caseStudies.findIndex((item: any) => item.id === activeCsId);
       if (currentIndex >= 0) {
         caseStudies[currentIndex] = updater(caseStudies[currentIndex] as typeof caseStudy);
       } else {
@@ -139,18 +114,18 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
     return (
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
         <div>
-          <label style={labelStyle}>{label} (EN)</label>
+          <label className={labelClasses}>{label} (EN)</label>
           <InputType
-            style={inputStyle}
+            className={inputClasses}
             rows={isTextArea ? 3 : undefined}
             value={getValue('en')}
             onChange={(e: any) => updateValue('en', e.target.value)}
           />
         </div>
         <div>
-          <label style={labelStyle}>{label} (AR)</label>
+          <label className={labelClasses}>{label} (AR)</label>
           <InputType
-            style={inputStyle}
+            className={inputClasses}
             dir="rtl"
             rows={isTextArea ? 3 : undefined}
             value={getValue('ar')}
@@ -264,9 +239,9 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
                   if (field.type === 'string') {
                     return (
                       <div key={field.key}>
-                        <label style={labelStyle}>{field.label}</label>
+                        <label className={labelClasses}>{field.label}</label>
                         <input
-                          style={inputStyle}
+                          className={inputClasses}
                           value={item[field.key] || ''}
                           onChange={e => handleUpdateItem(idx, field.key, 'flat', e.target.value)}
                         />
@@ -276,9 +251,9 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
                   if (field.type === 'select') {
                     return (
                       <div key={field.key}>
-                        <label style={labelStyle}>{field.label}</label>
+                        <label className={labelClasses}>{field.label}</label>
                         <select
-                          style={inputStyle}
+                          className={inputClasses}
                           value={item[field.key] || ''}
                           onChange={e => handleUpdateItem(idx, field.key, 'flat', e.target.value)}
                         >
@@ -292,17 +267,17 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
                     const InputType = field.type === 'bilingual-textarea' ? 'textarea' as any : 'input';
                     return (
                       <div key={field.key}>
-                        <label style={labelStyle}>{field.label}</label>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                        <label className={labelClasses}>{field.label}</label>
+                        <div className="grid grid-cols-2 gap-2.5">
                           <InputType
-                            style={inputStyle}
+                            className={inputClasses}
                             rows={field.type === 'bilingual-textarea' ? 3 : undefined}
                             placeholder="English"
                             value={item[field.key]?.en || ''}
                             onChange={(e: any) => handleUpdateItem(idx, field.key, 'en', e.target.value)}
                           />
                           <InputType
-                            style={inputStyle}
+                            className={inputClasses}
                             dir="rtl"
                             rows={field.type === 'bilingual-textarea' ? 3 : undefined}
                             placeholder="Arabic"
@@ -316,16 +291,16 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
                   if (field.type === 'bilingual-array') {
                     return (
                       <div key={field.key}>
-                        <label style={labelStyle}>{field.label} (Comma separated)</label>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                        <label className={labelClasses}>{field.label} (Comma separated)</label>
+                        <div className="grid grid-cols-2 gap-2.5">
                           <input
-                            style={inputStyle}
+                            className={inputClasses}
                             placeholder="English"
                             value={(item[field.key]?.en || []).join(', ')}
                             onChange={(e: any) => handleUpdateItem(idx, field.key, 'en', e.target.value.split(',').map((s: string) => s.trim()))}
                           />
                           <input
-                            style={inputStyle}
+                            className={inputClasses}
                             dir="rtl"
                             placeholder="Arabic"
                             value={(item[field.key]?.ar || []).join(', ')}
@@ -346,8 +321,8 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
   };
 
   return (
-    <div style={{ display: 'grid', gap: 12 }}>
-      <h2 style={{ color: '#fff', marginTop: 0 }}>Case Study {activeCsId}</h2>
+    <div className="grid gap-3">
+      <h2 className="text-white mt-0">Case Study {activeCsId}</h2>
       
       <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8 }}>
         {TABS.map(t => (
@@ -357,7 +332,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
         ))}
       </div>
 
-      <div style={cardStyle}>
+      <div className={cardClasses}>
         <label style={{ color: '#d3d3dc', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
           <input
             type="checkbox"
@@ -369,14 +344,14 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
       </div>
 
       {activeTab === 'basic' && (
-        <div style={cardStyle}>
+        <div className={cardClasses}>
           {renderBilingualField('Title', ['title'])}
           {renderBilingualField('Tagline', ['tagline'], true)}
           <div style={{ marginBottom: 16 }}>
-            <label style={labelStyle}>Hero Image URL (Recommended: 16:9)</label>
-            <input style={inputStyle} value={caseStudy.heroImage} onChange={e => updateCaseStudy(c => ({...c, heroImage: e.target.value}))} />
+            <label className={labelClasses}>Hero Image URL (Recommended: 16:9)</label>
+            <input className={inputClasses} value={caseStudy.heroImage} onChange={e => updateCaseStudy(c => ({...c, heroImage: e.target.value}))} />
           </div>
-          <p style={{ margin: '20px 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Meta Information</p>
+          <p className="m-0 mt-5 mb-2.5 text-white font-bold text-[13px]">Meta Information</p>
           {renderBilingualField('Role', ['meta', 'role'])}
           {renderBilingualField('Timeline', ['meta', 'timeline'])}
           {renderBilingualField('Team', ['meta', 'team'])}
@@ -385,16 +360,16 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
       )}
 
       {activeTab === 'problem' && (
-        <div style={cardStyle}>
-          <p style={{ margin: '0 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Problem Narrative</p>
+        <div className={cardClasses}>
+          <p className="m-0 mb-2.5 text-white font-bold text-[13px]">Problem Narrative</p>
           {renderBilingualField('Narrative', ['problem', 'narrative'], true)}
           
-          <p style={{ margin: '20px 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Research Methods</p>
+          <p className="m-0 mt-5 mb-2.5 text-white font-bold text-[13px]">Research Methods</p>
           <div style={{ marginBottom: 16 }}>
-            <label style={labelStyle}>Methods (comma separated) (EN/AR)</label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              <input style={inputStyle} value={(caseStudy.research?.methods?.en || []).join(', ')} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.research) c2.research={}; if(!c2.research.methods) c2.research.methods={}; c2.research.methods.en = e.target.value.split(',').map((s: string)=>s.trim()); return c2; })} />
-              <input style={inputStyle} dir="rtl" value={(caseStudy.research?.methods?.ar || []).join(', ')} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.research) c2.research={}; if(!c2.research.methods) c2.research.methods={}; c2.research.methods.ar = e.target.value.split(',').map((s: string)=>s.trim()); return c2; })} />
+            <label className={labelClasses}>Methods (comma separated) (EN/AR)</label>
+            <div className="grid grid-cols-2 gap-2.5">
+              <input className={inputClasses} value={(caseStudy.research?.methods?.en || []).join(', ')} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.research) c2.research={}; if(!c2.research.methods) c2.research.methods={}; c2.research.methods.en = e.target.value.split(',').map((s: string)=>s.trim()); return c2; })} />
+              <input className={inputClasses} dir="rtl" value={(caseStudy.research?.methods?.ar || []).join(', ')} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.research) c2.research={}; if(!c2.research.methods) c2.research.methods={}; c2.research.methods.ar = e.target.value.split(',').map((s: string)=>s.trim()); return c2; })} />
             </div>
           </div>
           
@@ -414,7 +389,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
       )}
 
       {activeTab === 'process' && (
-        <div style={cardStyle}>
+        <div className={cardClasses}>
           {renderArrayEditor('Process Steps', 'Steps taken during design/development.', ['process', 'steps'], [
             { type: 'string', key: 'phase', label: 'Phase (e.g. Discovery, Ideation)' },
             { type: 'bilingual', key: 'title', label: 'Step Title' },
@@ -429,7 +404,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
       )}
 
       {activeTab === 'solution' && (
-        <div style={cardStyle}>
+        <div className={cardClasses}>
           {renderArrayEditor('Solution Screens', 'Showcase major screens of the final product.', ['solution', 'screens'], [
             { type: 'bilingual', key: 'title', label: 'Screen Title' },
             { type: 'bilingual-textarea', key: 'desc', label: 'Description' },
@@ -439,18 +414,18 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
           ])}
           
           <div style={{ marginTop: 32, paddingTop: 32, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-            <p style={{ margin: '0 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Video Walkthrough</p>
+            <p className="m-0 mb-2.5 text-white font-bold text-[13px]">Video Walkthrough</p>
             <div style={{ marginBottom: 16 }}>
-              <label style={labelStyle}>MP4 Video URL (Recommended: 16:9)</label>
-              <input style={inputStyle} value={caseStudy.video?.url || ''} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.video) c2.video={}; c2.video.url = e.target.value; return c2; })} placeholder="https://example.com/video.mp4" />
+              <label className={labelClasses}>MP4 Video URL (Recommended: 16:9)</label>
+              <input className={inputClasses} value={caseStudy.video?.url || ''} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.video) c2.video={}; c2.video.url = e.target.value; return c2; })} placeholder="https://example.com/video.mp4" />
             </div>
             <div style={{ marginBottom: 16 }}>
-              <label style={labelStyle}>OR YouTube ID</label>
-              <input style={inputStyle} value={caseStudy.video?.youtubeId || ''} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.video) c2.video={}; c2.video.youtubeId = e.target.value; return c2; })} />
+              <label className={labelClasses}>OR YouTube ID</label>
+              <input className={inputClasses} value={caseStudy.video?.youtubeId || ''} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.video) c2.video={}; c2.video.youtubeId = e.target.value; return c2; })} />
             </div>
             <div style={{ marginBottom: 16 }}>
-              <label style={labelStyle}>Video Duration (e.g. 2:45)</label>
-              <input style={inputStyle} value={caseStudy.video?.duration || ''} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.video) c2.video={}; c2.video.duration = e.target.value; return c2; })} />
+              <label className={labelClasses}>Video Duration (e.g. 2:45)</label>
+              <input className={inputClasses} value={caseStudy.video?.duration || ''} onChange={e => updateCaseStudy(c => { const c2 = JSON.parse(JSON.stringify(c)); if(!c2.video) c2.video={}; c2.video.duration = e.target.value; return c2; })} />
             </div>
             {renderBilingualField('Video Title', ['video', 'title'])}
           </div>
@@ -466,24 +441,24 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
       )}
 
       {activeTab === 'results' && (
-        <div style={cardStyle}>
+        <div className={cardClasses}>
           {renderArrayEditor('Results Metrics', 'Quantifiable outcomes.', ['results', 'metrics'], [
             { type: 'string', key: 'value', label: 'Value (e.g. +40%)' },
             { type: 'bilingual', key: 'label', label: 'Metric Label' },
             { type: 'bilingual', key: 'sub', label: 'Subtext / Context' }
           ])}
-          <p style={{ margin: '20px 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Testimonial Quote</p>
+          <p className="m-0 mt-5 mb-2.5 text-white font-bold text-[13px]">Testimonial Quote</p>
           {renderBilingualField('Quote Text', ['results', 'quote', 'text'], true)}
           {renderBilingualField('Author', ['results', 'quote', 'author'])}
           {renderBilingualField('Role', ['results', 'quote', 'role'])}
 
-          <p style={{ margin: '20px 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Reflection</p>
+          <p className="m-0 mt-5 mb-2.5 text-white font-bold text-[13px]">Reflection</p>
           {renderBilingualField('Summary', ['reflection', 'summary'], true)}
         </div>
       )}
 
       {activeTab === 'settings' && (
-        <div style={cardStyle}>
+        <div className={cardClasses}>
           <p style={{ margin: '0 0 16px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Section Visibility</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 32 }}>
             <div>

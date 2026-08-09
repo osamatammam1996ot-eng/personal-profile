@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { HexGrid } from './HexGrid';
+import { HexGrid } from '../shared/HexGrid';
 import { ArrowRight, Mail } from 'lucide-react';
 import avatarImg from '../../assets/2d14d34cc2c291f0d8b60d9b13506b1995d59f5f.png';
 import lightAvatarImg from '../../assets/ef9cb82bf32c8b9e3dfe70e9c1705569056e55ee.png';
-import { useLanguage } from '../contexts/LanguageContext';
-import { useCms } from '../contexts/CmsContext';
-import { Button } from './ui/button';
-import { DecorativeShape } from './DecorativeShape';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useCms } from '../../contexts/CmsContext';
+import { Button } from '../ui/button';
+import { DecorativeShape } from '../shared/DecorativeShape';
 
 interface HeroProps {
   isDark: boolean;

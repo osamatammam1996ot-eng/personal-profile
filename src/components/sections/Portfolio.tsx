@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
-import { DecorativeShape } from './DecorativeShape';
-import { useLanguage } from '../contexts/LanguageContext';
-import { useCms } from '../contexts/CmsContext';
+import { DecorativeShape } from '../shared/DecorativeShape';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useCms } from '../../contexts/CmsContext';
 
 interface PortfolioProps {
   isDark: boolean;

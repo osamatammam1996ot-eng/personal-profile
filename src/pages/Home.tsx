@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Navigation } from './Navigation';
-import { Hero } from './Hero';
-import { WhyHireMe } from './WhyHireMe';
-import { Skills } from './Skills';
-import { Portfolio } from './Portfolio';
-import { Tools } from './Tools';
-import { Contact } from './Contact';
-import { Footer } from './Footer';
-import { CaseStudy } from './CaseStudy';
+import { Navigation } from '../components/layout/Navigation';
+import { Hero } from '../components/sections/Hero';
+import { WhyHireMe } from '../components/sections/WhyHireMe';
+import { Skills } from '../components/sections/Skills';
+import { Portfolio } from '../components/sections/Portfolio';
+import { Tools } from '../components/sections/Tools';
+import { Contact } from '../components/sections/Contact';
+import { Footer } from '../components/layout/Footer';
+import { CaseStudy } from '../components/shared/CaseStudy';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { CmsProvider, useCms } from '../contexts/CmsContext';
-import { ErrorBoundary } from './ErrorBoundary';
+import { ErrorBoundary } from '../components/layout/ErrorBoundary';
 
 function AppInner() {
   const [isDark, setIsDark] = useState(true);

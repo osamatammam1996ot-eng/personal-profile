@@ -1,89 +1,12 @@
-import type { CmsData } from '../../types/cms';
+import type { CmsData } from '../../../types/cms';
 import { useState } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
+import { BilingualField, splitComma, cardClasses, inputClasses, labelClasses } from '../../../components/cms/shared/BilingualField';
 
 interface HomeEditorProps {
   draft: CmsData;
   updateDraft: (updater: (prev: CmsData) => CmsData) => void;
   activeSection: string;
-}
-
-const cardStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.03)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 12,
-  padding: 16,
-};
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  borderRadius: 8,
-  border: '1px solid rgba(255,255,255,0.18)',
-  background: 'rgba(0,0,0,0.2)',
-  color: '#fff',
-  padding: '10px 12px',
-  fontSize: 13,
-};
-
-const labelStyle: React.CSSProperties = {
-  fontSize: 12,
-  fontWeight: 600,
-  color: '#c7c7d0',
-  marginBottom: 6,
-  display: 'block',
-};
-
-function splitComma(value: string): string[] {
-  return value
-    .split(',')
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
-function BilingualField({
-  label,
-  en,
-  ar,
-  multiline,
-  onChangeEn,
-  onChangeAr,
-}: {
-  label: string;
-  en: string;
-  ar: string;
-  multiline?: boolean;
-  onChangeEn: (value: string) => void;
-  onChangeAr: (value: string) => void;
-}) {
-  const Control = multiline ? 'textarea' : 'input';
-  const extra = multiline ? { rows: 3 } : {};
-
-  return (
-    <div style={cardStyle}>
-      <p style={{ margin: '0 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>{label}</p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        <div>
-          <label style={labelStyle}>English</label>
-          <Control
-            {...extra}
-            style={inputStyle}
-            value={en}
-            onChange={(e) => onChangeEn(e.target.value)}
-          />
-        </div>
-        <div>
-          <label style={labelStyle}>Arabic</label>
-          <Control
-            {...extra}
-            style={inputStyle}
-            dir="rtl"
-            value={ar}
-            onChange={(e) => onChangeAr(e.target.value)}
-          />
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProps) {
@@ -168,8 +91,8 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
       hero: {
         ...prev.hero,
         roles: {
-          en: prev.hero.roles.en.filter((_, i) => i !== index),
-          ar: prev.hero.roles.ar.filter((_, i) => i !== index),
+          en: prev.hero.roles.en.filter((_: any, i: number) => i !== index),
+          ar: prev.hero.roles.ar.filter((_: any, i: number) => i !== index),
         },
       },
     }));
@@ -215,7 +138,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
 
     return (
       <div>
-        <h2 style={{ color: '#fff', marginTop: 0 }}>Section Visibility & Order</h2>
+        <h2 className="text-white mt-0">Section Visibility & Order</h2>
         <p style={{ color: '#a0a0a8', marginTop: 0 }}>Toggle any section on/off, and drag them to reorder your homepage.</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 400 }}>
           {currentOrder.map((key, index) => {
@@ -224,13 +147,13 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
             return (
               <div 
                 key={key} 
+                className={cardClasses}
                 draggable
                 onDragStart={(e) => handleDragStart(index, e)}
                 onDragEnter={() => handleDragEnter(index)}
                 onDragEnd={handleDragEnd}
                 onDragOver={(e) => e.preventDefault()}
                 style={{ 
-                  ...cardStyle, 
                   display: 'flex', 
                   alignItems: 'center', 
                   padding: '12px 16px',
@@ -238,7 +161,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                   opacity: isDragging ? 0.3 : 1,
                   transform: isDragging ? 'scale(0.98)' : 'scale(1)',
                   transition: 'opacity 0.2s, transform 0.2s',
-                  border: isDragging ? '1px dashed #6366f1' : cardStyle.border,
+                  border: isDragging ? '1px dashed #6366f1' : "1px solid rgba(255,255,255,0.08)",
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
@@ -268,8 +191,8 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
 
   if (activeSection === 'home-hero') {
     return (
-      <div style={{ display: 'grid', gap: 12 }}>
-        <h2 style={{ color: '#fff', marginTop: 0 }}>Hero Content</h2>
+      <div className="grid gap-3">
+        <h2 className="text-white mt-0">Hero Content</h2>
         <BilingualField
           label="Label"
           en={draft.hero.label.en}
@@ -314,7 +237,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
           onChangeAr={(value) => updateDraft((prev) => ({ ...prev, hero: { ...prev.hero, cta2: { ...prev.hero.cta2, ar: value } } }))}
         />
 
-        <div style={cardStyle}>
+        <div className={cardClasses}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
             <p style={{ margin: 0, color: '#fff', fontWeight: 700, fontSize: 13 }}>Roles</p>
             <button
@@ -335,7 +258,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
             </button>
           </div>
 
-          <div style={{ display: 'grid', gap: 10 }}>
+          <div className="grid gap-2.5">
             {Array.from({ length: Math.max(draft.hero.roles.en.length, draft.hero.roles.ar.length, 1) }).map((_, index) => (
               <div
                 key={index}
@@ -347,17 +270,17 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                 }}
               >
                 <div>
-                  <label style={labelStyle}>English role {index + 1}</label>
+                  <label className={labelClasses}>English role {index + 1}</label>
                   <input
-                    style={inputStyle}
+                    className={inputClasses}
                     value={draft.hero.roles.en[index] ?? ''}
                     onChange={(e) => updateHeroRole(index, 'en', e.target.value)}
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Arabic role {index + 1}</label>
+                  <label className={labelClasses}>Arabic role {index + 1}</label>
                   <input
-                    style={inputStyle}
+                    className={inputClasses}
                     dir="rtl"
                     value={draft.hero.roles.ar[index] ?? ''}
                     onChange={(e) => updateHeroRole(index, 'ar', e.target.value)}
@@ -391,8 +314,8 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
 
   if (activeSection === 'home-whyhireme') {
     return (
-      <div style={{ display: 'grid', gap: 12 }}>
-        <h2 style={{ color: '#fff', marginTop: 0 }}>Why Hire Me</h2>
+      <div className="grid gap-3">
+        <h2 className="text-white mt-0">Why Hire Me</h2>
         <BilingualField
           label="Word 1"
           en={draft.whyHireMe.word1.en}
@@ -421,11 +344,11 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
             desc: { en: '', ar: '' },
           };
           return (
-            <div key={index} style={cardStyle}>
-              <p style={{ margin: '0 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>
+            <div key={index} className={cardClasses}>
+              <p className="m-0 mb-2.5 text-white font-bold text-[13px]">
                 Card {index + 1}
               </p>
-              <div style={{ display: 'grid', gap: 10 }}>
+              <div className="grid gap-2.5">
                 <BilingualField
                   label="Title"
                   en={card.title.en}
@@ -452,8 +375,8 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
   if (activeSection === 'home-portfolio') {
     const items = [0, 1, 2, 3];
     return (
-      <div style={{ display: 'grid', gap: 12 }}>
-        <h2 style={{ color: '#fff', marginTop: 0 }}>Portfolio Projects</h2>
+      <div className="grid gap-3">
+        <h2 className="text-white mt-0">Portfolio Projects</h2>
         {items.map((index) => {
           const project = draft.projects[index] ?? {
             id: index + 1,
@@ -466,7 +389,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
           };
 
           return (
-            <div key={index} style={cardStyle}>
+            <div key={index} className={cardClasses}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                 <p style={{ margin: 0, color: '#fff', fontWeight: 700, fontSize: 13 }}>Project {index + 1}</p>
                 <label style={{ color: '#d3d3dc', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -479,7 +402,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                 </label>
               </div>
 
-              <div style={{ display: 'grid', gap: 10 }}>
+              <div className="grid gap-2.5">
                 <BilingualField
                   label="Title"
                   en={project.title.en}
@@ -495,19 +418,19 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                   onChangeEn={(value) => updateProject(index, (current) => ({ ...current, desc: { ...current.desc, en: value } }))}
                   onChangeAr={(value) => updateProject(index, (current) => ({ ...current, desc: { ...current.desc, ar: value } }))}
                 />
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <div className="grid grid-cols-2 gap-2.5">
                   <div>
-                    <label style={labelStyle}>English tags (comma-separated)</label>
+                    <label className={labelClasses}>English tags (comma-separated)</label>
                     <input
-                      style={inputStyle}
+                      className={inputClasses}
                       value={project.tags.en.join(', ')}
                       onChange={(e) => updateProject(index, (current) => ({ ...current, tags: { ...current.tags, en: splitComma(e.target.value) } }))}
                     />
                   </div>
                   <div>
-                    <label style={labelStyle}>Arabic tags (comma-separated)</label>
+                    <label className={labelClasses}>Arabic tags (comma-separated)</label>
                     <input
-                      style={inputStyle}
+                      className={inputClasses}
                       dir="rtl"
                       value={project.tags.ar.join(', ')}
                       onChange={(e) => updateProject(index, (current) => ({ ...current, tags: { ...current.tags, ar: splitComma(e.target.value) } }))}
@@ -516,17 +439,17 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 140px', gap: 10 }}>
                   <div>
-                    <label style={labelStyle}>Image URL</label>
+                    <label className={labelClasses}>Image URL</label>
                     <input
-                      style={inputStyle}
+                      className={inputClasses}
                       value={project.image}
                       onChange={(e) => updateProject(index, (current) => ({ ...current, image: e.target.value }))}
                     />
                   </div>
                   <div>
-                    <label style={labelStyle}>Accent color</label>
+                    <label className={labelClasses}>Accent color</label>
                     <input
-                      style={inputStyle}
+                      className={inputClasses}
                       value={project.accent}
                       onChange={(e) => updateProject(index, (current) => ({ ...current, accent: e.target.value }))}
                     />
@@ -542,13 +465,13 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
 
   if (activeSection === 'home-contact') {
     return (
-      <div style={{ display: 'grid', gap: 12 }}>
-        <h2 style={{ color: '#fff', marginTop: 0 }}>Contact Section</h2>
+      <div className="grid gap-3">
+        <h2 className="text-white mt-0">Contact Section</h2>
 
-        <div style={cardStyle}>
-          <label style={labelStyle}>Email</label>
+        <div className={cardClasses}>
+          <label className={labelClasses}>Email</label>
           <input
-            style={inputStyle}
+            className={inputClasses}
             value={draft.contact.email}
             onChange={(e) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, email: e.target.value } }))}
           />
@@ -622,13 +545,13 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
           onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, signoff2: { ...prev.contact.signoff2, ar: value } } }))}
         />
 
-        <div style={cardStyle}>
-          <p style={{ margin: '0 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Social Links</p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div className={cardClasses}>
+          <p className="m-0 mb-2.5 text-white font-bold text-[13px]">Social Links</p>
+          <div className="grid grid-cols-2 gap-2.5">
             <div>
-              <label style={labelStyle}>WhatsApp</label>
+              <label className={labelClasses}>WhatsApp</label>
               <input
-                style={inputStyle}
+                className={inputClasses}
                 value={draft.contact.socials.whatsapp}
                 onChange={(e) => updateDraft((prev) => ({
                   ...prev,
@@ -637,9 +560,9 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
               />
             </div>
             <div>
-              <label style={labelStyle}>LinkedIn</label>
+              <label className={labelClasses}>LinkedIn</label>
               <input
-                style={inputStyle}
+                className={inputClasses}
                 value={draft.contact.socials.linkedin}
                 onChange={(e) => updateDraft((prev) => ({
                   ...prev,
@@ -648,9 +571,9 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
               />
             </div>
             <div>
-              <label style={labelStyle}>Behance</label>
+              <label className={labelClasses}>Behance</label>
               <input
-                style={inputStyle}
+                className={inputClasses}
                 value={draft.contact.socials.behance}
                 onChange={(e) => updateDraft((prev) => ({
                   ...prev,
@@ -659,9 +582,9 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
               />
             </div>
             <div>
-              <label style={labelStyle}>Facebook</label>
+              <label className={labelClasses}>Facebook</label>
               <input
-                style={inputStyle}
+                className={inputClasses}
                 value={draft.contact.socials.facebook}
                 onChange={(e) => updateDraft((prev) => ({
                   ...prev,

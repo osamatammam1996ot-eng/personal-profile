@@ -1,75 +1,9 @@
-import type { CmsData } from '../../types/cms';
+import type { CmsData } from '../../../types/cms';
+import { BilingualField, splitComma, cardClasses, inputClasses, labelClasses } from '../../../components/cms/shared/BilingualField';
 
 interface GlobalSettingsEditorProps {
   draft: CmsData;
   updateDraft: (updater: (prev: CmsData) => CmsData) => void;
-}
-
-const cardStyle: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.03)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 12,
-  padding: 16,
-};
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  borderRadius: 8,
-  border: '1px solid rgba(255,255,255,0.18)',
-  background: 'rgba(0,0,0,0.2)',
-  color: '#fff',
-  padding: '10px 12px',
-  fontSize: 13,
-};
-
-const labelStyle: React.CSSProperties = {
-  fontSize: 12,
-  fontWeight: 600,
-  color: '#c7c7d0',
-  marginBottom: 6,
-  display: 'block',
-};
-
-function splitComma(value: string): string[] {
-  return value
-    .split(',')
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
-function BilingualField({
-  label,
-  en,
-  ar,
-  multiline,
-  onChangeEn,
-  onChangeAr,
-}: {
-  label: string;
-  en: string;
-  ar: string;
-  multiline?: boolean;
-  onChangeEn: (value: string) => void;
-  onChangeAr: (value: string) => void;
-}) {
-  const Control = multiline ? 'textarea' : 'input';
-  const extra = multiline ? { rows: 3 } : {};
-
-  return (
-    <div style={cardStyle}>
-      <p style={{ margin: '0 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>{label}</p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        <div>
-          <label style={labelStyle}>English</label>
-          <Control {...extra} style={inputStyle} value={en} onChange={(e) => onChangeEn(e.target.value)} />
-        </div>
-        <div>
-          <label style={labelStyle}>Arabic</label>
-          <Control {...extra} style={inputStyle} dir="rtl" value={ar} onChange={(e) => onChangeAr(e.target.value)} />
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEditorProps) {
@@ -96,51 +30,51 @@ export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEdito
   };
 
   return (
-    <div style={{ display: 'grid', gap: 12 }}>
-      <h2 style={{ color: '#fff', marginTop: 0 }}>Global Content Settings</h2>
+    <div className="grid gap-3">
+      <h2 className="text-white mt-0">Global Content Settings</h2>
 
-      <div style={cardStyle}>
-        <p style={{ margin: '0 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>SEO / Owner</p>
-        <div style={{ display: 'grid', gap: 10 }}>
+      <div className={cardClasses}>
+        <p className="m-0 mb-2.5 text-white font-bold text-[13px]">SEO / Owner</p>
+        <div className="grid gap-2.5">
           <div>
-            <label style={labelStyle}>SEO Title</label>
+            <label className={labelClasses}>SEO Title</label>
             <input
-              style={inputStyle}
+              className={inputClasses}
               value={draft.global.seoTitle}
               onChange={(e) => updateDraft((prev) => ({ ...prev, global: { ...prev.global, seoTitle: e.target.value } }))}
             />
           </div>
           <div>
-            <label style={labelStyle}>SEO Description</label>
+            <label className={labelClasses}>SEO Description</label>
             <textarea
               rows={3}
-              style={inputStyle}
+              className={inputClasses}
               value={draft.global.seoDescription}
               onChange={(e) => updateDraft((prev) => ({ ...prev, global: { ...prev.global, seoDescription: e.target.value } }))}
             />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <div className="grid grid-cols-2 gap-2.5">
             <div>
-              <label style={labelStyle}>Owner Name</label>
+              <label className={labelClasses}>Owner Name</label>
               <input
-                style={inputStyle}
+                className={inputClasses}
                 value={draft.global.ownerName}
                 onChange={(e) => updateDraft((prev) => ({ ...prev, global: { ...prev.global, ownerName: e.target.value } }))}
               />
             </div>
             <div>
-              <label style={labelStyle}>Owner Email</label>
+              <label className={labelClasses}>Owner Email</label>
               <input
-                style={inputStyle}
+                className={inputClasses}
                 value={draft.global.ownerEmail}
                 onChange={(e) => updateDraft((prev) => ({ ...prev, global: { ...prev.global, ownerEmail: e.target.value } }))}
               />
             </div>
           </div>
           <div>
-            <label style={labelStyle}>Footer Tagline</label>
+            <label className={labelClasses}>Footer Tagline</label>
             <input
-              style={inputStyle}
+              className={inputClasses}
               value={draft.global.footerTagline}
               onChange={(e) => updateDraft((prev) => ({ ...prev, global: { ...prev.global, footerTagline: e.target.value } }))}
             />
@@ -179,11 +113,11 @@ export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEdito
         };
 
         return (
-          <div key={index} style={cardStyle}>
-            <p style={{ margin: '0 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>
+          <div key={index} className={cardClasses}>
+            <p className="m-0 mb-2.5 text-white font-bold text-[13px]">
               Discipline {index + 1}
             </p>
-            <div style={{ display: 'grid', gap: 10 }}>
+            <div className="grid gap-2.5">
               <BilingualField
                 label="Title"
                 en={discipline.title.en}
@@ -199,20 +133,20 @@ export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEdito
                 onChangeEn={(value) => updateDiscipline(index, (current) => ({ ...current, tagline: { ...current.tagline, en: value } }))}
                 onChangeAr={(value) => updateDiscipline(index, (current) => ({ ...current, tagline: { ...current.tagline, ar: value } }))}
               />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div className="grid grid-cols-2 gap-2.5">
                 <div>
-                  <label style={labelStyle}>Tags EN (comma-separated)</label>
+                  <label className={labelClasses}>Tags EN (comma-separated)</label>
                   <input
-                    style={inputStyle}
+                    className={inputClasses}
                     value={discipline.tags.en.join(', ')}
                     onChange={(e) => updateDiscipline(index, (current) => ({ ...current, tags: { ...current.tags, en: splitComma(e.target.value) } }))}
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Tags AR (comma-separated)</label>
+                  <label className={labelClasses}>Tags AR (comma-separated)</label>
                   <input
                     dir="rtl"
-                    style={inputStyle}
+                    className={inputClasses}
                     value={discipline.tags.ar.join(', ')}
                     onChange={(e) => updateDiscipline(index, (current) => ({ ...current, tags: { ...current.tags, ar: splitComma(e.target.value) } }))}
                   />
@@ -261,13 +195,13 @@ export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEdito
         onChangeAr={(value) => updateDraft((prev) => ({ ...prev, footer: { ...prev.footer, copyright: { ...prev.footer.copyright, ar: value } } }))}
       />
 
-      <div style={cardStyle}>
-        <p style={{ margin: '0 0 10px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Footer Links</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+      <div className={cardClasses}>
+        <p className="m-0 mb-2.5 text-white font-bold text-[13px]">Footer Links</p>
+        <div className="grid grid-cols-2 gap-2.5">
           <div>
-            <label style={labelStyle}>English links (comma-separated)</label>
+            <label className={labelClasses}>English links (comma-separated)</label>
             <input
-              style={inputStyle}
+              className={inputClasses}
               value={draft.footer.links.en.join(', ')}
               onChange={(e) => updateDraft((prev) => ({
                 ...prev,
@@ -282,10 +216,10 @@ export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEdito
             />
           </div>
           <div>
-            <label style={labelStyle}>Arabic links (comma-separated)</label>
+            <label className={labelClasses}>Arabic links (comma-separated)</label>
             <input
               dir="rtl"
-              style={inputStyle}
+              className={inputClasses}
               value={draft.footer.links.ar.join(', ')}
               onChange={(e) => updateDraft((prev) => ({
                 ...prev,
