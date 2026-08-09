@@ -111,7 +111,7 @@ export default function AdminDashboard() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     setFetchError(null);
-    const STORAGE_KEY = 'cms:portfolio:v1:local';
+    const STORAGE_KEY = 'cms:portfolio:v2:local';
     try {
       const { getCmsDataAction } = await import('@/app/actions/cms');
       const response = await getCmsDataAction();
@@ -157,7 +157,7 @@ export default function AdminDashboard() {
   const handleSave = async () => {
     if (!draft || !hasChanges) return;
     setSaveStatus('saving');
-    const STORAGE_KEY = 'cms:portfolio:v1:local';
+    const STORAGE_KEY = 'cms:portfolio:v2:local';
     
     try {
       const { saveCmsDataAction } = await import('@/app/actions/cms');
