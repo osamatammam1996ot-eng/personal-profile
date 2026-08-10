@@ -34,8 +34,8 @@
   --surface: #f5f5fa;
   --surface-elevated: #ffffff;
   --surface-glass: rgba(255, 255, 255, 0.6);
-  --brand: #6366f1; /* 4.5:1 on white */
-  --brand-hover: #4f46e5;
+  --brand: #482c81; /* custom deep purple */
+  --brand-hover: #361f66;
   --success: #059669; /* WCAG 2.2 AA pass */
   --warning: #d97706;
   --danger: #dc2626;
@@ -96,8 +96,8 @@
   --surface: #080810;
   --surface-elevated: rgba(255, 255, 255, 0.04);
   --surface-glass: rgba(8, 8, 16, 0.65);
-  --brand: #a5b4fc; /* better contrast on dark */
-  --brand-hover: #c7d2fe;
+  --brand: #6d4fb8; /* adjusted custom purple for dark mode contrast */
+  --brand-hover: #8a73c9;
   --success: #34d399; /* WCAG 2.2 AA pass on dark */
   --warning: #fbbf24;
   --danger: #ef4444;
