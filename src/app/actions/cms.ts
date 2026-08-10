@@ -1,17 +1,40 @@
 "use server";
 
-import { kv } from '@vercel/kv';
-import { put, del, list } from '@vercel/blob';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
-import path from 'path';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
-const LOCAL_STORAGE_PATH = path.join(process.cwd(), 'node_modules', '.cache', 'cms-data.json');
 
-// Helper to check authentication
+// ── Supabase clients ────────────────────────────────────────────────────────────
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
+/**
+ * Read-only Supabase client (uses anon key, respects RLS).
+ * Used for fetching CMS data on the public-facing site.
+ */
+function getReadClient() {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false },
+  });
+}
+
+/**
+ * Admin Supabase client (uses service role key, bypasses RLS).
+ * Used for saving CMS data from the admin panel.
+ */
+function getAdminClient() {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) return null;
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+    auth: { persistSession: false },
+  });
+}
+
+// ── Auth helper ─────────────────────────────────────────────────────────────────
 async function isAuthenticated() {
   const token = (await cookies()).get('admin_token')?.value;
   if (!token) return false;
@@ -23,23 +46,48 @@ async function isAuthenticated() {
   }
 }
 
+// ── GET CMS Data ────────────────────────────────────────────────────────────────
 export async function getCmsDataAction() {
   try {
-    // Tier 1: Try Vercel KV if configured
-    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
-      const raw = await kv.get('cms_data');
-      if (raw) return { data: raw, source: 'vercel-kv' };
+    // Tier 1: Supabase (primary — always available on Vercel + localhost)
+    const readClient = getReadClient();
+    if (readClient) {
+      const { data, error } = await readClient
+        .from('cms_data')
+        .select('data, updated_at')
+        .eq('id', 'main')
+        .single();
+
+      if (!error && data?.data && Object.keys(data.data).length > 0) {
+        return { data: data.data, source: 'supabase' };
+      }
+      // If the table exists but has empty data, fall through
+      if (error) {
+        console.warn('Supabase read error (falling through):', error.message);
+      }
     }
 
-    // Tier 2: Try Vercel Blob if configured
+    // Tier 2: Vercel KV (optional — if env vars are configured)
+    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+      try {
+        const { kv } = await import('@vercel/kv');
+        const raw = await kv.get('cms_data');
+        if (raw) return { data: raw, source: 'vercel-kv' };
+      } catch (kvErr) {
+        console.warn('Vercel KV read error:', kvErr);
+      }
+    }
+
+    // Tier 3: Vercel Blob (optional — if env vars are configured)
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       try {
-        const { blobs } = await list({ prefix: 'cms-data.json' });
+        const { list: blobList } = await import('@vercel/blob');
+        const { blobs } = await blobList({ prefix: 'cms-data.json' });
         if (blobs.length > 0) {
           const res = await fetch(blobs[0].url, { cache: 'no-store' });
           if (res.ok) {
-            const data = await res.json();
-            return { data, source: 'vercel-blob' };
+            const blobData = await res.json();
+            return { data: blobData, source: 'vercel-blob' };
           }
         }
       } catch (blobErr) {
@@ -47,10 +95,17 @@ export async function getCmsDataAction() {
       }
     }
 
-    // Tier 3: Local file fallback
-    if (fs.existsSync(LOCAL_STORAGE_PATH)) {
-      const content = fs.readFileSync(LOCAL_STORAGE_PATH, 'utf-8');
-      return { data: JSON.parse(content), source: 'local-file' };
+    // Tier 4: Local filesystem (dev only — ephemeral on Vercel)
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      const LOCAL_STORAGE_PATH = path.join(process.cwd(), 'node_modules', '.cache', 'cms-data.json');
+      if (fs.existsSync(LOCAL_STORAGE_PATH)) {
+        const content = fs.readFileSync(LOCAL_STORAGE_PATH, 'utf-8');
+        return { data: JSON.parse(content), source: 'local-file' };
+      }
+    } catch (fsErr) {
+      console.warn('Local FS read error:', fsErr);
     }
 
     return { data: null };
@@ -60,6 +115,7 @@ export async function getCmsDataAction() {
   }
 }
 
+// ── SAVE CMS Data ───────────────────────────────────────────────────────────────
 export async function saveCmsDataAction(data: any) {
   if (!(await isAuthenticated())) {
     return { error: 'Unauthorized' };
@@ -70,9 +126,28 @@ export async function saveCmsDataAction(data: any) {
     const body = { ...data, updatedAt };
     let savedToCloud = false;
 
-    // Tier 1: Save to Vercel KV if available
+    // Tier 1: Supabase (primary)
+    const adminClient = getAdminClient();
+    if (adminClient) {
+      const { error } = await adminClient
+        .from('cms_data')
+        .upsert(
+          { id: 'main', data: body, updated_at: updatedAt },
+          { onConflict: 'id' }
+        );
+
+      if (error) {
+        console.error('Supabase save error:', error.message);
+        // Don't throw — try other tiers
+      } else {
+        savedToCloud = true;
+      }
+    }
+
+    // Tier 2: Vercel KV (optional)
     if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
       try {
+        const { kv } = await import('@vercel/kv');
         await kv.set('cms_data', body);
         savedToCloud = true;
       } catch (kvErr) {
@@ -80,9 +155,10 @@ export async function saveCmsDataAction(data: any) {
       }
     }
 
-    // Tier 2: Save to Vercel Blob if available
+    // Tier 3: Vercel Blob (optional)
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       try {
+        const { put } = await import('@vercel/blob');
         await put('cms-data.json', JSON.stringify(body), {
           access: 'public',
           addRandomSuffix: false,
@@ -93,8 +169,11 @@ export async function saveCmsDataAction(data: any) {
       }
     }
 
-    // Tier 3: Local file save
+    // Tier 4: Local filesystem (dev convenience)
     try {
+      const fs = await import('fs');
+      const path = await import('path');
+      const LOCAL_STORAGE_PATH = path.join(process.cwd(), 'node_modules', '.cache', 'cms-data.json');
       const dir = path.dirname(LOCAL_STORAGE_PATH);
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(LOCAL_STORAGE_PATH, JSON.stringify(body, null, 2));
@@ -105,11 +184,13 @@ export async function saveCmsDataAction(data: any) {
     revalidatePath('/');
     revalidatePath('/admin');
 
-    return { 
-      success: true, 
-      updatedAt, 
+    return {
+      success: true,
+      updatedAt,
       savedToCloud,
-      warning: savedToCloud ? undefined : 'Saved locally. For global cloud persistence across all visitors on Vercel, connect Vercel KV or Vercel Blob in your project settings.'
+      warning: savedToCloud
+        ? undefined
+        : 'Saved locally only. For cloud persistence, ensure SUPABASE_SERVICE_ROLE_KEY is set in your Vercel environment variables.',
     };
   } catch (e: any) {
     console.error('CMS PUT action error:', e);
@@ -117,6 +198,7 @@ export async function saveCmsDataAction(data: any) {
   }
 }
 
+// ── Image Upload ────────────────────────────────────────────────────────────────
 export async function uploadImageAction(formData: FormData) {
   if (!(await isAuthenticated())) {
     return { error: 'Unauthorized' };
@@ -128,18 +210,42 @@ export async function uploadImageAction(formData: FormData) {
       return { error: 'No file provided' };
     }
 
-    const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
-    const safeName = `cms-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
-    
-    const blob = await put(safeName, file, { access: 'public' });
+    // Try Supabase Storage first
+    const adminClient = getAdminClient();
+    if (adminClient) {
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
+      const safeName = `cms-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
 
-    return { url: blob.url, filename: safeName };
+      const { data, error } = await adminClient.storage
+        .from('cms-images')
+        .upload(safeName, file, { contentType: file.type, upsert: false });
+
+      if (!error && data) {
+        const { data: urlData } = adminClient.storage
+          .from('cms-images')
+          .getPublicUrl(data.path);
+        return { url: urlData.publicUrl, filename: safeName };
+      }
+      console.warn('Supabase storage upload failed, trying Vercel Blob:', error?.message);
+    }
+
+    // Fall back to Vercel Blob
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const { put } = await import('@vercel/blob');
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
+      const safeName = `cms-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
+      const blob = await put(safeName, file, { access: 'public' });
+      return { url: blob.url, filename: safeName };
+    }
+
+    return { error: 'No storage backend available. Configure Supabase Storage or Vercel Blob.' };
   } catch (e) {
     console.error('Image upload action error:', e);
     return { error: 'Image upload failed' };
   }
 }
 
+// ── Image Delete ────────────────────────────────────────────────────────────────
 export async function deleteImageAction(filename: string) {
   if (!(await isAuthenticated())) {
     return { error: 'Unauthorized' };
@@ -149,13 +255,27 @@ export async function deleteImageAction(filename: string) {
     if (filename.includes('/') || filename.includes('..')) {
       return { error: 'Invalid filename' };
     }
-    
-    try {
-      await del(filename); 
-    } catch (err) {
-      console.warn('Vercel Blob delete failed:', err);
+
+    // Try Supabase Storage first
+    const adminClient = getAdminClient();
+    if (adminClient) {
+      const { error } = await adminClient.storage
+        .from('cms-images')
+        .remove([filename]);
+      if (!error) return { success: true };
+      console.warn('Supabase storage delete failed:', error?.message);
     }
-    
+
+    // Fall back to Vercel Blob
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        const { del } = await import('@vercel/blob');
+        await del(filename);
+      } catch (err) {
+        console.warn('Vercel Blob delete failed:', err);
+      }
+    }
+
     return { success: true };
   } catch (e) {
     console.error('Image delete action error:', e);
