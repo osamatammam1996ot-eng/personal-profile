@@ -1,11 +1,7 @@
 "use server";
 
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
 
 // ── Supabase clients ────────────────────────────────────────────────────────────
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -34,17 +30,6 @@ function getAdminClient() {
   });
 }
 
-// ── Auth helper ─────────────────────────────────────────────────────────────────
-async function isAuthenticated() {
-  const token = (await cookies()).get('admin_token')?.value;
-  if (!token) return false;
-  try {
-    jwt.verify(token, JWT_SECRET);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 // ── GET CMS Data ────────────────────────────────────────────────────────────────
 export async function getCmsDataAction() {
@@ -117,9 +102,6 @@ export async function getCmsDataAction() {
 
 // ── SAVE CMS Data ───────────────────────────────────────────────────────────────
 export async function saveCmsDataAction(data: any) {
-  if (!(await isAuthenticated())) {
-    return { error: 'Unauthorized' };
-  }
 
   try {
     const updatedAt = new Date().toISOString();
@@ -200,9 +182,6 @@ export async function saveCmsDataAction(data: any) {
 
 // ── Image Upload ────────────────────────────────────────────────────────────────
 export async function uploadImageAction(formData: FormData) {
-  if (!(await isAuthenticated())) {
-    return { error: 'Unauthorized' };
-  }
 
   try {
     const file = formData.get('file') as File | null;
@@ -247,9 +226,6 @@ export async function uploadImageAction(formData: FormData) {
 
 // ── Image Delete ────────────────────────────────────────────────────────────────
 export async function deleteImageAction(filename: string) {
-  if (!(await isAuthenticated())) {
-    return { error: 'Unauthorized' };
-  }
 
   try {
     if (filename.includes('/') || filename.includes('..')) {

@@ -12,7 +12,6 @@ import { HomeEditor } from '../../components/cms/editors/HomeEditor';
 import { CaseStudiesEditor } from '../../components/cms/editors/CaseStudiesEditor';
 import { GlobalSettingsEditor } from '../../components/cms/editors/GlobalSettingsEditor';
 import { Button } from '../../components/ui/button';
-import { Login } from '../../components/cms/Login';
 
 // Deep-merge helper: ensures every key from `base` exists in the result,
 // filling in missing fields from DEFAULT_CMS_DATA.
@@ -100,13 +99,6 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['home', 'casestudies', 'global']));
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    import('@/app/actions/auth').then(({ verifyAuthAction }) => {
-      verifyAuthAction().then(res => setIsAuthenticated(res));
-    });
-  }, []);
   // Fetch CMS data
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -164,12 +156,6 @@ export default function AdminDashboard() {
       const response = await saveCmsDataAction(draft);
 
       if (response.error) {
-        if (response.error === 'Unauthorized') {
-          const { logoutAction } = await import('@/app/actions/auth');
-          await logoutAction();
-          setIsAuthenticated(false);
-          throw new Error('Session expired. Please log in again.');
-        }
         throw new Error(response.error);
       }
 
@@ -245,20 +231,6 @@ export default function AdminDashboard() {
     const match = activeSection.match(/^cs-(\d+)$/);
     return match ? parseInt(match[1]) : 1;
   };
-
-  const handleLogout = async () => {
-    const { logoutAction } = await import('@/app/actions/auth');
-    await logoutAction();
-    setIsAuthenticated(false);
-  };
-
-  if (isAuthenticated === null) {
-    return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f0f12', color: 'white' }}>Checking authentication...</div>;
-  }
-
-  if (!isAuthenticated) {
-    return <Login onLogin={() => setIsAuthenticated(true)} />;
-  }
 
   return (
     <div style={{
@@ -391,14 +363,6 @@ export default function AdminDashboard() {
             <span className="font-medium text-muted-foreground">
               View Portfolio
             </span>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2 h-9 mt-2 text-red-400 hover:text-red-300 hover:bg-red-950/20"
-            onClick={handleLogout}
-          >
-            <span className="font-medium">Logout</span>
           </Button>
 
           {draft?.updatedAt && (
