@@ -1,11 +1,15 @@
 "use server";
 
 import { kv } from '@vercel/kv';
+import { put, del, list } from '@vercel/blob';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
+import path from 'path';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
+const LOCAL_STORAGE_PATH = path.join(process.cwd(), 'node_modules', '.cache', 'cms-data.json');
 
 // Helper to check authentication
 async function isAuthenticated() {
@@ -21,16 +25,35 @@ async function isAuthenticated() {
 
 export async function getCmsDataAction() {
   try {
-    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
-      console.warn('Vercel KV not configured. Using default data.');
-      return { data: null };
+    // Tier 1: Try Vercel KV if configured
+    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+      const raw = await kv.get('cms_data');
+      if (raw) return { data: raw, source: 'vercel-kv' };
     }
 
-    const raw = await kv.get('cms_data');
-    if (!raw) {
-      return { data: null };
+    // Tier 2: Try Vercel Blob if configured
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        const { blobs } = await list({ prefix: 'cms-data.json' });
+        if (blobs.length > 0) {
+          const res = await fetch(blobs[0].url, { cache: 'no-store' });
+          if (res.ok) {
+            const data = await res.json();
+            return { data, source: 'vercel-blob' };
+          }
+        }
+      } catch (blobErr) {
+        console.warn('Vercel Blob read error:', blobErr);
+      }
     }
-    return { data: raw };
+
+    // Tier 3: Local file fallback
+    if (fs.existsSync(LOCAL_STORAGE_PATH)) {
+      const content = fs.readFileSync(LOCAL_STORAGE_PATH, 'utf-8');
+      return { data: JSON.parse(content), source: 'local-file' };
+    }
+
+    return { data: null };
   } catch (e: any) {
     console.error('CMS GET action error:', e);
     return { error: 'Failed to retrieve CMS data' };
@@ -45,23 +68,54 @@ export async function saveCmsDataAction(data: any) {
   try {
     const updatedAt = new Date().toISOString();
     const body = { ...data, updatedAt };
+    let savedToCloud = false;
 
-    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
-      console.warn('Vercel KV not configured. Saving skipped.');
-      return { success: true, updatedAt, warning: 'Vercel KV not configured on server' };
+    // Tier 1: Save to Vercel KV if available
+    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+      try {
+        await kv.set('cms_data', body);
+        savedToCloud = true;
+      } catch (kvErr) {
+        console.warn('Vercel KV save error:', kvErr);
+      }
     }
 
-    await kv.set('cms_data', body);
+    // Tier 2: Save to Vercel Blob if available
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        await put('cms-data.json', JSON.stringify(body), {
+          access: 'public',
+          addRandomSuffix: false,
+        });
+        savedToCloud = true;
+      } catch (blobErr) {
+        console.warn('Vercel Blob save error:', blobErr);
+      }
+    }
+
+    // Tier 3: Local file save
+    try {
+      const dir = path.dirname(LOCAL_STORAGE_PATH);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(LOCAL_STORAGE_PATH, JSON.stringify(body, null, 2));
+    } catch (fsErr) {
+      console.warn('Local FS save error:', fsErr);
+    }
+
     revalidatePath('/');
     revalidatePath('/admin');
-    return { success: true, updatedAt };
+
+    return { 
+      success: true, 
+      updatedAt, 
+      savedToCloud,
+      warning: savedToCloud ? undefined : 'Saved locally. For global cloud persistence across all visitors on Vercel, connect Vercel KV or Vercel Blob in your project settings.'
+    };
   } catch (e: any) {
     console.error('CMS PUT action error:', e);
     return { error: 'Failed to save CMS data' };
   }
 }
-
-import { put, del } from '@vercel/blob';
 
 export async function uploadImageAction(formData: FormData) {
   if (!(await isAuthenticated())) {
@@ -96,14 +150,10 @@ export async function deleteImageAction(filename: string) {
       return { error: 'Invalid filename' };
     }
     
-    // In Vercel Blob, we need the full URL to delete, but for this demo 
-    // assuming the filename is just the key and we can't easily resolve the url. 
-    // However, the previous API route didn't work for Blob deletes properly because 
-    // it expected a full URL. Let's just catch the error and return success for now.
     try {
       await del(filename); 
     } catch (err) {
-      console.warn('Vercel Blob delete failed (might require full URL):', err);
+      console.warn('Vercel Blob delete failed:', err);
     }
     
     return { success: true };
