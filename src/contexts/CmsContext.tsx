@@ -294,9 +294,17 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
         throw new Error(response.error);
       }
 
-      const data = response.data ?? DEFAULT_CMS_DATA;
-      const normalized = applyCmsData(data);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+      if (response.data) {
+        const normalized = applyCmsData(response.data);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+      } else {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          applyCmsData(JSON.parse(saved));
+        } else {
+          applyCmsData(DEFAULT_CMS_DATA);
+        }
+      }
     } catch (fetchError) {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
