@@ -1,19 +1,18 @@
 "use server";
 
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
 
 export async function loginAction(password: string) {
-  const adminHash = process.env.ADMIN_PASSWORD_HASH;
-  if (!password || !adminHash) {
-    return { error: 'Invalid password or configuration missing' };
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  
+  if (!password || !adminPassword) {
+    return { error: 'Invalid password or configuration missing (ADMIN_PASSWORD)' };
   }
 
-  const match = await bcrypt.compare(password, adminHash);
-  if (!match) {
+  if (password !== adminPassword) {
     return { error: 'Invalid password' };
   }
 
