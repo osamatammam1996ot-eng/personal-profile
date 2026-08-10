@@ -300,8 +300,8 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' as const }}>
                     {(data?.metrics || []).map((m: any, i: number) => (
                       <motion.div key={m.label} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.55 + i * 0.07 }}
-                        style={{ padding: '20px 24px', borderRadius: 16, background: 'linear-gradient(135deg,rgba(99,102,241,0.14),rgba(139,92,246,0.08))', border: '1px solid rgba(99,102,241,0.3)', boxShadow: '0 4px 24px rgba(99,102,241,0.12)', minWidth: 110 }}>
-                        <div style={{  fontWeight: 800, fontSize: 'clamp(1.4rem,2.5vw,1.9rem)', background: `linear-gradient(135deg,${ACCENT},${ACCENT2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{m.value}</div>
+                        style={{ padding: '20px 24px', borderRadius: 16, background: 'color-mix(in srgb, var(--color-brand) 8%, transparent)', border: '1px solid color-mix(in srgb, var(--color-brand) 30%, transparent)', boxShadow: '0 4px 24px color-mix(in srgb, var(--color-brand) 10%, transparent)', minWidth: 110 }}>
+                        <div style={{  fontWeight: 800, fontSize: 'clamp(1.4rem,2.5vw,1.9rem)', color: ACCENT, lineHeight: 1.1 }}>{m.value}</div>
                         <div style={{  fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: 4, fontWeight: 500 }}>{m.label}</div>
                       </motion.div>
                     ))}

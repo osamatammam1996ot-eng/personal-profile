@@ -164,7 +164,7 @@ export function Hero({ isDark }: HeroProps) {
           }}>
             {heroHeadline1}
           </span>
-          <span className="block font-extrabold text-[clamp(2.2rem,5.6vw,4.4rem)] bg-clip-text text-transparent bg-gradient-to-r from-[#6366f1] to-[#06b6d4]">
+          <span className="block font-extrabold text-[clamp(2.2rem,5.6vw,4.4rem)] text-brand">
             {heroHeadline2}
           </span>
         </motion.h1>
@@ -184,8 +184,8 @@ export function Hero({ isDark }: HeroProps) {
               padding: '10px 24px',
               borderRadius: '999px',
               background: dark
-                ? 'linear-gradient(135deg, rgba(99,102,241,0.18) 0%, rgba(139,92,246,0.14) 100%)'
-                : 'linear-gradient(135deg, rgba(99,102,241,0.10) 0%, rgba(139,92,246,0.08) 100%)',
+                ? 'rgba(99,102,241,0.18)'
+                : 'rgba(99,102,241,0.10)',
               border: dark
                 ? '1px solid rgba(165,180,252,0.25)'
                 : '1px solid rgba(99,102,241,0.22)',
@@ -214,7 +214,7 @@ export function Hero({ isDark }: HeroProps) {
             </span>
 
             <span
-              className="font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)] bg-gradient-to-r from-indigo-400 via-purple-300 to-cyan-300 bg-clip-text text-transparent"
+              className="font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)] text-brand"
               style={{
                 letterSpacing: '-0.01em',
                 direction: isRTL ? 'rtl' : 'ltr',
@@ -271,7 +271,7 @@ export function Hero({ isDark }: HeroProps) {
         >
           <Button
             onClick={() => scrollToSection('work')}
-            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-[0.92rem] bg-gradient-to-br from-indigo-500 to-purple-600 hover:scale-[1.04] transition-transform"
+            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-[0.92rem] bg-brand hover:bg-brand-hover hover:scale-[1.04] transition-all"
           >
             {heroCta1}
             <ArrowRight size={15} className={`transition-transform duration-200 ${isRTL ? '-scale-x-100' : ''}`} />
