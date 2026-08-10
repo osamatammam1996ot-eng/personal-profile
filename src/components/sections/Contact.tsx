@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { DecorativeShape } from '../shared/DecorativeShape';
+
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 
@@ -140,15 +140,7 @@ export function Contact({ isDark }: ContactProps) {
         />
       </div>
 
-      {/* Decorative 3D shape — top-left */}
-      <DecorativeShape
-        shape="torusKnot"
-        position="top-left"
-        size={370}
-        cropAmount={32}
-        rotationOffset={[0.5, -0.3, 0.4]}
-        isDark={dark}
-      />
+
 
       <div className="relative max-w-[1200px] mx-auto px-6 md:px-10 w-full">
         {/* Two-column layout */}
