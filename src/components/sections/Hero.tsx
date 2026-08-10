@@ -164,7 +164,7 @@ export function Hero({ isDark }: HeroProps) {
           }}>
             {heroHeadline1}
           </span>
-          <span className="block font-extrabold text-[clamp(2.2rem,5.6vw,4.4rem)] text-brand">
+          <span className="block font-extrabold text-[clamp(2.2rem,5.6vw,4.4rem)] bg-[image:var(--brand-gradient)] bg-clip-text text-transparent">
             {heroHeadline2}
           </span>
         </motion.h1>
@@ -214,7 +214,7 @@ export function Hero({ isDark }: HeroProps) {
             </span>
 
             <span
-              className="font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)] text-brand"
+              className="font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)] bg-[image:var(--brand-gradient)] bg-clip-text text-transparent"
               style={{
                 letterSpacing: '-0.01em',
                 direction: isRTL ? 'rtl' : 'ltr',
@@ -271,7 +271,10 @@ export function Hero({ isDark }: HeroProps) {
         >
           <Button
             onClick={() => scrollToSection('work')}
-            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-[0.92rem] bg-brand hover:bg-brand-hover hover:scale-[1.04] transition-all"
+            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-[0.92rem] hover:scale-[1.04] transition-all"
+            style={{
+              background: 'var(--brand-gradient)',
+            }}
           >
             {heroCta1}
             <ArrowRight size={15} className={`transition-transform duration-200 ${isRTL ? '-scale-x-100' : ''}`} />

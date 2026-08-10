@@ -567,7 +567,8 @@ export function Tools({ isDark = false }: ToolsProps) {
           }}
         >
           <span style={{
-            color: 'var(--color-brand)',
+            background: 'var(--brand-gradient)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
           }}>{toolsTitle}</span>
         </h2>
 
@@ -696,8 +697,8 @@ export function Tools({ isDark = false }: ToolsProps) {
                   </span>
                   <span style={{
                     fontSize: '0.7rem', fontWeight: 700,
-                    
-                    color: 'var(--color-brand)',
+                    background: 'var(--brand-gradient)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
                   }}>
                     {pct}%
                   </span>
@@ -713,7 +714,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                     transition={{ duration: 0.9, ease: [0.34, 1.10, 0.64, 1], delay: 0.1 }}
                     style={{
                       height: '100%', borderRadius: 100,
-                      background: 'var(--color-brand)',
+                      background: 'var(--brand-gradient)',
                       boxShadow: `0 0 8px rgba(99,102,241,0.6)`,
                     }}
                   />
@@ -789,8 +790,8 @@ export function Tools({ isDark = false }: ToolsProps) {
                   <span style={{ fontSize: '0.6rem', letterSpacing: '0.10em', textTransform: 'uppercase', color: mutedC }}>{proficiencyLabel}</span>
                   <span style={{
                     fontSize: '0.7rem', fontWeight: 700, 
-                    background: 'none',
-                    color: 'var(--color-brand)'
+                    background: 'var(--brand-gradient)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
                   }}>{pct}%</span>
                 </div>
                 <div style={{ height: 4, borderRadius: 100, background: barTrack, overflow: 'hidden' }}>
@@ -800,7 +801,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                     transition={{ duration: 0.9, ease: [0.34, 1.10, 0.64, 1], delay: 0.1 }}
                     style={{
                       height: '100%', borderRadius: 100,
-                      background: 'var(--color-brand)',
+                      background: 'var(--brand-gradient)',
                       boxShadow: '0 0 8px rgba(99,102,241,0.6)',
                     }}
                   />

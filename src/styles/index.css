@@ -36,6 +36,8 @@
   --surface-glass: rgba(255, 255, 255, 0.6);
   --brand: #482c81; /* custom deep purple */
   --brand-hover: #361f66;
+  --brand-gradient: linear-gradient(135deg, #6d4fb8 0%, #482c81 100%);
+  --brand-gradient-hover: linear-gradient(135deg, #5c3e9c 0%, #361f66 100%);
   --success: #059669; /* WCAG 2.2 AA pass */
   --warning: #d97706;
   --danger: #dc2626;
@@ -98,6 +100,8 @@
   --surface-glass: rgba(8, 8, 16, 0.65);
   --brand: #6d4fb8; /* adjusted custom purple for dark mode contrast */
   --brand-hover: #8a73c9;
+  --brand-gradient: linear-gradient(135deg, #8a73c9 0%, #6d4fb8 100%);
+  --brand-gradient-hover: linear-gradient(135deg, #9b87d6 0%, #8a73c9 100%);
   --success: #34d399; /* WCAG 2.2 AA pass on dark */
   --warning: #fbbf24;
   --danger: #ef4444;

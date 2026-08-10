@@ -200,7 +200,12 @@ export function Contact({ isDark }: ContactProps) {
               }}
             >
               {headline1}{' '}
-              <span style={{ color: 'var(--color-brand)' }}>
+              <span style={{
+                background: 'var(--brand-gradient)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}>
                 {headline2}
               </span>
               <br />
