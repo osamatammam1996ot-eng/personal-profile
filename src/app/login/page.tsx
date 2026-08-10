@@ -31,24 +31,24 @@ export default function LoginPage() {
 
       {/* Overlay & Login Form */}
       <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/85 text-gray-100">
-        <div className="max-w-md w-full bg-gray-900/90 backdrop-blur-md p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-gray-700">
-          <h2 className="text-2xl font-bold text-center mb-6 text-white tracking-wide">Admin Login</h2>
+        <div className="max-w-md w-full bg-surface-glass backdrop-blur-md p-8 rounded-[var(--radius-xl)] shadow-[var(--shadow-card)] border border-border-default">
+          <h2 className="text-center mb-6 text-text-primary font-heading tracking-wide">Admin Login</h2>
         
         <form action={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-300" htmlFor="password">Secret Password</label>
+            <label className="block mb-1 text-text-secondary" htmlFor="password">Secret Password</label>
             <input
               id="password"
               name="password"
               type="password"
-              className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full bg-input-background border border-border-default rounded-[var(--radius-md)] px-4 py-2 text-text-primary focus:outline-none focus:ring-2 focus:ring-brand transition-all"
               placeholder="Enter admin password"
               required
             />
           </div>
           
           {error && (
-            <p className="text-red-400 text-sm mt-4 text-center">
+            <p className="text-danger mt-4 text-center">
               {error}
             </p>
           )}
@@ -56,7 +56,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors mt-6"
+            className="w-full bg-brand hover:bg-brand-hover text-white py-2 px-4 rounded-[var(--radius-md)] transition-colors mt-6"
           >
             {loading ? <Loader2 className="animate-spin w-5 h-5 mx-auto" /> : 'Sign In'}
           </Button>
