@@ -365,6 +365,17 @@ export default function AdminDashboard() {
             </span>
           </Button>
 
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-2 h-9 mt-2 text-red-400 hover:text-red-300 hover:bg-red-950/20"
+            onClick={async () => {
+              const { logoutAction } = await import('@/app/actions/auth');
+              await logoutAction();
+            }}
+          >
+            <span className="font-medium">Logout</span>
+          </Button>
+
           {draft?.updatedAt && (
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 10.5, color: '#808086', marginTop: 8, textAlign: 'center' }}>
               Last saved {new Date(draft.updatedAt).toLocaleString()}

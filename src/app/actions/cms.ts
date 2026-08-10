@@ -2,6 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
+import { verifyAuthAction } from '@/app/actions/auth';
 
 // ── Supabase clients ────────────────────────────────────────────────────────────
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -102,6 +103,9 @@ export async function getCmsDataAction() {
 
 // ── SAVE CMS Data ───────────────────────────────────────────────────────────────
 export async function saveCmsDataAction(data: any) {
+  if (!(await verifyAuthAction())) {
+    return { error: 'Unauthorized' };
+  }
 
   try {
     const updatedAt = new Date().toISOString();
@@ -182,6 +186,9 @@ export async function saveCmsDataAction(data: any) {
 
 // ── Image Upload ────────────────────────────────────────────────────────────────
 export async function uploadImageAction(formData: FormData) {
+  if (!(await verifyAuthAction())) {
+    return { error: 'Unauthorized' };
+  }
 
   try {
     const file = formData.get('file') as File | null;
@@ -226,6 +233,9 @@ export async function uploadImageAction(formData: FormData) {
 
 // ── Image Delete ────────────────────────────────────────────────────────────────
 export async function deleteImageAction(filename: string) {
+  if (!(await verifyAuthAction())) {
+    return { error: 'Unauthorized' };
+  }
 
   try {
     if (filename.includes('/') || filename.includes('..')) {
