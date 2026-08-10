@@ -2,6 +2,7 @@
 
 import { kv } from '@vercel/kv';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
@@ -21,7 +22,7 @@ async function isAuthenticated() {
 export async function getCmsDataAction() {
   try {
     if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
-      console.warn('Vercel KV not configured locally. Using default data.');
+      console.warn('Vercel KV not configured. Using default data.');
       return { data: null };
     }
 
@@ -46,11 +47,13 @@ export async function saveCmsDataAction(data: any) {
     const body = { ...data, updatedAt };
 
     if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
-      console.warn('Vercel KV not configured locally. Saving skipped.');
-      return { success: true, updatedAt, warning: 'Saved locally only' };
+      console.warn('Vercel KV not configured. Saving skipped.');
+      return { success: true, updatedAt, warning: 'Vercel KV not configured on server' };
     }
 
     await kv.set('cms_data', body);
+    revalidatePath('/');
+    revalidatePath('/admin');
     return { success: true, updatedAt };
   } catch (e: any) {
     console.error('CMS PUT action error:', e);
