@@ -674,7 +674,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                 {tool.name}
               </div>
               <div style={{
-                fontSize: '0.65rem', letterSpacing: '0.10em', textTransform: 'uppercase',
+                fontSize: '0.65rem', letterSpacing: '0.10em',
                 color: mutedC, marginBottom: 10,
               }}>
                 {(tool.cat?.[lang] || tool.cat?.en)}
@@ -691,7 +691,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                   <span style={{
                     fontSize: '0.65rem', letterSpacing: '0.10em',
-                    textTransform: 'uppercase', color: mutedC,
+                    color: mutedC,
                   }}>
                     {proficiencyLabel}
                   </span>
@@ -775,7 +775,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                   </div>
                   <div style={{
                     fontSize: '0.6rem', letterSpacing: '0.10em',
-                    textTransform: 'uppercase', color: mutedC, marginTop: 2,
+                    color: mutedC, marginTop: 2,
                   }}>
                     {(tool.cat?.[lang] || tool.cat?.en)}
                   </div>
@@ -787,7 +787,7 @@ export function Tools({ isDark = false }: ToolsProps) {
               {/* skill bar mobile */}
               <div style={{ marginBottom: 10 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
-                  <span style={{ fontSize: '0.6rem', letterSpacing: '0.10em', textTransform: 'uppercase', color: mutedC }}>{proficiencyLabel}</span>
+                  <span style={{ fontSize: '0.6rem', letterSpacing: '0.10em', color: mutedC }}>{proficiencyLabel}</span>
                   <span style={{
                     fontSize: '0.7rem', fontWeight: 700, 
                     background: 'var(--brand-gradient)',

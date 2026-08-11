@@ -366,7 +366,7 @@ export function Skills({ isDark }: SkillsProps) {
             <button
               key={num}
               onClick={() => scrollToChapter(num)}
-              className={`text-[10px] lg:text-xs font-bold transition-colors duration-300 uppercase tracking-widest ${activeChapter === num ? 'text-brand' : 'text-white/30 hover:text-white/80'}`}
+              className={`text-[10px] lg:text-xs font-bold transition-colors duration-300 tracking-widest ${activeChapter === num ? 'text-brand' : 'text-white/30 hover:text-white/80'}`}
               
             >
               {num === 0 ? 'Intro' : `0${num}`}
@@ -378,7 +378,7 @@ export function Skills({ isDark }: SkillsProps) {
 
           {/* Intro State */}
           <div id="ui-intro" className={`absolute top-[25%] md:top-1/3 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-lg`}>
-            <h2 className="text-brand text-xs md:text-sm tracking-[0.2em] uppercase mb-4" >Craft</h2>
+            <h2 className="text-brand text-xs md:text-sm tracking-[0.2em] mb-4" >Craft</h2>
             <h1 className="text-4xl md:text-6xl text-text-primary mb-6 leading-tight" >
               {getStr(skills.heading1)}<br />{getStr(skills.heading2)}
             </h1>

@@ -298,7 +298,6 @@ export function Contact({ isDark }: ContactProps) {
                   fontWeight: 500,
                   fontSize: '0.75rem',
                   letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
                   color: dark ? 'rgba(165,180,252,0.6)' : 'rgba(99,102,241,0.7)',
                 }}>
                   {emailLabel}

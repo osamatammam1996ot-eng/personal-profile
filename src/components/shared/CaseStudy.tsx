@@ -454,7 +454,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
 
                 {/* Trade-offs */}
                 <div style={{ marginTop: 20 }}>
-                  <h3 style={{  fontWeight: 700, fontSize: '1rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em', textTransform: 'uppercase' as const, marginBottom: 20 }}>Key Trade-offs</h3>
+                  <h3 style={{  fontWeight: 700, fontSize: '1rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em', marginBottom: 20 }}>Key Trade-offs</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                     {(data.process?.tradeoffs || []).map((item: any, i: number) => {
                       if (!item || !item.decision) return null;
@@ -692,7 +692,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                   </motion.div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
                     <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
-                      <h3 style={{  fontWeight: 700, fontSize: '0.78rem', color: ACCENT, letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: 18 }}>Lessons Learned</h3>
+                      <h3 style={{  fontWeight: 700, fontSize: '0.78rem', color: ACCENT, letterSpacing: '0.12em', marginBottom: 18 }}>Lessons Learned</h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                         {(data?.reflection?.lessons || []).map((l: any, i: number) => (
                           <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
@@ -702,7 +702,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                       </div>
                     </motion.div>
                     <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}>
-                      <h3 style={{  fontWeight: 700, fontSize: '0.78rem', color: ACCENT2, letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: 18 }}>Next Iteration</h3>
+                      <h3 style={{  fontWeight: 700, fontSize: '0.78rem', color: ACCENT2, letterSpacing: '0.12em', marginBottom: 18 }}>Next Iteration</h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                         {(data?.reflection?.next || []).map((n: any, i: number) => (
                           <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', padding: '12px 16px', borderRadius: 10, background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.12)' }}>

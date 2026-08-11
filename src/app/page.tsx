@@ -111,8 +111,7 @@ export default function Home() {
             }}
           >
             <span
-              className="text-white text-center uppercase tracking-wider leading-snug font-semibold text-[0.62rem]"
-              
+              className="text-white text-center tracking-wider leading-snug font-semibold text-[0.62rem]"
             >
               View<br />Project
             </span>

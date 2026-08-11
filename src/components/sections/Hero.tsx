@@ -142,7 +142,7 @@ export function Hero({ isDark }: HeroProps) {
             fontWeight: 400,
             fontSize: '0.76rem',
             letterSpacing: isRTL ? '0.06em' : '0.16em',
-            textTransform: isRTL ? 'none' : 'uppercase',
+            textTransform: 'none',
             color: dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)',
             marginBottom: '18px',
           }}
@@ -302,7 +302,7 @@ export function Hero({ isDark }: HeroProps) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4 }}
       >
-        <p className={`font-body text-[0.68rem] tracking-widest text-text-secondary uppercase`} style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)' }}>
+        <p className={`font-body text-[0.68rem] tracking-widest text-text-secondary`} style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)' }}>
           {heroScroll}
         </p>
         <motion.div

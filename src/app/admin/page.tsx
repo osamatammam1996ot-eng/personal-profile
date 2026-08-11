@@ -295,7 +295,7 @@ export default function AdminDashboard() {
                 <span style={{ color: '#808086' }}>{group.icon}</span>
                 <span style={{
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 11,
-                  letterSpacing: '0.07em', textTransform: 'uppercase',
+                  letterSpacing: '0.07em',
                   color: '#808086', flex: 1, textAlign: 'left',
                 }}>
                   {group.label}
