@@ -230,7 +230,7 @@ export function Portfolio({ isDark, onCursorChange, onViewCase }: PortfolioProps
       <DecorativeShape
         shape="octahedron"
         position="bottom-right"
-        size={430}
+        size={500}
         cropAmount={30}
         rotationOffset={[-0.3, 0.8, 0.15]}
         isDark={dark}

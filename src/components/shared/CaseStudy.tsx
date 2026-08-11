@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ArrowLeft, ArrowUpRight, ChevronRight, Play, Maximize2, ZoomIn } from 'lucide-react';
-import { DecorativeShape } from './DecorativeShape';
+
 import { useCms } from '../../contexts/CmsContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -186,16 +186,6 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
       transition={{ duration: 0.3 }}
       style={{ position: 'fixed', inset: 0, zIndex: 200, background: BG, overflow: 'hidden' }}
     >
-        {/* Decorative 3D shape */}
-        <DecorativeShape
-          shape="torusKnot"
-          position="top-right"
-          size={460}
-          cropAmount={22}
-          rotationOffset={[0.2, 0.4, -0.3]}
-          isDark={isDark}
-        />
-
         {/* Scroll progress bar */}
         <motion.div
           style={{

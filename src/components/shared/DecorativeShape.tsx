@@ -287,8 +287,8 @@ export const DecorativeShape = memo(function DecorativeShape({
     window.addEventListener('scroll', onScroll, { passive: true });
 
     // ── Animation loop ──
-    const LERP_SPEED = 0.035;
-    const MAX_TILT = 0.42; // ~24 degrees in radians
+    const LERP_SPEED = 0.055;
+    const MAX_TILT = 0.85; // ~48 degrees in radians
     const BASE_SPIN = 0.0008; // very slow idle rotation
 
     const loop = () => {

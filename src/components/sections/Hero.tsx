@@ -100,7 +100,7 @@ export function Hero({ isDark }: HeroProps) {
       <DecorativeShape
         shape="icosahedron"
         position="bottom-left"
-        size={280}
+        size={330}
         rotationOffset={[0.1, 0.2, 0]}
         isDark={dark}
       />

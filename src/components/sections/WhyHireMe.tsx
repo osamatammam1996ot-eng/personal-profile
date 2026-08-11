@@ -497,7 +497,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
       <DecorativeShape
         shape="octahedron"
         position="bottom-left"
-        size={460}
+        size={520}
         cropAmount={28}
         rotationOffset={[0.5, -0.2, 0.4]}
         isDark={isDark}
