@@ -438,9 +438,9 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
   const { fontHeading, isRTL, lang } = useLanguage();
   const { cmsData } = useCms();
 
-  const word1 = cmsData.whyHireMe.word1[lang] || (lang === 'en' ? 'WHY' : 'لماذا');
-  const word2 = cmsData.whyHireMe.word2[lang] || (lang === 'en' ? 'HIRE' : 'توظيف');
-  const word3 = cmsData.whyHireMe.word3[lang] || (lang === 'en' ? 'ME' : 'أنا');
+  const word1 = cmsData.whyHireMe.word1[lang] || (lang === 'en' ? 'Why' : 'لماذا');
+  const word2 = cmsData.whyHireMe.word2[lang] || (lang === 'en' ? 'Hire' : 'توظيف');
+  const word3 = cmsData.whyHireMe.word3[lang] || (lang === 'en' ? 'Me' : 'أنا');
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const rect = sectionRef.current?.getBoundingClientRect();
@@ -518,11 +518,11 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
           className="select-none text-center mb-[7vh]"
         >
           <div
-            className="font-bold text-[clamp(2rem,5vw,4.5rem)] leading-none tracking-tighter flex gap-[0.14em] items-baseline flex-wrap justify-center"
+            className="font-bold text-[clamp(2.5rem,5vw,4rem)] leading-none tracking-tighter flex gap-[0.14em] items-baseline flex-wrap justify-center"
             
           >
             <span className="text-text-primary">{word1}</span>
-            <span className="text-brand dark:drop-shadow-[0_0_60px_rgba(99,102,241,0.55)] drop-shadow-[0_0_40px_rgba(99,102,241,0.25)]">
+            <span className="text-text-primary">
               {word2}
             </span>
             {word3 && <span className="text-text-primary">{word3}</span>}

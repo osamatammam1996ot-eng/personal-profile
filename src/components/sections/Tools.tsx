@@ -557,19 +557,15 @@ export function Tools({ isDark = false }: ToolsProps) {
         {/* heading — Space Grotesk to match Skills */}
         <h2
           style={{
-            
             fontWeight: 700,
-            fontSize: 'clamp(2rem,4vw,3.25rem)',
+            fontSize: 'clamp(2.5rem,5vw,4rem)',
             letterSpacing: '-0.02em',
             lineHeight: 1.15,
-            color: headingC,
+            color: 'var(--text-primary)',
             margin: '0 0 16px',
           }}
         >
-          <span style={{
-            background: 'var(--brand-gradient)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-          }}>{toolsTitle}</span>
+          <span>{toolsTitle}</span>
         </h2>
 
         <p style={{

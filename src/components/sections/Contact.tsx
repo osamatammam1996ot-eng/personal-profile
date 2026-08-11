@@ -183,21 +183,15 @@ export function Contact({ isDark }: ContactProps) {
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.05, ease: [0.4, 0, 0.2, 1] }}
               style={{
-                
                 fontWeight: 700,
-                fontSize: 'clamp(2rem, 3.5vw, 3rem)',
-                color: dark ? '#f0f0ff' : '#0f0f1e',
+                fontSize: 'clamp(2.5rem,5vw,4rem)',
+                color: 'var(--text-primary)',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.15,
               }}
             >
               {headline1}{' '}
-              <span style={{
-                background: 'var(--brand-gradient)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}>
+              <span>
                 {headline2}
               </span>
               <br />

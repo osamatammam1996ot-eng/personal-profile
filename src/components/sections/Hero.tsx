@@ -158,10 +158,10 @@ export function Hero({ isDark }: HeroProps) {
           transition={{ duration: 0.75, delay: 0.18, ease: [0.4, 0, 0.2, 1] }}
           className="font-heading mb-6 leading-tight tracking-tight"
         >
-          <span className="block font-bold text-[clamp(2rem,5.2vw,4rem)] text-text-secondary">
+          <span className="block font-bold text-[clamp(2.5rem,5vw,4rem)] text-text-primary">
             {heroHeadline1}
           </span>
-          <span className="block font-bold text-[clamp(2.2rem,5.6vw,4.4rem)] text-text-primary">
+          <span className="block font-bold text-[clamp(2.5rem,5vw,4rem)] text-text-primary">
             {heroHeadline2}
           </span>
         </motion.h1>
