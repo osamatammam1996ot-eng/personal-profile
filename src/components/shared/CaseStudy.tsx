@@ -276,7 +276,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                 </motion.div>
 
                 <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-                  style={{  fontWeight: 800, fontSize: 'clamp(2.8rem,7vw,6rem)', lineHeight: 1.05, letterSpacing: '-0.03em', color: 'var(--text-primary)', margin: '0 0 24px', maxWidth: 900 }}>
+                  style={{  fontWeight: 700, fontSize: 'clamp(2.8rem,7vw,6rem)', lineHeight: 1.05, letterSpacing: '-0.03em', color: 'var(--text-primary)', margin: '0 0 24px', maxWidth: 900 }}>
                   {data.title}
                 </motion.h1>
 
@@ -301,7 +301,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                     {(data?.metrics || []).map((m: any, i: number) => (
                       <motion.div key={m.label} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.55 + i * 0.07 }}
                         style={{ padding: '20px 24px', borderRadius: 16, background: 'color-mix(in srgb, var(--color-brand) 8%, transparent)', border: '1px solid color-mix(in srgb, var(--color-brand) 30%, transparent)', boxShadow: '0 4px 24px color-mix(in srgb, var(--color-brand) 10%, transparent)', minWidth: 110 }}>
-                        <div style={{  fontWeight: 800, fontSize: 'clamp(1.4rem,2.5vw,1.9rem)', background: 'var(--brand-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{m.value}</div>
+                        <div style={{  fontWeight: 700, fontSize: 'clamp(1.4rem,2.5vw,1.9rem)', background: 'var(--brand-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{m.value}</div>
                         <div style={{  fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: 4, fontWeight: 500 }}>{m.label}</div>
                       </motion.div>
                     ))}
@@ -454,7 +454,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
 
                 {/* Trade-offs */}
                 <div style={{ marginTop: 20 }}>
-                  <h3 style={{  fontWeight: 700, fontSize: '1rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em', marginBottom: 20 }}>Key Trade-offs</h3>
+                  <h3 style={{  fontWeight: 700, fontSize: '1rem', color: 'var(--text-secondary)', letterSpacing: '0.06em', marginBottom: 20 }}>Key Trade-offs</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                     {(data.process?.tradeoffs || []).map((item: any, i: number) => {
                       if (!item || !item.decision) return null;
@@ -647,7 +647,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
               <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 70% 50% at 50% 50%,rgba(99,102,241,0.07),transparent)' }} />
               <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative' }}>
                 <SectionLabel>07 — Results</SectionLabel>
-                <h2 style={{  fontWeight: 800, fontSize: 'clamp(2rem,4vw,3.5rem)', lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--text-primary)', margin: '0 0 60px' }}>
+                <h2 style={{  fontWeight: 700, fontSize: 'clamp(2rem,4vw,3.5rem)', lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--text-primary)', margin: '0 0 60px' }}>
                   Measured.<br />
                   <span style={{ background: `linear-gradient(135deg,${ACCENT},${ACCENT2},#06b6d4)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Meaningful.</span>
                 </h2>
@@ -656,7 +656,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                     <motion.div key={m.label} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-40px' }} transition={{ delay: i * 0.07, duration: 0.5 }}
                       whileHover={{ y: -4, boxShadow: '0 16px 48px rgba(99,102,241,0.2)' }}
                       style={{ padding: '28px 24px', borderRadius: 18, background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', transition: 'all 0.25s ease', cursor: 'default' }}>
-                      <div style={{  fontWeight: 800, fontSize: 'clamp(1.8rem,3vw,2.5rem)', lineHeight: 1.1, background: `linear-gradient(135deg,${ACCENT},${ACCENT2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: 8 }}>{m.value}</div>
+                      <div style={{  fontWeight: 700, fontSize: 'clamp(1.8rem,3vw,2.5rem)', lineHeight: 1.1, background: `linear-gradient(135deg,${ACCENT},${ACCENT2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: 8 }}>{m.value}</div>
                       <div style={{  fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 4 }}>{m.label}</div>
                       <div style={{  fontSize: '0.72rem', color: 'var(--border-strong)' }}>{m.sub}</div>
                     </motion.div>
@@ -722,7 +722,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
             <section style={{ padding: 'clamp(60px,8vw,100px) clamp(24px,6vw,80px)', background: BG, textAlign: 'center', borderTop: '1px solid rgba(99,102,241,0.1)' }}>
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
                 <p style={{  fontSize: '0.78rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: ACCENT, marginBottom: 20 }}>Interested in working together?</p>
-                <h2 style={{  fontWeight: 800, fontSize: 'clamp(2rem,4vw,3rem)', lineHeight: 1.15, letterSpacing: '-0.03em', color: 'var(--text-primary)', margin: '0 0 36px' }}>
+                <h2 style={{  fontWeight: 700, fontSize: 'clamp(2rem,4vw,3rem)', lineHeight: 1.15, letterSpacing: '-0.03em', color: 'var(--text-primary)', margin: '0 0 36px' }}>
                   Let's build something <span style={{ color: ACCENT2 }}>remarkable.</span>
                 </h2>
                 <motion.button onClick={onClose} whileHover={{ scale: 1.04, boxShadow: '0 16px 48px rgba(99,102,241,0.4)' }} whileTap={{ scale: 0.97 }}

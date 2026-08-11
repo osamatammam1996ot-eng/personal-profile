@@ -378,8 +378,8 @@ export function Skills({ isDark }: SkillsProps) {
 
           {/* Intro State */}
           <div id="ui-intro" className={`absolute top-[25%] md:top-1/3 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-lg`}>
-            <h2 className="text-brand text-xs md:text-sm tracking-[0.2em] mb-4" >Craft</h2>
-            <h1 className="text-4xl md:text-6xl text-text-primary mb-6 leading-tight" >
+            <h2 className="text-text-secondary font-bold text-xs md:text-sm tracking-[0.2em] mb-4" >Craft</h2>
+            <h1 className="font-bold text-4xl md:text-6xl text-text-primary mb-6 leading-tight" >
               {getStr(skills.heading1)}<br />{getStr(skills.heading2)}
             </h1>
             <p className="text-text-secondary text-base md:text-lg leading-relaxed" >
@@ -393,9 +393,9 @@ export function Skills({ isDark }: SkillsProps) {
 
           {/* State 1: Research */}
           <div id="ui-01" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-sm opacity-0 pointer-events-auto`}>
-            <h2 className="text-[#38bdf8] dark:text-[#38bdf8] text-4xl md:text-5xl font-bold mb-1 md:mb-2" >01</h2>
+            <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >01</h2>
             <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc1?.title).replace(/\n/g, ' ')}</h3>
-            <p className="text-text-secondary text-sm md:text-base mb-6 md:mb-8 italic" >
+            <p className="text-text-secondary text-sm md:text-base mb-6 md:mb-8" >
               “{getStr(disc1?.tagline)}”
             </p>
             <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-white/10`}>
@@ -409,9 +409,9 @@ export function Skills({ isDark }: SkillsProps) {
 
           {/* State 2: Design */}
           <div id="ui-02" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'left-6 md:left-10 pr-12 md:pr-0' : 'right-6 md:right-10 pl-12 md:pl-0'} max-w-sm opacity-0 pointer-events-auto`}>
-            <h2 className="text-brand text-4xl md:text-5xl font-bold mb-1 md:mb-2" >02</h2>
+            <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >02</h2>
             <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc2?.title).replace(/\n/g, ' ')}</h3>
-            <p className="text-text-secondary text-sm md:text-base mb-6 md:mb-8 italic" >
+            <p className="text-text-secondary text-sm md:text-base mb-6 md:mb-8" >
               “{getStr(disc2?.tagline)}”
             </p>
             <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-white/10`}>
@@ -426,9 +426,9 @@ export function Skills({ isDark }: SkillsProps) {
           {/* State 3: Prototyping */}
           <div id="ui-03" className={`absolute bottom-10 md:bottom-20 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-3xl opacity-0 pointer-events-auto`}>
             <div className="md:w-1/2">
-              <h2 className="text-brand text-4xl md:text-5xl font-bold mb-1 md:mb-2" >03</h2>
+              <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >03</h2>
               <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc3?.title).replace(/\n/g, ' ')}</h3>
-              <p className="text-text-secondary text-sm md:text-base mb-6 md:mb-8 italic" >
+              <p className="text-text-secondary text-sm md:text-base mb-6 md:mb-8" >
                 “{getStr(disc3?.tagline)}”
               </p>
             </div>
