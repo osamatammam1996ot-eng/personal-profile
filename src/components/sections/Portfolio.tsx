@@ -245,15 +245,7 @@ export function Portfolio({ isDark, onCursorChange, onViewCase }: PortfolioProps
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="text-center mb-20"
         >
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-block px-4 py-1.5 rounded-full text-sm mb-4 font-medium bg-brand/10 border border-brand/30 text-brand"
-            
-          >
-            {caseStudiesLabel}
-          </motion.div>
+
           <h2
             className="mt-2 font-bold text-[clamp(2rem,4vw,3.25rem)] text-text-primary tracking-tight leading-[1.15]"
             

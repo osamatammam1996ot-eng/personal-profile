@@ -378,7 +378,7 @@ export function Skills({ isDark }: SkillsProps) {
 
           {/* Intro State */}
           <div id="ui-intro" className={`absolute top-[25%] md:top-1/3 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-lg`}>
-            <h2 className="text-text-secondary font-bold text-xs md:text-sm tracking-[0.2em] mb-4" >Craft</h2>
+
             <h1 className="font-bold text-4xl md:text-6xl text-text-primary mb-6 leading-tight" >
               {getStr(skills.heading1)}<br />{getStr(skills.heading2)}
             </h1>

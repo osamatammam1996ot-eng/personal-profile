@@ -538,21 +538,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         transition={{ duration: 0.6, ease: [0.4,0,0.2,1] }}
         style={{ textAlign: 'center', marginBottom: 44, position: 'relative', zIndex: 10 }}
       >
-        {/* eyebrow — matching Skills.tsx style */}
-        <span
-          style={{
-            display: 'inline-block',
-            padding: '6px 16px', borderRadius: 100,
-            fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.04em',
-            color: eyebrowC,
-            background: eyebrowBg,
-            border: `1px solid ${eyebrowBd}`,
-            
-            marginBottom: 16,
-          }}
-        >
-          {stackLabel}
-        </span>
+
 
         {/* heading — Space Grotesk to match Skills */}
         <h2
