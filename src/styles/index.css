@@ -38,6 +38,7 @@
   --brand-hover: #361f66;
   --brand-gradient: linear-gradient(135deg, #6d4fb8 0%, #482c81 100%);
   --brand-gradient-hover: linear-gradient(135deg, #5c3e9c 0%, #361f66 100%);
+  --cursor-glow: #8468c4;
   --success: #059669; /* WCAG 2.2 AA pass */
   --warning: #d97706;
   --danger: #dc2626;
@@ -102,6 +103,7 @@
   --brand-hover: #8a73c9;
   --brand-gradient: linear-gradient(135deg, #8a73c9 0%, #6d4fb8 100%);
   --brand-gradient-hover: linear-gradient(135deg, #9b87d6 0%, #8a73c9 100%);
+  --cursor-glow: #8468c4;
   --success: #34d399; /* WCAG 2.2 AA pass on dark */
   --warning: #fbbf24;
   --danger: #ef4444;
@@ -163,6 +165,7 @@
   --color-surface-glass: var(--surface-glass);
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
+  --color-cursor-glow: var(--cursor-glow);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
@@ -174,7 +177,8 @@
   --color-border-default: var(--border-default);
   --color-border-strong: var(--border-strong);
   --color-focus-ring: var(--focus-ring);
-  --shadow-card: var(--shadow-card);
+  --drop-shadow-card: var(--shadow-card);
+  --drop-shadow-cursor: 0 0 8px var(--cursor-glow), 0 0 20px var(--cursor-glow);
   
   --color-input: var(--input);
   --color-input-background: var(--input-background);

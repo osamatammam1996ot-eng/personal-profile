@@ -73,14 +73,13 @@ export function CustomCursor({ portfolioHoverVisible, portfolioX, portfolioY }: 
       </AnimatePresence>
 
       <motion.div
-        className="fixed top-0 left-0 z-[9998] pointer-events-none"
+        className="fixed top-0 left-0 z-[9998] pointer-events-none drop-shadow-cursor"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
           translateX: "-50%",
           translateY: "-50%",
           opacity: portfolioHoverVisible ? 0 : 1,
-          filter: "drop-shadow(0 0 8px rgba(132, 104, 196, 0.8)) drop-shadow(0 0 20px rgba(132, 104, 196, 0.6))",
         }}
         transition={{ opacity: { duration: 0.15 } }}
       >
@@ -92,10 +91,7 @@ export function CustomCursor({ portfolioHoverVisible, portfolioX, portfolioY }: 
         >
           <polygon
             points="50,5 88.97,27.5 88.97,72.5 50,95 11.03,72.5 11.03,27.5"
-            fill={isHoveringLink ? '#8468c4' : '#8468c4'}
-            fillOpacity={isHoveringLink ? 0.6 : 0.15}
-            stroke="#8468c4"
-            strokeWidth="8"
+            className={`stroke-cursor-glow stroke-[8px] transition-all duration-300 ${isHoveringLink ? 'fill-cursor-glow/50' : 'fill-cursor-glow/10'}`}
             strokeLinejoin="round"
           />
         </svg>
