@@ -87,13 +87,13 @@ export function CustomCursor({ portfolioHoverVisible, portfolioX, portfolioY }: 
           width={isHoveringLink ? 42 : 26}
           height={isHoveringLink ? 42 : 26}
           viewBox="0 0 100 100"
-          className="transition-all duration-300 drop-shadow-[0_0_8px_var(--color-brand)]"
+          className="transition-all duration-300 drop-shadow-[0_0_8px_#8468c4]"
         >
           <polygon
-            points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5"
-            fill={isHoveringLink ? 'var(--color-brand)' : 'transparent'}
+            points="50,5 88.97,27.5 88.97,72.5 50,95 11.03,72.5 11.03,27.5"
+            fill={isHoveringLink ? '#8468c4' : 'transparent'}
             fillOpacity={isHoveringLink ? 0.3 : 0}
-            stroke="var(--color-brand)"
+            stroke="#8468c4"
             strokeWidth="6"
             strokeLinejoin="round"
           />
