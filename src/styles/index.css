@@ -209,6 +209,12 @@
     width: 100%;
   }
 
+  @media (pointer: fine) {
+    body, a, button, input, select, textarea, [role="button"], [role="tab"] {
+      cursor: none !important;
+    }
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);

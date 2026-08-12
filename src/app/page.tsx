@@ -11,6 +11,7 @@ import { Tools } from '../components/sections/Tools';
 import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/layout/Footer';
 import { CaseStudy } from '../components/shared/CaseStudy';
+import { CustomCursor } from '../components/shared/CustomCursor';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { CmsProvider, useCms } from '../contexts/CmsContext';
 import { ErrorBoundary } from '../components/layout/ErrorBoundary';
@@ -88,36 +89,13 @@ export default function Home() {
     <div
       dir={isRTL ? 'rtl' : 'ltr'}
       className="min-h-screen bg-surface transition-colors duration-400 overflow-clip"
-      style={{
-        
-        cursor: cursor.visible ? 'none' : 'default',
-      }}
     >
-      {/* Custom cursor for portfolio section */}
-      <AnimatePresence>
-        {cursor.visible && (
-          <motion.div
-            key="custom-cursor"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed z-[9999] pointer-events-none flex items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-hover opacity-90 backdrop-blur-sm shadow-[0_8px_30px_var(--color-brand)]"
-            style={{
-              left: cursor.x - 40,
-              top: cursor.y - 40,
-              width: 80,
-              height: 80,
-            }}
-          >
-            <span
-              className="text-white text-center tracking-wider leading-snug font-semibold text-[0.62rem]"
-            >
-              View<br />Project
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Global custom cursor */}
+      <CustomCursor
+        portfolioHoverVisible={cursor.visible}
+        portfolioX={cursor.x}
+        portfolioY={cursor.y}
+      />
 
       {error && (
         <div className="p-4 bg-danger text-white text-center font-medium">

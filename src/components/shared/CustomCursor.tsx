@@ -1,0 +1,104 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring, AnimatePresence } from "motion/react";
+
+interface CustomCursorProps {
+  portfolioHoverVisible: boolean;
+  portfolioX: number;
+  portfolioY: number;
+}
+
+export function CustomCursor({ portfolioHoverVisible, portfolioX, portfolioY }: CustomCursorProps) {
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+
+  const springConfig = { damping: 28, stiffness: 400, mass: 0.5 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
+
+  const [isHoveringLink, setIsHoveringLink] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const moveCursor = (e: MouseEvent) => {
+      if (!isVisible) setIsVisible(true);
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+    };
+
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a, button, input, textarea, select, [role="button"], [role="tab"]')) {
+        setIsHoveringLink(true);
+      } else {
+        setIsHoveringLink(false);
+      }
+    };
+
+    window.addEventListener("mousemove", moveCursor);
+    window.addEventListener("mouseover", handleMouseOver);
+
+    return () => {
+      window.removeEventListener("mousemove", moveCursor);
+      window.removeEventListener("mouseover", handleMouseOver);
+    };
+  }, [cursorX, cursorY, isVisible]);
+
+  if (!isVisible) return null;
+
+  return (
+    <>
+      <AnimatePresence>
+        {portfolioHoverVisible && (
+          <motion.div
+            key="custom-cursor-portfolio"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            className="fixed z-[9999] pointer-events-none flex items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-hover opacity-90 backdrop-blur-sm shadow-[0_8px_30px_var(--color-brand)]"
+            style={{
+              left: portfolioX - 40,
+              top: portfolioY - 40,
+              width: 80,
+              height: 80,
+            }}
+          >
+            <span className="text-white text-center tracking-wider leading-snug font-semibold text-[0.62rem]">
+              View<br />Project
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        className="fixed top-0 left-0 z-[9998] pointer-events-none mix-blend-difference"
+        style={{
+          x: cursorXSpring,
+          y: cursorYSpring,
+          translateX: "-50%",
+          translateY: "-50%",
+          opacity: portfolioHoverVisible ? 0 : 1,
+        }}
+        transition={{ opacity: { duration: 0.15 } }}
+      >
+        <svg
+          width={isHoveringLink ? 42 : 26}
+          height={isHoveringLink ? 42 : 26}
+          viewBox="0 0 100 100"
+          className="transition-all duration-300 drop-shadow-[0_0_8px_var(--color-brand)]"
+        >
+          <polygon
+            points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5"
+            fill={isHoveringLink ? 'var(--color-brand)' : 'transparent'}
+            fillOpacity={isHoveringLink ? 0.3 : 0}
+            stroke="var(--color-brand)"
+            strokeWidth="6"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </motion.div>
+    </>
+  );
+}
