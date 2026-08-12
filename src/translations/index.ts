@@ -26,9 +26,9 @@ const en = {
 
   // Why Hire Me
   whyHireMe: {
-    word1: 'WHY',
-    word2: 'HIRE',
-    word3: 'ME',
+    word1: 'Why',
+    word2: 'Hire',
+    word3: 'Me',
     cards: [
       {
         title: 'Systems Thinking',

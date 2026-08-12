@@ -209,9 +209,9 @@ export const DEFAULT_CMS_DATA: any = {
     cta2: { en: "Let's talk", ar: '\u0644\u0646\u062a\u062d\u062f\u062b' },
   },
   whyHireMe: {
-    word1: { en: 'WHY', ar: '\u0644\u0645\u0627\u0630\u0627' },
-    word2: { en: 'HIRE', ar: '\u062a\u062e\u062a\u0627\u0631\u0646\u064a' },
-    word3: { en: 'ME', ar: '' },
+    word1: { en: 'Why', ar: 'لماذا' },
+    word2: { en: 'Hire', ar: 'تختارني' },
+    word3: { en: 'Me', ar: '' },
     cards: [
       {
         title: { en: 'Systems Thinking', ar: '\u0627\u0644\u062a\u0641\u0643\u064a\u0631 \u0627\u0644\u0645\u0646\u0638\u0648\u0645\u064a' },
