@@ -120,6 +120,8 @@
   --focus-ring: #a5b4fc;
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.3);
   --input: oklch(0.269 0 0);
+  --input-background: rgba(255, 255, 255, 0.05);
+  --switch-background: rgba(255, 255, 255, 0.1);
   --ring: var(--focus-ring);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
@@ -214,14 +216,14 @@
   }
 
   @media (pointer: fine) {
-    body:not(.admin-mode), 
-    body:not(.admin-mode) a, 
-    body:not(.admin-mode) button, 
-    body:not(.admin-mode) input, 
-    body:not(.admin-mode) select, 
-    body:not(.admin-mode) textarea, 
-    body:not(.admin-mode) [role="button"], 
-    body:not(.admin-mode) [role="tab"] {
+    .portfolio-mode, 
+    .portfolio-mode a, 
+    .portfolio-mode button, 
+    .portfolio-mode input, 
+    .portfolio-mode select, 
+    .portfolio-mode textarea, 
+    .portfolio-mode [role="button"], 
+    .portfolio-mode [role="tab"] {
       cursor: none !important;
     }
   }

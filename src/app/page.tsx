@@ -88,7 +88,7 @@ export default function Home() {
   return (
     <div
       dir={isRTL ? 'rtl' : 'ltr'}
-      className="min-h-screen bg-surface transition-colors duration-400 overflow-clip"
+      className="min-h-screen bg-surface transition-colors duration-400 overflow-clip portfolio-mode"
     >
       {/* Global custom cursor */}
       <CustomCursor
