@@ -30,10 +30,6 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
       document.documentElement.classList.remove('dark');
     }
 
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-    };
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'F12') {
         e.preventDefault();
@@ -46,11 +42,9 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
       }
     };
 
-    document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isDark]);
@@ -87,6 +81,7 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
 
   return (
     <div
+      id="app-wrapper"
       dir={isRTL ? 'rtl' : 'ltr'}
       className="min-h-screen bg-surface transition-colors duration-400 overflow-clip portfolio-mode"
     >

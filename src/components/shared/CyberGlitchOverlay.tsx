@@ -44,6 +44,7 @@ export function CyberGlitchOverlay() {
       `;
       
       if (target.closest(interactiveSelector)) return;
+      if (e.defaultPrevented) return;
 
       // Safe to trigger the glitch, prevent default context menu
       e.preventDefault();
@@ -52,14 +53,14 @@ export function CyberGlitchOverlay() {
       setGlitchOrigin(origin);
       setGlitchActive(true);
 
-      // Add glitch class to the document body so we can skew/filter the whole layout wrapper
-      document.body.classList.add("is-glitching");
+      const wrapper = document.getElementById("app-wrapper") || document.body;
+      wrapper.classList.add("is-glitching");
 
       // Cleanup
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
         setGlitchActive(false);
-        document.body.classList.remove("is-glitching");
+        wrapper.classList.remove("is-glitching");
       }, 450); // Glitch duration fallback (matching CSS duration)
     };
 
@@ -68,7 +69,8 @@ export function CyberGlitchOverlay() {
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      document.body.classList.remove("is-glitching");
+      const wrapper = document.getElementById("app-wrapper") || document.body;
+      wrapper.classList.remove("is-glitching");
     };
   }, []);
 
