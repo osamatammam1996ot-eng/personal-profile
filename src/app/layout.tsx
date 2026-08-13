@@ -34,7 +34,6 @@ export const metadata: Metadata = {
   }
 };
 
-import { CyberGlitchOverlay } from "../components/shared/CyberGlitchOverlay";
 
 export default function RootLayout({
   children,
@@ -97,7 +96,6 @@ export default function RootLayout({
           <LanguageProvider>
             <CmsProvider>
               {children}
-              <CyberGlitchOverlay />
             </CmsProvider>
           </LanguageProvider>
         </ErrorBoundary>
