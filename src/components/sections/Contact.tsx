@@ -291,9 +291,7 @@ export function Contact({ isDark }: ContactProps) {
                 {email}
               </a>
               <div className="flex items-center gap-4 text-text-muted shrink-0 pb-1">
-                <a href={`mailto:${email}`} aria-label="Open email client" className="outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm">
-                  <ArrowUpRight className="w-5 h-5 cursor-pointer hover:text-foreground transition-colors" />
-                </a>
+
                 <button onClick={handleCopy} aria-label="Copy email address" className="hover:text-foreground transition-colors relative outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm">
                   <Copy className="w-5 h-5" />
                   {copied && (
