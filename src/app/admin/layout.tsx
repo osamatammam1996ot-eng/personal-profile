@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { verifyAuthAction } from '@/app/actions/auth';
+import { AdminCursorFix } from './AdminCursorFix';
 
 export default async function AdminLayout({
   children,
@@ -12,5 +13,10 @@ export default async function AdminLayout({
     redirect('/login');
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <AdminCursorFix />
+      {children}
+    </>
+  );
 }

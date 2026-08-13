@@ -214,7 +214,14 @@
   }
 
   @media (pointer: fine) {
-    body, a, button, input, select, textarea, [role="button"], [role="tab"] {
+    body:not(.admin-mode), 
+    body:not(.admin-mode) a, 
+    body:not(.admin-mode) button, 
+    body:not(.admin-mode) input, 
+    body:not(.admin-mode) select, 
+    body:not(.admin-mode) textarea, 
+    body:not(.admin-mode) [role="button"], 
+    body:not(.admin-mode) [role="tab"] {
       cursor: none !important;
     }
   }
