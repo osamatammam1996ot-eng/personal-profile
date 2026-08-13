@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, useReducedMotion } from 'motion/react';
 import { DecorativeShape } from '../shared/DecorativeShape';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
@@ -54,6 +54,81 @@ export function Contact({ isDark }: ContactProps) {
   const { lang, isRTL } = useLanguage();
   const { cmsData } = useCms();
   const [copied, setCopied] = useState(false);
+
+  // --- 3D Hover Interaction ---
+  const reducedMotion = useReducedMotion();
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches);
+  }, []);
+
+  const shouldAnimate = !reducedMotion && !isTouchDevice;
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const isHovered = useMotionValue(0);
+
+  const springConfig = { damping: 20, stiffness: 100, mass: 0.5 };
+  const springX = useSpring(mouseX, springConfig);
+  const springY = useSpring(mouseY, springConfig);
+  const hoverSpring = useSpring(isHovered, { damping: 20, stiffness: 100 });
+
+  const rotateX = useTransform(springY, [-0.5, 0.5], [4, -4]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], [-5, 5]);
+  const scale = useTransform(hoverSpring, [0, 1], [1, 1.01]);
+  const y = useTransform(hoverSpring, [0, 1], [0, -4]);
+
+  const zTitle = useTransform(hoverSpring, [0, 1], [0, 16]);
+  const zActions = useTransform(hoverSpring, [0, 1], [0, 12]);
+  const zSocials = useTransform(hoverSpring, [0, 1], [0, 8]);
+  const zText = useTransform(hoverSpring, [0, 1], [0, 4]);
+
+  const glowX = useSpring(rawX, { damping: 30, stiffness: 200 });
+  const glowY = useSpring(rawY, { damping: 30, stiffness: 200 });
+  const glowOpacity = useTransform(hoverSpring, [0, 1], [0, isDark ? 0.15 : 0.05]);
+  const glowBackground = useMotionTemplate`radial-gradient(circle at ${glowX}px ${glowY}px, var(--brand), transparent 60%)`;
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!shouldAnimate || !cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const posY = e.clientY - rect.top;
+    
+    const normX = (x / rect.width) - 0.5;
+    const normY = (posY / rect.height) - 0.5;
+    
+    mouseX.set(normX);
+    mouseY.set(normY);
+    rawX.set(x);
+    rawY.set(posY);
+  };
+
+  const handlePointerEnter = () => {
+    if (!shouldAnimate) return;
+    isHovered.set(1);
+  };
+
+  const handlePointerLeave = () => {
+    if (!shouldAnimate) return;
+    isHovered.set(0);
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  const handleFocus = () => {
+    if (!shouldAnimate) return;
+    isHovered.set(1);
+  };
+
+  const handleBlur = () => {
+    if (!shouldAnimate) return;
+    isHovered.set(0);
+  };
+  // -----------------------------
 
   const email = cmsData?.contact?.email || 'osvartsarmen72604@gmail.com';
   const availability = cmsData?.contact?.availability?.[lang] || (lang === 'en' ? 'Available for new projects' : 'متاح لمشاريع جديدة');
@@ -167,26 +242,59 @@ export function Contact({ isDark }: ContactProps) {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.5 }}
           className="relative w-full"
+          style={{ perspective: 1000 }}
         >
-          <div className="relative z-10 p-8 md:p-12 rounded-3xl border border-border-default bg-surface-elevated/80 backdrop-blur-xl shadow-card flex flex-col">
+          <motion.div
+            ref={cardRef}
+            onPointerMove={handlePointerMove}
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            tabIndex={-1}
+            style={shouldAnimate ? {
+              rotateX,
+              rotateY,
+              scale,
+              y,
+              transformStyle: 'preserve-3d',
+            } : undefined}
+            className="relative z-10 p-8 md:p-12 rounded-3xl border border-border-default bg-surface-elevated/80 backdrop-blur-xl shadow-card flex flex-col transition-colors duration-300 hover:border-border-strong hover:bg-surface-elevated focus-within:border-border-strong focus-within:bg-surface-elevated overflow-hidden outline-none"
+          >
+            {/* Glow layer */}
+            {shouldAnimate && (
+              <motion.div
+                className="pointer-events-none absolute inset-0 z-0"
+                style={{
+                  background: glowBackground,
+                  opacity: glowOpacity,
+                }}
+              />
+            )}
             
-            <span className="text-xs font-bold text-brand uppercase tracking-wider mb-6 block">
+            <motion.span 
+              className="relative z-10 text-xs font-bold text-brand uppercase tracking-wider mb-6 block"
+              style={shouldAnimate ? { z: zTitle } : undefined}
+            >
               {emailLabel}
-            </span>
+            </motion.span>
             
             {/* Email Action */}
-            <div className="flex flex-wrap sm:flex-nowrap items-end justify-between border-b border-brand pb-3 mb-10 gap-4">
+            <motion.div 
+              className="relative z-10 flex flex-wrap sm:flex-nowrap items-end justify-between border-b border-brand pb-3 mb-10 gap-4"
+              style={shouldAnimate ? { z: zActions } : undefined}
+            >
               <a 
                 href={`mailto:${email}`} 
-                className="text-2xl sm:text-3xl lg:text-[1.75rem] font-medium text-foreground hover:text-brand transition-colors break-all"
+                className="text-2xl sm:text-3xl lg:text-[1.75rem] font-medium text-foreground hover:text-brand transition-colors break-all outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm"
               >
                 {email}
               </a>
               <div className="flex items-center gap-4 text-text-muted shrink-0 pb-1">
-                <a href={`mailto:${email}`} aria-label="Open email client">
+                <a href={`mailto:${email}`} aria-label="Open email client" className="outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm">
                   <ArrowUpRight className="w-5 h-5 cursor-pointer hover:text-foreground transition-colors" />
                 </a>
-                <button onClick={handleCopy} aria-label="Copy email address" className="hover:text-foreground transition-colors relative">
+                <button onClick={handleCopy} aria-label="Copy email address" className="hover:text-foreground transition-colors relative outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm">
                   <Copy className="w-5 h-5" />
                   {copied && (
                     <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded">
@@ -195,10 +303,13 @@ export function Contact({ isDark }: ContactProps) {
                   )}
                 </button>
               </div>
-            </div>
+            </motion.div>
 
             {/* Socials Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+            <motion.div 
+              className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10"
+              style={shouldAnimate ? { z: zSocials } : undefined}
+            >
               {SOCIALS.map((social) => {
                 const url = socialLinks[social.name as keyof typeof socialLinks] || '#';
                 return (
@@ -207,7 +318,7 @@ export function Contact({ isDark }: ContactProps) {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center justify-between p-4 rounded-2xl border border-border-default bg-background hover:border-border-strong transition-colors"
+                    className="group flex items-center justify-between p-4 rounded-2xl border border-border-default bg-background hover:bg-surface-elevated hover:border-border-strong focus-visible:ring-2 focus-visible:ring-brand focus-visible:bg-surface-elevated outline-none transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div style={{ color: social.color }}>
@@ -217,17 +328,20 @@ export function Contact({ isDark }: ContactProps) {
                         {social.name}
                       </span>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-foreground transition-colors" />
+                    <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-foreground group-hover:translate-x-1 group-focus-visible:translate-x-1 transition-all" />
                   </a>
                 );
               })}
-            </div>
+            </motion.div>
 
             {/* Bottom Note */}
-            <p className="text-sm font-normal text-text-muted leading-relaxed">
+            <motion.p 
+              className="relative z-10 text-sm font-normal text-text-muted leading-relaxed"
+              style={shouldAnimate ? { z: zText } : undefined}
+            >
               {bottomNote}
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
           {/* 3D Decorative Shape overlapping the bottom right */}
           <div className="absolute -bottom-16 -right-16 z-0 opacity-80 pointer-events-none hidden md:block">
