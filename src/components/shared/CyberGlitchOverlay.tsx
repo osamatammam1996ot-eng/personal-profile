@@ -43,7 +43,9 @@ export function CyberGlitchOverlay() {
         [data-no-glitch], [role="menu"], [role="menuitem"]
       `;
       
+      if (!(target instanceof Element)) return;
       if (target.closest(interactiveSelector)) return;
+
       if (e.defaultPrevented) return;
 
       // Safe to trigger the glitch, prevent default context menu
