@@ -16,10 +16,10 @@ import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { CmsProvider, useCms } from '../contexts/CmsContext';
 import { ErrorBoundary } from '../components/layout/ErrorBoundary';
 
-export default function Home() {
+export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: { id: number; title: string } | null } = {}) {
   const [isDark, setIsDark] = useState(true);
   const [cursor, setCursor] = useState({ visible: false, x: 0, y: 0 });
-  const [caseStudy, setCaseStudy] = useState<{ id: number; title: string } | null>(null);
+  const [caseStudy, setCaseStudy] = useState<{ id: number; title: string } | null>(initialCaseStudy);
   const { isRTL, fontBody } = useLanguage();
   const { cmsData, loading, error } = useCms();
 
