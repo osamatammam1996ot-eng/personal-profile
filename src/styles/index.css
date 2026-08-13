@@ -290,11 +290,11 @@
     animation: glitch-slices var(--glitch-duration) var(--glitch-easing) forwards;
   }
 
-  .is-glitching .glitch-flash {
+  .glitch-flash {
     animation: glitch-flash-anim var(--glitch-duration) var(--glitch-easing) forwards;
   }
 
-  .is-glitching .glitch-scanlines {
+  .glitch-scanlines {
     animation: glitch-scanlines-anim var(--glitch-duration) linear forwards;
   }
 
@@ -308,6 +308,7 @@
       display: none;
     }
     .glitch-flash {
+      animation: none !important;
       opacity: var(--glitch-opacity) !important;
       transition: opacity 200ms;
     }
