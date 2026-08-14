@@ -233,7 +233,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-surface overflow-hidden font-body">
+    <div className="flex h-screen bg-transparent overflow-hidden font-body relative z-0 p-4 lg:p-6 gap-4 lg:gap-6">
       {/* ── Sidebar ─────────────────────────────────────────────────────────── */}
       <aside style={{
         width: sidebarOpen ? 240 : 0,

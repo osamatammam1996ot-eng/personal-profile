@@ -120,7 +120,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
 
         <div className="flex flex-col gap-4">
           {caseStudy.media.map((item, idx) => (
-            <div key={item.id} className="bg-surface-glass p-6 rounded-2xl border border-border-default/30 flex gap-4 items-start shadow-card backdrop-blur-md hover:border-border-default/60 transition-all">
+            <div key={item.id} className="bg-admin-glass-card p-7 rounded-[24px] border border-admin-border-subtle flex gap-5 items-start shadow-2xl backdrop-blur-2xl hover:border-admin-border-strong hover:bg-admin-glass-card-hover transition-all duration-300 group">
               
               <div className="flex flex-col gap-1 mt-6">
                 <button onClick={() => handleMoveMedia(idx, 'up')} disabled={idx === 0} className={`p-1 bg-transparent border-none ${idx === 0 ? "text-white/10 cursor-default" : "text-text-muted cursor-pointer hover:text-text-primary"}`}>
