@@ -85,7 +85,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
           >
             <div className="h-[1px] w-8 bg-brand/50"></div>
             <span className="text-brand font-mono text-[11px] uppercase tracking-[0.2em] font-bold">
-              04 — Recommendations
+              {lang === 'en' ? 'Recommendations' : 'التوصيات'}
             </span>
             <div className="h-[1px] w-8 bg-brand/50"></div>
           </motion.div>
@@ -94,8 +94,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-black text-white tracking-tight uppercase"
-            style={{ fontFamily: 'var(--font-heading)' }}
+            className="mt-2 font-bold text-[clamp(2rem,4vw,3.25rem)] text-text-primary tracking-tight leading-[1.15]"
           >
             {lang === 'en' ? 'What People Say' : 'ماذا يقولون'}
           </motion.h2>
@@ -104,7 +103,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-4 text-white/50 text-lg max-w-2xl font-medium"
+            className="mt-4 text-text-secondary text-base md:text-lg max-w-2xl"
           >
             {lang === 'en' 
               ? "A few words from the people I've built, solved, and collaborated with." 

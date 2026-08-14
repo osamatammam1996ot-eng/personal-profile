@@ -15,6 +15,7 @@ const CMS_TO_DOM_IDS: Record<string, string> = {
   whyHireMe: 'why-me',
   skills: 'skills',
   portfolio: 'work',
+  recommendations: 'recommendations',
   tools: 'tools',
   contact: 'contact'
 };
@@ -23,7 +24,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
   const { lang, toggleLang, isRTL, fontBody, fontHeading, t } = useLanguage();
   const { cmsData } = useCms();
 
-  const activeOrder = cmsData?.sectionOrder || ['hero', 'whyHireMe', 'skills', 'portfolio', 'tools', 'contact'];
+  const activeOrder = cmsData?.sectionOrder || ['hero', 'whyHireMe', 'skills', 'portfolio', 'recommendations', 'tools', 'contact'];
   const SECTION_IDS = activeOrder
     .filter(k => cmsData?.sections[k as keyof typeof cmsData.sections])
     .map(k => CMS_TO_DOM_IDS[k])
@@ -37,6 +38,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
     whyHireMe: 'whyMe',
     skills: 'skills',
     portfolio: 'work',
+    recommendations: 'recommendations',
     tools: 'tools',
     contact: 'contact'
   };
