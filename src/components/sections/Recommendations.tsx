@@ -95,14 +95,14 @@ export function Recommendations({ isDark }: RecommendationsProps) {
               animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20, rotateX: -10 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 w-full max-w-2xl bg-[#080810]/80 backdrop-blur-xl border border-brand/20 p-8 md:p-12 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.1)] group"
+              className="relative z-10 w-full max-w-2xl min-h-[380px] md:min-h-[420px] flex flex-col justify-center bg-[#080810]/80 backdrop-blur-xl border border-brand/20 p-8 md:p-12 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.1)] group"
             >
               <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-brand/5 to-transparent rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
               <Quote size={48} className="text-brand/20 absolute top-8 left-8 -z-10 rotate-180" />
               
               <div className="relative z-10 flex flex-col items-center text-center">
-                <p className="text-xl md:text-2xl text-white/90 leading-relaxed font-medium mb-8">
+                <p className="text-lg md:text-xl text-white/90 leading-relaxed font-medium mb-8">
                   "{activeRec.comment[lang]}"
                 </p>
                 
