@@ -12,6 +12,7 @@ import { HomeEditor } from '../../components/cms/editors/HomeEditor';
 import { CaseStudiesEditor } from '../../components/cms/editors/CaseStudiesEditor';
 import { GlobalSettingsEditor } from '../../components/cms/editors/GlobalSettingsEditor';
 import { RecommendationsEditor } from '../../components/cms/editors/RecommendationsEditor';
+import { LogoMarqueeEditor } from '../../components/cms/editors/LogoMarqueeEditor';
 import { Button } from '../../components/ui/button';
 
 // Deep-merge helper: ensures every key from `base` exists in the result,
@@ -57,6 +58,7 @@ const NAV: NavSection[] = [
     items: [
       { id: 'home-visibility', label: 'Section Visibility', icon: '👁️' },
       { id: 'home-hero', label: 'Hero', icon: '🏠' },
+      { id: 'home-logo-marquee', label: 'Logo Marquee', icon: '🖼️' },
       { id: 'home-whyhireme', label: 'Why Hire Me', icon: '⭐' },
       { id: 'home-skills', label: 'Skills (Craft Engine)', icon: '🔮' },
       { id: 'home-tools', label: 'Tools', icon: '🛠️' },
@@ -218,6 +220,7 @@ export default function AdminDashboard() {
   const getSectionVisible = (id: string): boolean | null => {
     if (!draft) return null;
     if (id === 'home-hero') return draft.sections.hero;
+    if (id === 'home-logo-marquee') return draft.sections.logoMarquee;
     if (id === 'home-whyhireme') return draft.sections.whyHireMe;
     if (id === 'home-portfolio') return draft.sections.portfolio;
     if (id === 'home-recommendations') return draft.sections.recommendations;
@@ -437,11 +440,17 @@ export default function AdminDashboard() {
             {/* Editors */}
             {!loading && draft && (
               <>
-                {activeSection.startsWith('home-') && activeSection !== 'home-recommendations' && (
+                {activeSection.startsWith('home-') && activeSection !== 'home-recommendations' && activeSection !== 'home-logo-marquee' && (
                   <HomeEditor
                     draft={draft}
                     updateDraft={updateDraft}
                     activeSection={activeSection}
+                  />
+                )}
+                {activeSection === 'home-logo-marquee' && (
+                  <LogoMarqueeEditor
+                    draft={draft}
+                    updateDraft={updateDraft}
                   />
                 )}
                 {activeSection === 'home-recommendations' && (
@@ -485,6 +494,7 @@ function getActiveSectionLabel(id: string): string {
   const labels: Record<string, string> = {
     'home-visibility': 'Section Visibility',
     'home-hero': 'Hero',
+    'home-logo-marquee': 'Logo Marquee',
     'home-whyhireme': 'Why Hire Me',
     'home-skills': 'Skills (Craft Engine)',
     'home-tools': 'Tools',

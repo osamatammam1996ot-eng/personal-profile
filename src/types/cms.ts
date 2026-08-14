@@ -3,6 +3,7 @@ export type Bilingual<T = string> = { en: T; ar: T };
 
 export interface CmsSections {
   hero: boolean;
+  logoMarquee: boolean;
   whyHireMe: boolean;
   skills: boolean;
   portfolio: boolean;
@@ -64,12 +65,6 @@ export interface CmsCaseStudyMedia {
   url: string;
 }
 
-export interface CmsCaseStudyMedia {
-  id: string;
-  type: 'image' | 'video';
-  url: string;
-}
-
 export interface CmsCaseStudy {
   id: number;
   visible: boolean;
@@ -84,6 +79,14 @@ export interface CmsRecommendation {
   position: Bilingual;
   comment: Bilingual;
   avatar: string;
+}
+
+export interface CmsLogo {
+  id: string;
+  visible: boolean;
+  name: string;
+  url: string;
+  href?: string;
 }
 
 export interface CmsSkills {
@@ -133,6 +136,7 @@ export interface CmsData {
   sectionOrder: string[];
   sections: CmsSections;
   hero: CmsHero;
+  logoMarquee: CmsLogo[];
   whyHireMe: CmsWhyHireMe;
   skills: CmsSkills;
   tools: CmsTools;
@@ -151,9 +155,10 @@ export type CmsCaseStudyRaw = CmsCaseStudy;
 
 // Default CMS data
 export const DEFAULT_CMS_DATA: any = {
-  sectionOrder: ['hero', 'whyHireMe', 'skills', 'portfolio', 'recommendations', 'tools', 'contact', 'footer'],
+  sectionOrder: ['hero', 'logoMarquee', 'whyHireMe', 'skills', 'portfolio', 'recommendations', 'tools', 'contact', 'footer'],
   sections: {
     hero: true,
+    logoMarquee: true,
     whyHireMe: true,
     skills: true,
     portfolio: true,
@@ -171,6 +176,12 @@ export const DEFAULT_CMS_DATA: any = {
     cta1: { en: 'See my work', ar: '\u0634\u0627\u0647\u062f \u0623\u0639\u0645\u0627\u0644\u064a' },
     cta2: { en: "Let's talk", ar: '\u0644\u0646\u062a\u062d\u062f\u062b' },
   },
+  logoMarquee: [
+    { id: '1', visible: true, name: 'ServeBig', url: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg' },
+    { id: '2', visible: true, name: 'SEHA', url: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg' },
+    { id: '3', visible: true, name: 'realize', url: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' },
+    { id: '4', visible: true, name: 'Royal Commission', url: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg' }
+  ],
   whyHireMe: {
     word1: { en: 'Why', ar: 'لماذا' },
     word2: { en: 'Hire', ar: 'تختارني' },

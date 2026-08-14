@@ -11,6 +11,7 @@ import { Tools } from '../components/sections/Tools';
 import { Recommendations } from '../components/sections/Recommendations';
 import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/layout/Footer';
+import { LogoMarquee } from '../components/sections/LogoMarquee';
 import { CaseStudy } from '../components/shared/CaseStudy';
 import { CustomCursor } from '../components/shared/CustomCursor';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
@@ -114,11 +115,12 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
       <Navigation isDark={isDark} onToggleDark={() => setIsDark(d => !d)} />
 
       <main>
-        {(cmsData.sectionOrder || ['hero', 'whyHireMe', 'skills', 'portfolio', 'tools', 'contact', 'footer']).map(id => {
+        {(cmsData.sectionOrder || ['hero', 'logoMarquee', 'whyHireMe', 'skills', 'portfolio', 'tools', 'contact', 'footer']).map(id => {
           if (!cmsData.sections[id as keyof typeof cmsData.sections]) return null;
           
           switch(id) {
             case 'hero': return <Hero key={id} isDark={isDark} />;
+            case 'logoMarquee': return <LogoMarquee key={id} isDark={isDark} />;
             case 'whyHireMe': return <WhyHireMe key={id} isDark={isDark} />;
             case 'skills': return <Skills key={id} isDark={isDark} />;
             case 'portfolio': return <Portfolio key={id} isDark={isDark} onCursorChange={handleCursorChange} onViewCase={handleViewCase} />;
