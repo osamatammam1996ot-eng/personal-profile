@@ -209,7 +209,7 @@ export function Tools({ isDark = false }: ToolsProps) {
   const fillLightRef= useRef<THREE.PointLight         | null>(null);
   
   const panelsRef = useRef<{ sprite: THREE.Sprite; grp: THREE.Group; idx: number }[]>([]);
-  const rebuildSpritesRef = useRef<(() => void) | null>(null);
+  const rebuildSpritesRef = useRef<((forceIsDark?: boolean) => void) | null>(null);
 
   useDustCanvas(dustRef, isDark);
 
@@ -308,7 +308,7 @@ export function Tools({ isDark = false }: ToolsProps) {
     };
     rebuildSpritesRef.current = rebuildSprites;
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(rebuildSprites);
+      document.fonts.ready.then(() => rebuildSprites());
     }
 
     let animRX = 0, animRY = 0;
@@ -670,7 +670,7 @@ export function Tools({ isDark = false }: ToolsProps) {
                 
                 background: `rgba(${tool.rgb.map(v=>Math.round(v*255)).join(',')},0.18)`,
                 border: `1px solid ${tool.glow}66`,
-                color: tool.glow,
+                color: isDark ? tool.glow : `rgba(${tool.rgb.map(v=>Math.floor(v*255*0.6)).join(',')},1)`,
               }}>
                 {tool.abbr}
               </div>
@@ -773,7 +773,8 @@ export function Tools({ isDark = false }: ToolsProps) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 15, fontWeight: 700, letterSpacing: '-0.02em',
                   background: `rgba(${tool.rgb.map(v=>Math.round(v*255)).join(',')},0.18)`,
-                  border: `1px solid ${tool.glow}66`, color: tool.glow,
+                  border: `1px solid ${tool.glow}66`,
+                  color: isDark ? tool.glow : `rgba(${tool.rgb.map(v=>Math.floor(v*255*0.6)).join(',')},1)`,
                 }}>{tool.abbr}</div>
                 <div>
                   <div style={{
