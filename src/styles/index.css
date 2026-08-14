@@ -53,7 +53,8 @@
   --border-default: rgba(0, 0, 0, 0.15);
   --border-strong: rgba(0, 0, 0, 0.4); /* 3:1 pass for UI borders */
   --focus-ring: #6366f1;
-  --overlay: rgba(255, 255, 255, 0.2);
+  --overlay: rgba(255, 255, 255, 0.1);
+  --vignette: radial-gradient(circle, transparent 40%, rgba(255,255,255,0.8) 150%);
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.08);
   --input: transparent;
   --input-background: #f3f3f5;
@@ -119,7 +120,8 @@
   --border-default: rgba(255, 255, 255, 0.15);
   --border-strong: rgba(255, 255, 255, 0.4);
   --focus-ring: #a5b4fc;
-  --overlay: rgba(0, 0, 0, 0.2);
+  --overlay: rgba(0, 0, 0, 0.1);
+  --vignette: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.9) 150%);
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.3);
   --input: oklch(0.269 0 0);
   --input-background: rgba(255, 255, 255, 0.05);
@@ -209,6 +211,12 @@
 }
 
 
+
+@layer utilities {
+  .bg-vignette {
+    background-image: var(--vignette);
+  }
+}
 
 @layer base {
   * {

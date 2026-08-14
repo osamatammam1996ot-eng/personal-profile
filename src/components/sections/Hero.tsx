@@ -99,6 +99,9 @@ export function Hero({ isDark }: HeroProps) {
       {/* Overlay layer requested by user */}
       <div className="absolute inset-0 z-[15] pointer-events-none bg-overlay" />
 
+      {/* Vignette layer */}
+      <div className="absolute inset-0 z-[16] pointer-events-none bg-vignette" />
+
       {/* Decorative 3D Shape */}
       <DecorativeShape
         shape="icosahedron"
