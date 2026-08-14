@@ -56,7 +56,19 @@ function mergeDeep<T>(base: T, override: any): T {
 }
 
 function normalizeCmsData(input: unknown): CmsData {
-  return mergeDeep(DEFAULT_CMS_DATA, input);
+  const data = mergeDeep(DEFAULT_CMS_DATA, input);
+  
+  // Migration: ensure logoMarquee is in sectionOrder
+  if (data.sectionOrder && !data.sectionOrder.includes('logoMarquee')) {
+    const heroIdx = data.sectionOrder.indexOf('hero');
+    if (heroIdx !== -1) {
+      data.sectionOrder.splice(heroIdx + 1, 0, 'logoMarquee');
+    } else {
+      data.sectionOrder.splice(1, 0, 'logoMarquee');
+    }
+  }
+  
+  return data;
 }
 
 function mapCmsDataToLegacyContent(data: CmsData): ContentData {
