@@ -44,7 +44,7 @@ type NavSection = {
   label: string;
   icon: React.ReactNode;
   type: 'group';
-  items: { id: string; label: string; icon: string }[];
+  items: { id: string; label: string; icon: React.ReactNode }[];
 };
 
 const NAV: NavSection[] = [
@@ -235,78 +235,46 @@ export default function AdminDashboard() {
   return (
     <div className="flex h-screen bg-transparent overflow-hidden font-body relative z-0 p-4 lg:p-6 gap-4 lg:gap-6">
       {/* ── Sidebar ─────────────────────────────────────────────────────────── */}
-      <aside style={{
-        width: sidebarOpen ? 240 : 0,
-        minWidth: sidebarOpen ? 240 : 0,
-        background: '#1a1a1e',
-        borderRight: `1px solid ${'#2a2a2f'}`,
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        transition: 'width 0.25s ease, min-width 0.25s ease',
-        flexShrink: 0,
-      }}>
+      <aside 
+        className={`flex flex-col bg-admin-glass-nav backdrop-blur-2xl border border-admin-border-subtle rounded-3xl shadow-2xl transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden shrink-0 ${sidebarOpen ? "w-[260px] min-w-[260px] opacity-100 translate-x-0" : "w-0 min-w-0 opacity-0 -translate-x-10"}`}
+      >
         {/* Sidebar header */}
-        <div style={{
-          padding: '20px 16px 16px',
-          borderBottom: `1px solid ${'#2a2a2f'}`,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          flexShrink: 0,
-        }}>
-          <div style={{
-            width: 30, height: 30, borderRadius: 8,
-            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0, boxShadow: '0 4px 12px rgba(99,102,241,0.4)',
-          }}>
-            <span style={{ fontSize: 14 }}>✦</span>
+        <div className="p-6 border-b border-admin-border-subtle flex items-center gap-4 bg-admin-highlight/20 shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand to-brand-hover flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(109,79,184,0.4)]">
+            <span className="text-[14px] text-white">✦</span>
           </div>
           <div>
-            <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 13, color: '#ffffff', margin: 0, letterSpacing: '-0.01em' }}>
+            <p className="font-bold text-[13px] text-white m-0 tracking-tight">
               CMS Dashboard
             </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10.5, color: '#808086', margin: '1px 0 0' }}>
+            <p className="text-[10.5px] text-white/50 m-0 mt-0.5">
               Osama Tammam Portfolio
             </p>
           </div>
         </div>
 
         {/* Nav */}
-        <nav style={{ flex: 1, overflow: 'auto', padding: '12px 0' }}>
+        <nav className="flex-1 overflow-auto py-4 custom-scrollbar">
           {NAV.map(group => (
-            <div key={group.id} style={{ marginBottom: 4 }}>
+            <div key={group.id} className="mb-2">
               {/* Group header */}
               <button
                 onClick={() => toggleGroup(group.id)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  width: '100%', padding: '8px 16px', border: 'none',
-                  background: 'none', cursor: 'pointer', borderRadius: 0,
-                }}
+                className="flex items-center justify-between w-[calc(100%-32px)] mx-4 mt-4 mb-2 px-4 py-2 rounded-xl border border-transparent bg-transparent text-white/50 cursor-pointer text-left text-[11px] font-bold uppercase tracking-[0.15em] hover:text-white hover:bg-white/5 hover:border-white/10 transition-all duration-300"
               >
-                <span style={{ color: '#808086' }}>{group.icon}</span>
-                <span style={{
-                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 11,
-                  letterSpacing: '0.07em',
-                  color: '#808086', flex: 1, textAlign: 'left',
-                }}>
-                  {group.label}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span>{group.icon}</span>
+                  <span>{group.label}</span>
+                </div>
                 <ChevronRight
                   size={12}
-                  color={'#808086'}
-                  style={{
-                    transform: expandedGroups.has(group.id) ? 'rotate(90deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.2s',
-                  }}
+                  className={`transition-transform duration-200 ${expandedGroups.has(group.id) ? 'rotate-90' : 'rotate-0'}`}
                 />
               </button>
 
               {/* Group items */}
               {expandedGroups.has(group.id) && (
-                <div style={{ paddingLeft: 8 }}>
+                <div className="pl-2">
                   {group.items.map(item => {
                     const isActive = activeSection === item.id;
                     const vis = getSectionVisible(item.id);
@@ -314,24 +282,14 @@ export default function AdminDashboard() {
                       <button
                         key={item.id}
                         onClick={() => setActiveSection(item.id)}
-                        style={{
-                          display: 'flex', alignItems: 'center', gap: 8,
-                          width: '100%', padding: '8px 12px',
-                          background: isActive ? 'rgba(99, 102, 241, 0.1)' : 'none',
-                          border: isActive ? `1px solid ${'#6366f1'}` : '1px solid transparent',
-                          borderRadius: 8, cursor: 'pointer', marginBottom: 2,
-                        }}
+                        className={`group flex items-center gap-3 w-[calc(100%-32px)] mx-4 my-1 px-4 py-2.5 rounded-xl border cursor-pointer transition-all duration-300 text-left text-[13px] ${isActive ? "bg-white/10 text-white font-semibold border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)]" : "bg-transparent text-white/60 hover:text-white hover:bg-white/5 hover:border-white/10 border-transparent font-medium"}`}
                       >
-                        <span style={{ fontSize: 13 }}>{item.icon}</span>
-                        <span style={{
-                          fontFamily: 'var(--font-body)', fontSize: 12.5, fontWeight: isActive ? 600 : 400,
-                          color: isActive ? '#a5b4fc' : '#a0a0a8',
-                          flex: 1, textAlign: 'left',
-                        }}>
+                        <span className={`transition-colors duration-300 ${isActive ? 'text-brand' : 'text-white/40 group-hover:text-white/70'}`}>{item.icon}</span>
+                        <span className="flex-1">
                           {item.label}
                         </span>
                         {vis === false && (
-                          <EyeOff size={10} color={'#808086'} />
+                          <EyeOff size={12} className="text-white/40" />
                         )}
                       </button>
                     );
@@ -343,25 +301,21 @@ export default function AdminDashboard() {
         </nav>
 
         {/* Sidebar footer */}
-        <div style={{
-          padding: '12px 16px',
-          borderTop: `1px solid ${'#2a2a2f'}`,
-          flexShrink: 0,
-        }}>
+        <div className="p-6 border-t border-admin-border-subtle bg-admin-highlight/10 mt-auto shrink-0">
           <Button
             variant="outline"
-            className="w-full justify-start gap-2 h-9"
+            className="w-full justify-start gap-2 h-10 rounded-xl border-admin-border-subtle hover:border-admin-border-strong hover:bg-white/5 bg-transparent text-white/70 transition-all duration-300"
             onClick={() => router.push('/')}
           >
-            <ArrowLeft size={14} className="text-muted-foreground" />
-            <span className="font-medium text-muted-foreground">
+            <ArrowLeft size={14} />
+            <span className="font-medium">
               View Portfolio
             </span>
           </Button>
 
           <Button
             variant="outline"
-            className="w-full justify-start gap-2 h-9 mt-2 text-red-400 hover:text-red-300 hover:bg-red-950/20"
+            className="w-full justify-start gap-2 h-10 mt-3 rounded-xl border-red-500/20 text-red-400 hover:text-red-300 hover:bg-red-500/10 hover:border-red-500/30 bg-transparent transition-all duration-300"
             onClick={async () => {
               const { logoutAction } = await import('@/app/actions/auth');
               await logoutAction();
@@ -371,7 +325,7 @@ export default function AdminDashboard() {
           </Button>
 
           {draft?.updatedAt && (
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10.5, color: '#808086', marginTop: 8, textAlign: 'center' }}>
+            <p className="text-[10.5px] text-white/40 mt-4 text-center">
               Last saved {new Date(draft.updatedAt).toLocaleString()}
             </p>
           )}
@@ -379,60 +333,48 @@ export default function AdminDashboard() {
       </aside>
 
       {/* ── Main area ────────────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0 bg-admin-glass-content backdrop-blur-3xl border border-admin-border-subtle rounded-3xl shadow-2xl transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]">
         {/* Top bar */}
-        <header style={{
-          height: 60,
-          background: '#1a1a1e',
-          borderBottom: `1px solid ${'#2a2a2f'}`,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          padding: '0 20px',
-          flexShrink: 0,
-        }}>
+        <header className="h-[76px] border-b border-admin-border-subtle bg-admin-highlight/5 flex items-center justify-between px-8 z-10 shrink-0 relative">
           <button
             onClick={() => setSidebarOpen(o => !o)}
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              color: '#a0a0a8', display: 'flex', padding: 4, borderRadius: 6,
-            }}
+            className="bg-white/5 border border-white/10 text-white/70 cursor-pointer w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10 hover:text-white hover:border-white/20 transition-all shadow-sm backdrop-blur-md"
           >
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
 
           {/* Breadcrumb */}
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#808086' }}>CMS</span>
-            <ChevronRight size={12} color={'#808086'} />
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, color: '#ffffff' }}>
+          <div className="flex-1 flex items-center gap-3 px-6">
+            <span className="text-[13px] text-white/50 tracking-wide">CMS</span>
+            <ChevronRight size={14} className="text-white/30" />
+            <span className="text-[14px] font-bold text-white tracking-wide">
               {getActiveSectionLabel(activeSection)}
             </span>
           </div>
 
           {/* Status + Save */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div className="flex items-center gap-4">
             {/* Unsaved indicator */}
             {hasChanges && saveStatus === 'idle' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#f59e0b', fontWeight: 500 }}>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+                <span className="text-[12px] text-amber-500 font-medium tracking-wide">
                   Unsaved changes
                 </span>
               </div>
             )}
             {saveStatus === 'saved' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <CheckCircle size={14} color={'#22c55e'} />
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#22c55e', fontWeight: 500 }}>
+              <div className="flex items-center gap-2">
+                <CheckCircle size={14} className="text-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)] rounded-full" />
+                <span className="text-[12px] text-green-500 font-medium tracking-wide">
                   Changes saved
                 </span>
               </div>
             )}
             {saveStatus === 'error' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <AlertCircle size={14} color={'#ef4444'} />
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#ef4444', fontWeight: 500 }}>
+              <div className="flex items-center gap-2">
+                <AlertCircle size={14} className="text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] rounded-full" />
+                <span className="text-[12px] text-red-500 font-medium tracking-wide">
                   Save failed
                 </span>
               </div>
@@ -443,29 +385,25 @@ export default function AdminDashboard() {
               onClick={fetchData}
               disabled={loading}
               title="Reload from server"
-              style={{
-                background: 'rgba(255,255,255,0.04)', border: `1px solid ${'#2a2a2f'}`,
-                borderRadius: 8, padding: '7px', cursor: loading ? 'wait' : 'pointer',
-                color: '#a0a0a8', display: 'flex', alignItems: 'center',
-              }}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-wait ml-2"
             >
-              <RefreshCw size={14} style={{ animation: loading ? 'spin 0.8s linear infinite' : 'none' }} />
+              <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             </button>
 
             {/* Save button */}
             <Button
               onClick={handleSave}
               disabled={!hasChanges || saveStatus === 'saving' || loading}
-              className={`gap-2 h-9 px-4 ${
+              className={`gap-2.5 h-10 px-6 rounded-xl text-[14px] font-semibold flex items-center transition-all duration-300 backdrop-blur-md ml-2 ${
                 (!hasChanges || saveStatus === 'saving') 
-                  ? 'bg-white/5 border border-border text-muted-foreground shadow-none'
-                  : 'bg-gradient-to-br from-brand to-[#8b5cf6] text-white shadow-card hover:shadow-card/80'
+                  ? 'bg-white/5 border border-white/10 text-white/40 shadow-none'
+                  : 'bg-white/10 hover:bg-white/20 text-white border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-white/40'
               }`}
             >
               {saveStatus === 'saving' ? (
-                <Loader2 size={14} className="animate-spin" />
+                <Loader2 size={16} className="animate-spin" />
               ) : (
-                <Save size={14} />
+                <Save size={16} />
               )}
               {saveStatus === 'saving' ? 'Saving…' : 'Save Changes'}
             </Button>
@@ -473,58 +411,52 @@ export default function AdminDashboard() {
         </header>
 
         {/* Content */}
-        <main style={{ flex: 1, overflow: 'auto', padding: '32px 36px' }}>
-          {/* Fetch error banner */}
-          {fetchError && (
-            <div style={{
-              background: 'rgba(239, 68, 68, 0.1)', border: `1px solid rgba(239,68,68,0.25)`,
-              borderRadius: 10, padding: '12px 16px', marginBottom: 20,
-              display: 'flex', gap: 10, alignItems: 'center',
-            }}>
-              <AlertCircle size={16} color={'#ef4444'} />
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#ef4444' }}>
-                Could not load data from server — showing defaults. {fetchError}
-              </span>
-            </div>
-          )}
+        <main className="flex-1 overflow-auto p-6 md:p-10 lg:p-14 custom-scrollbar">
+          <div className="max-w-[1100px] mx-auto flex flex-col gap-8">
+            {/* Fetch error banner */}
+            {fetchError && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 flex gap-3 items-center backdrop-blur-sm">
+                <AlertCircle size={18} className="text-red-400" />
+                <span className="text-[13px] text-red-400 font-medium">
+                  Could not load data from server — showing defaults. {fetchError}
+                </span>
+              </div>
+            )}
 
-          {/* Loading state */}
-          {loading && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, paddingTop: 80 }}>
-              <div style={{
-                width: 36, height: 36, border: `3px solid rgba(99,102,241,0.2)`,
-                borderTopColor: '#6366f1', borderRadius: '50%',
-                animation: 'spin 0.8s linear infinite',
-              }} />
-              <span style={{ fontFamily: 'var(--font-body)', color: '#a0a0a8', fontSize: 14 }}>Loading CMS data…</span>
-            </div>
-          )}
+            {/* Loading state */}
+            {loading && (
+              <div className="flex flex-col items-center justify-center gap-4 pt-32">
+                <div className="w-10 h-10 border-4 border-brand/20 border-t-brand rounded-full animate-spin shadow-[0_0_15px_var(--cursor-glow)]" />
+                <span className="text-white/50 text-[14px] font-medium tracking-wide">Loading CMS Data…</span>
+              </div>
+            )}
 
-          {/* Editors */}
-          {!loading && draft && (
-            <>
-              {activeSection.startsWith('home-') && (
-                <HomeEditor
-                  draft={draft}
-                  updateDraft={updateDraft}
-                  activeSection={activeSection}
-                />
-              )}
-              {activeSection.startsWith('cs-') && (
-                <CaseStudiesEditor
-                  draft={draft}
-                  updateDraft={updateDraft}
-                  activeCsId={getActiveCsId()}
-                />
-              )}
-              {activeSection === 'global-settings' && (
-                <GlobalSettingsEditor
-                  draft={draft}
-                  updateDraft={updateDraft}
-                />
-              )}
-            </>
-          )}
+            {/* Editors */}
+            {!loading && draft && (
+              <>
+                {activeSection.startsWith('home-') && (
+                  <HomeEditor
+                    draft={draft}
+                    updateDraft={updateDraft}
+                    activeSection={activeSection}
+                  />
+                )}
+                {activeSection.startsWith('cs-') && (
+                  <CaseStudiesEditor
+                    draft={draft}
+                    updateDraft={updateDraft}
+                    activeCsId={getActiveCsId()}
+                  />
+                )}
+                {activeSection === 'global-settings' && (
+                  <GlobalSettingsEditor
+                    draft={draft}
+                    updateDraft={updateDraft}
+                  />
+                )}
+              </>
+            )}
+          </div>
         </main>
       </div>
 
