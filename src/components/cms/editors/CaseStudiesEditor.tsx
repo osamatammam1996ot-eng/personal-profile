@@ -38,7 +38,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
     updateCaseStudy((c) => ({
       ...c,
       media: [
-        ...c.media,
+        ...(c.media || []),
         { id: Math.random().toString(36).substring(7), type: 'image', url: '' }
       ]
     }));
@@ -46,7 +46,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
 
   const handleRemoveMedia = (idx: number) => {
     updateCaseStudy((c) => {
-      const newMedia = [...c.media];
+      const newMedia = [...(c.media || [])];
       newMedia.splice(idx, 1);
       return { ...c, media: newMedia };
     });
@@ -54,7 +54,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
 
   const handleMoveMedia = (idx: number, direction: 'up' | 'down') => {
     updateCaseStudy((c) => {
-      const newMedia = [...c.media];
+      const newMedia = [...(c.media || [])];
       if (direction === 'up' && idx > 0) {
         [newMedia[idx - 1], newMedia[idx]] = [newMedia[idx], newMedia[idx - 1]];
       } else if (direction === 'down' && idx < newMedia.length - 1) {
@@ -66,7 +66,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
 
   const handleUpdateMedia = (idx: number, field: 'type' | 'url', value: string) => {
     updateCaseStudy((c) => {
-      const newMedia = [...c.media];
+      const newMedia = [...(c.media || [])];
       newMedia[idx] = { ...newMedia[idx], [field]: value };
       return { ...c, media: newMedia };
     });
