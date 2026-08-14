@@ -77,7 +77,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
       <h2 className="text-white mt-0 mb-4">Case Study {activeCsId} — Media Gallery</h2>
 
       <div className={cardClasses}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
             <label className={labelClasses}>Project Title (EN)</label>
             <input
@@ -99,39 +99,39 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
       </div>
 
       <div className={cardClasses}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <p style={{ margin: '0 0 4px', color: '#fff', fontWeight: 700, fontSize: 13 }}>Media Gallery</p>
-            <p style={{ margin: 0, color: '#a5b4fc', fontSize: 12 }}>Add image or video URLs to display in the case study slider overlay.</p>
+            <p className="m-0 mb-1 text-text-primary font-bold text-[13px] tracking-wide">Media Gallery</p>
+            <p className="m-0 text-brand-hover text-xs">Add image or video URLs to display in the case study slider overlay.</p>
           </div>
           <button
             onClick={handleAddMedia}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#4f46e5', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+            className="flex items-center gap-2 bg-brand/20 hover:bg-brand-gradient text-white border border-brand/50 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all hover:shadow-[0_0_15px_rgba(109,79,184,0.4)]"
           >
             <Plus size={14} /> Add Media
           </button>
         </div>
 
         {caseStudy.media.length === 0 && (
-          <div style={{ padding: 32, textAlign: 'center', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: 12, color: '#a1a1aa', fontSize: 13 }}>
+          <div className="p-8 text-center border border-dashed border-border-strong rounded-2xl text-text-muted text-[13px] bg-black/10 hover:bg-black/20 hover:border-brand/50 transition-all">
             No media added yet. Click "Add Media" to start.
           </div>
         )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="flex flex-col gap-4">
           {caseStudy.media.map((item, idx) => (
-            <div key={item.id} style={{ background: 'rgba(0,0,0,0.2)', padding: 16, borderRadius: 8, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+            <div key={item.id} className="bg-surface-glass p-6 rounded-2xl border border-border-default/30 flex gap-4 items-start shadow-card backdrop-blur-md hover:border-border-default/60 transition-all">
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 24 }}>
-                <button onClick={() => handleMoveMedia(idx, 'up')} disabled={idx === 0} style={{ background: 'none', border: 'none', color: idx === 0 ? 'rgba(255,255,255,0.1)' : '#a1a1aa', cursor: idx === 0 ? 'default' : 'pointer', padding: 2 }}>
+              <div className="flex flex-col gap-1 mt-6">
+                <button onClick={() => handleMoveMedia(idx, 'up')} disabled={idx === 0} className={`p-1 bg-transparent border-none ${idx === 0 ? "text-white/10 cursor-default" : "text-text-muted cursor-pointer hover:text-text-primary"}`}>
                   <ChevronUp size={16} />
                 </button>
-                <button onClick={() => handleMoveMedia(idx, 'down')} disabled={idx === caseStudy.media.length - 1} style={{ background: 'none', border: 'none', color: idx === caseStudy.media.length - 1 ? 'rgba(255,255,255,0.1)' : '#a1a1aa', cursor: idx === caseStudy.media.length - 1 ? 'default' : 'pointer', padding: 2 }}>
+                <button onClick={() => handleMoveMedia(idx, 'down')} disabled={idx === caseStudy.media.length - 1} className={`p-1 bg-transparent border-none ${idx === caseStudy.media.length - 1 ? "text-white/10 cursor-default" : "text-text-muted cursor-pointer hover:text-text-primary"}`}>
                   <ChevronDown size={16} />
                 </button>
               </div>
 
-              <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '120px 1fr', gap: 12 }}>
+              <div className="flex-1 grid grid-cols-[120px_1fr] gap-4">
                 <div>
                   <label className={labelClasses}>Type</label>
                   <select
@@ -156,7 +156,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
 
               <button
                 onClick={() => handleRemoveMedia(idx)}
-                style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: 'none', padding: 6, borderRadius: 4, cursor: 'pointer', display: 'flex', alignItems: 'center', marginTop: 24 }}
+                className="bg-danger/10 hover:bg-danger/20 text-danger border border-danger/20 p-2 rounded-lg cursor-pointer flex items-center mt-6 transition-all"
                 title="Remove Media"
               >
                 <Trash2 size={16} />

@@ -139,33 +139,23 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
     return (
       <div>
         <h2 className="text-white mt-0">Section Visibility & Order</h2>
-        <p style={{ color: '#a0a0a8', marginTop: 0 }}>Toggle any section on/off, and drag them to reorder your homepage.</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 400 }}>
+        <p className="text-text-muted mt-0">Toggle any section on/off, and drag them to reorder your homepage.</p>
+        <div className="flex flex-col gap-2 max-w-[400px]">
           {currentOrder.map((key, index) => {
             const sectionKey = key as keyof CmsData['sections'];
             const isDragging = index === draggedIdx;
             return (
               <div 
                 key={key} 
-                className={cardClasses}
                 draggable
                 onDragStart={(e) => handleDragStart(index, e)}
                 onDragEnter={() => handleDragEnter(index)}
                 onDragEnd={handleDragEnd}
                 onDragOver={(e) => e.preventDefault()}
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  padding: '12px 16px',
-                  cursor: isDragging ? 'grabbing' : 'grab',
-                  opacity: isDragging ? 0.3 : 1,
-                  transform: isDragging ? 'scale(0.98)' : 'scale(1)',
-                  transition: 'opacity 0.2s, transform 0.2s',
-                  border: isDragging ? '1px dashed #6366f1' : "1px solid rgba(255,255,255,0.08)",
-                }}
+                className={`${cardClasses} flex items-center px-4 py-3 transition-all duration-200 ${isDragging ? "cursor-grabbing opacity-30 scale-[0.98] border-brand border-dashed" : "cursor-grab scale-100 border-border-default/30"}`}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
-                  <div style={{ cursor: isDragging ? 'grabbing' : 'grab', color: '#6366f1', display: 'flex' }}>
+                <div className="flex items-center gap-3 flex-1">
+                  <div className={`flex text-brand hover:text-brand-hover transition-colors ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
                   </div>
                   <input
@@ -177,9 +167,9 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                         sections: { ...prev.sections, [sectionKey]: e.target.checked },
                       }))
                     }
-                    style={{ cursor: 'pointer', width: 16, height: 16, accentColor: '#6366f1' }}
+                    className="cursor-pointer w-4 h-4 accent-brand transition-all"
                   />
-                  <span style={{ color: '#fff', userSelect: 'none', fontWeight: 500 }}>{labelMap[key] || key}</span>
+                  <span className="text-text-primary select-none font-medium">{labelMap[key] || key}</span>
                 </div>
               </div>
             );
@@ -238,21 +228,12 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
         />
 
         <div className={cardClasses}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <p style={{ margin: 0, color: '#fff', fontWeight: 700, fontSize: 13 }}>Roles</p>
+          <div className="flex justify-between items-center mb-3">
+            <p className="m-0 text-text-primary font-bold text-[13px] tracking-wide">Roles</p>
             <button
               type="button"
               onClick={addHeroRole}
-              style={{
-                borderRadius: 8,
-                border: '1px solid rgba(99,102,241,0.5)',
-                background: 'rgba(99,102,241,0.16)',
-                color: '#c7d2fe',
-                padding: '6px 10px',
-                fontSize: 12,
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
+              className="bg-brand/20 hover:bg-brand/40 text-brand-hover border border-brand/50 rounded-lg px-3 py-1.5 text-xs font-bold cursor-pointer transition-colors"
             >
               + Add role
             </button>
@@ -262,12 +243,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
             {Array.from({ length: Math.max(draft.hero.roles.en.length, draft.hero.roles.ar.length, 1) }).map((_, index) => (
               <div
                 key={index}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr auto',
-                  gap: 10,
-                  alignItems: 'end',
-                }}
+                className="grid grid-cols-[1fr_1fr_auto] gap-3 items-end"
               >
                 <div>
                   <label className={labelClasses}>English role {index + 1}</label>
@@ -290,17 +266,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                   type="button"
                   onClick={() => removeHeroRole(index)}
                   disabled={Math.max(draft.hero.roles.en.length, draft.hero.roles.ar.length, 1) <= 1}
-                  style={{
-                    borderRadius: 8,
-                    border: '1px solid rgba(239,68,68,0.45)',
-                    background: 'rgba(239,68,68,0.14)',
-                    color: '#fecaca',
-                    padding: '10px 12px',
-                    fontSize: 12,
-                    fontWeight: 700,
-                    cursor: Math.max(draft.hero.roles.en.length, draft.hero.roles.ar.length, 1) <= 1 ? 'not-allowed' : 'pointer',
-                    opacity: Math.max(draft.hero.roles.en.length, draft.hero.roles.ar.length, 1) <= 1 ? 0.55 : 1,
-                  }}
+                  className={`border border-danger/40 bg-danger/10 text-danger rounded-lg px-3 py-2.5 text-xs font-bold transition-all ${Math.max(draft.hero.roles.en.length, draft.hero.roles.ar.length, 1) <= 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-danger/20 hover:border-danger/60"}`}
                 >
                   Remove
                 </button>
@@ -390,9 +356,9 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
 
           return (
             <div key={index} className={cardClasses}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <p style={{ margin: 0, color: '#fff', fontWeight: 700, fontSize: 13 }}>Project {index + 1}</p>
-                <label style={{ color: '#d3d3dc', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div className="flex justify-between items-center mb-3">
+                <p className="m-0 text-text-primary font-bold text-[13px] tracking-wide">Project {index + 1}</p>
+                <label className="text-text-secondary text-xs flex items-center gap-2 font-medium">
                   <input
                     type="checkbox"
                     checked={project.visible}
@@ -437,7 +403,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                     />
                   </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 140px', gap: 10 }}>
+                <div className="grid grid-cols-[1fr_140px] gap-3">
                   <div>
                     <label className={labelClasses}>Image URL</label>
                     <input
@@ -848,5 +814,5 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
     );
   }
 
-  return <p style={{ color: '#a0a0a8' }}>Section editor not available.</p>;
+  return <p className="text-text-muted">Section editor not available.</p>;
 }
