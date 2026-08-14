@@ -34,33 +34,6 @@ export function Recommendations({ isDark }: RecommendationsProps) {
 
   const activeRec = recs[activeIndex];
 
-  // Calculate orbit positions for nodes
-  const getOrbitNodes = () => {
-    if (recs.length <= 1) return [];
-    
-    // We place the non-active nodes evenly around an ellipse/circle
-    const nodes = [];
-    const totalOrbiting = recs.length - 1;
-    let orbitIndex = 0;
-    
-    for (let i = 0; i < recs.length; i++) {
-      if (i === activeIndex) continue;
-      
-      const angle = (orbitIndex / totalOrbiting) * Math.PI * 2;
-      // Adjust angle to make it slowly rotate over time when not hovered, but we'll just use a static base angle and animate the container instead.
-      
-      nodes.push({
-        rec: recs[i],
-        index: i,
-        angle
-      });
-      orbitIndex++;
-    }
-    return nodes;
-  };
-
-  const orbitNodes = getOrbitNodes();
-
   return (
     <section 
       id="recommendations" 
@@ -111,47 +84,8 @@ export function Recommendations({ isDark }: RecommendationsProps) {
           </motion.p>
         </div>
 
-        {/* Orbit Stage */}
-        <div className="relative w-full max-w-4xl mx-auto min-h-[500px] flex items-center justify-center mt-12 perspective-[1000px]">
-          
-          {/* Orbiting Nodes */}
-          {!prefersReducedMotion && (
-            <motion.div 
-              className="absolute inset-0 pointer-events-none"
-              animate={{ rotate: isHovered ? 0 : 360 }}
-              transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-            >
-              {orbitNodes.map(({ rec, index, angle }) => {
-                const radiusX = 380; // Desktop radius X
-                const radiusY = 120; // Desktop radius Y (flattened for 3D look)
-                
-                return (
-                  <motion.div
-                    key={rec.id}
-                    className="absolute top-1/2 left-1/2 w-12 h-12 -ml-6 -mt-6 rounded-full border border-brand/30 bg-surface shadow-[0_0_15px_rgba(109,79,184,0.3)] overflow-hidden pointer-events-auto cursor-pointer transition-all hover:scale-125 hover:border-brand hover:z-20 group"
-                    style={{
-                      x: Math.cos(angle) * radiusX,
-                      y: Math.sin(angle) * radiusY,
-                    }}
-                    onClick={() => setActiveIndex(index)}
-                  >
-                    {/* Counter-rotate to keep upright */}
-                    <motion.div 
-                      className="w-full h-full"
-                      animate={{ rotate: isHovered ? 0 : -360 }}
-                      transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-                    >
-                      {rec.avatar ? (
-                        <img src={rec.avatar} alt={rec.name} className="w-full h-full object-cover opacity-60 group-hover:opacity-100" />
-                      ) : (
-                        <div className="w-full h-full bg-brand/10 flex items-center justify-center text-brand/50 font-bold">{rec.name.charAt(0)}</div>
-                      )}
-                    </motion.div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          )}
+        {/* Card Stage */}
+        <div className="relative w-full max-w-4xl mx-auto flex items-center justify-center mt-4 perspective-[1000px]">
 
           {/* Active Card */}
           <AnimatePresence mode="wait">
