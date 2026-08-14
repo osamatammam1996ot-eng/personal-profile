@@ -13,8 +13,8 @@ export default async function AdminLayout({
   }
 
   return (
-    <>
+    <div dir="ltr" className="min-h-screen text-left">
       {children}
-    </>
+    </div>
   );
 }
