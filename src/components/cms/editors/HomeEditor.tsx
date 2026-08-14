@@ -405,18 +405,18 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
               <div className="grid gap-2.5">
                 <BilingualField
                   label="Title"
-                  en={project.title.en}
-                  ar={project.title.ar}
-                  onChangeEn={(value) => updateProject(index, (current) => ({ ...current, title: { ...current.title, en: value } }))}
-                  onChangeAr={(value) => updateProject(index, (current) => ({ ...current, title: { ...current.title, ar: value } }))}
+                  en={project.title?.en || ''}
+                  ar={project.title?.ar || ''}
+                  onChangeEn={(value) => updateProject(index, (current) => ({ ...current, title: { ...(current.title || {}), en: value } }))}
+                  onChangeAr={(value) => updateProject(index, (current) => ({ ...current, title: { ...(current.title || {}), ar: value } }))}
                 />
                 <BilingualField
                   label="Description"
                   multiline
-                  en={project.desc.en}
-                  ar={project.desc.ar}
-                  onChangeEn={(value) => updateProject(index, (current) => ({ ...current, desc: { ...current.desc, en: value } }))}
-                  onChangeAr={(value) => updateProject(index, (current) => ({ ...current, desc: { ...current.desc, ar: value } }))}
+                  en={project.desc?.en || ''}
+                  ar={project.desc?.ar || ''}
+                  onChangeEn={(value) => updateProject(index, (current) => ({ ...current, desc: { ...(current.desc || {}), en: value } }))}
+                  onChangeAr={(value) => updateProject(index, (current) => ({ ...current, desc: { ...(current.desc || {}), ar: value } }))}
                 />
                 <div className="grid grid-cols-2 gap-2.5">
                   <div>
