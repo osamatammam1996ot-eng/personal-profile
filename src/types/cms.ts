@@ -57,72 +57,23 @@ export interface CmsProject {
   accent: string;
 }
 
+export interface CmsCaseStudyMedia {
+  id: string;
+  type: 'image' | 'video';
+  url: string;
+}
+
+export interface CmsCaseStudyMedia {
+  id: string;
+  type: 'image' | 'video';
+  url: string;
+}
+
 export interface CmsCaseStudy {
   id: number;
   visible: boolean;
   title: Bilingual;
-  tagline: Bilingual;
-  heroImage: string;
-  meta: {
-    role: Bilingual;
-    timeline: Bilingual;
-    team: Bilingual;
-    industry: Bilingual;
-  };
-  metrics: Array<{ value: string; label: Bilingual; sub: Bilingual }>;
-  problem: {
-    narrative: Bilingual;
-    painPoints: Array<{ icon: string; title: Bilingual; desc: Bilingual }>;
-  };
-  research: {
-    methods: Bilingual<string[]>;
-    insights: Array<{ id: string; quote: Bilingual; author: Bilingual; theme: Bilingual }>;
-    findings: Bilingual<string[]>;
-  };
-  process: {
-    steps: Array<{ phase: string; title: Bilingual; duration: Bilingual; desc: Bilingual }>;
-    tradeoffs: Array<{ decision: Bilingual; rationale: Bilingual }>;
-  };
-  solution: {
-    screens: Array<{ title: Bilingual; desc: Bilingual; image: string; callouts: Bilingual<string[]>; align: string }>;
-  };
-  screenshots: Array<{ image: string; caption: Bilingual; tag: Bilingual }>;
-  video: {
-    url: string;
-    youtubeId: string;
-    aspectRatio: string;
-    title: Bilingual;
-    desc: Bilingual;
-    duration: string;
-  };
-  results: {
-    metrics: Array<{ value: string; label: Bilingual; sub: Bilingual }>;
-    quote: { text: Bilingual; author: Bilingual; role: Bilingual };
-  };
-  reflection: {
-    summary: Bilingual;
-    lessons: Bilingual<string[]>;
-    next: Bilingual<string[]>;
-  };
-  settings: {
-    showProblem: boolean;
-    showResearch: boolean;
-    showProcess: boolean;
-    showSolution: boolean;
-    showMedia: boolean;
-    showResults: boolean;
-    showReflection: boolean;
-  };
-  labels: {
-    overview: Bilingual;
-    problem: Bilingual;
-    research: Bilingual;
-    process: Bilingual;
-    solution: Bilingual;
-    media: Bilingual;
-    results: Bilingual;
-    reflection: Bilingual;
-  };
+  media: CmsCaseStudyMedia[];
 }
 
 export interface CmsSkills {

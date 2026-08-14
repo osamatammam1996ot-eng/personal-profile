@@ -19,8 +19,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 
   const title = `${caseStudy.title.en} UX Case Study | Osama Tammam`;
-  const desc = caseStudy.tagline.en || siteConfig.defaultDescription;
+  const desc = siteConfig.defaultDescription;
   const url = `${siteConfig.productionOrigin}/case-study/${params.id}`;
+  const firstImage = caseStudy.media?.find((m: any) => m.type === 'image')?.url;
 
   return {
     title,
@@ -29,13 +30,13 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       canonical: url,
     },
     openGraph: {
-      type: "article", // Fallback to article or creativework
+      type: "article",
       url,
       title,
       description: desc,
-      images: caseStudy.heroImage ? [
+      images: firstImage ? [
         {
-          url: caseStudy.heroImage,
+          url: firstImage,
           alt: `${caseStudy.title.en} Case Study`,
         }
       ] : undefined,
@@ -44,7 +45,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       card: "summary_large_image",
       title,
       description: desc,
-      images: caseStudy.heroImage ? [caseStudy.heroImage] : undefined,
+      images: firstImage ? [firstImage] : undefined,
     },
   };
 }
@@ -55,14 +56,16 @@ export default function CaseStudyPage({ params }: { params: { id: string } }) {
   if (!caseStudy) {
     return null;
   }
+  
+  const firstImage = caseStudy.media?.find((m: any) => m.type === 'image')?.url;
 
   const jsonLdCreativeWork = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
     "name": caseStudy.title.en,
-    "description": caseStudy.tagline.en,
+    "description": siteConfig.defaultDescription,
     "url": `${siteConfig.productionOrigin}/case-study/${params.id}`,
-    "image": caseStudy.heroImage || siteConfig.defaultOgImage,
+    "image": firstImage || siteConfig.defaultOgImage,
     "creator": {
       "@id": `${siteConfig.productionOrigin}/#osama-tammam`
     }
