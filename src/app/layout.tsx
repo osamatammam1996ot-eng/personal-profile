@@ -8,6 +8,7 @@ import { ErrorBoundary } from "../components/layout/ErrorBoundary";
 const cairo = Cairo({ subsets: ["latin", "arabic"], display: "swap" });
 
 import { siteConfig } from "../config/seo";
+import { CyberGlitch } from "../components/shared/CyberGlitch";
 
 export const metadata: Metadata = {
   title: siteConfig.defaultTitle,
@@ -96,6 +97,7 @@ export default function RootLayout({
           <LanguageProvider>
             <CmsProvider>
               {children}
+              <CyberGlitch />
             </CmsProvider>
           </LanguageProvider>
         </ErrorBoundary>

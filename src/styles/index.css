@@ -302,3 +302,30 @@
   }
 }
 
+/* --- CYBER GLITCH STYLES --- */
+body.cyber-glitch-active {
+  animation: glitch-shake 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  filter: url(#cyber-glitch-filter) contrast(1.15) brightness(1.1);
+}
+
+@keyframes glitch-shake {
+  0% { transform: translate(0) }
+  20% { transform: translate(-3px, 1px) }
+  40% { transform: translate(-1px, -2px) }
+  60% { transform: translate(3px, 2px) }
+  80% { transform: translate(1px, -1px) }
+  100% { transform: translate(0) }
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.85; }
+  50% { opacity: 0.95; }
+  100% { opacity: 0.85; }
+}
+
+@keyframes click-burst {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+}
+
