@@ -89,7 +89,7 @@ function ProjectCard({
   const isReversed = index % 2 !== 0;
 
   const projectNum = isRTL
-    ? String(project.id).replace(/\d/g, d => '٠٢٣٤٥٦٧٨٩'[+d]).padStart(2, '٠')
+    ? String(project.id).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[+d]).padStart(2, '٠')
     : String(project.id).padStart(2, '0');
 
   return (
@@ -190,7 +190,7 @@ export function Portfolio({ isDark, onCursorChange, onViewCase }: PortfolioProps
 
   const portfolioLabel = lang === 'en' ? 'Selected Work' : 'الأعمال المختارة';
   const projectLabel = lang === 'en' ? 'Project' : 'مشروع';
-  const viewCaseLabel = lang === 'en' ? 'View Case' : 'عرض الحالة';
+  const viewCaseLabel = lang === 'en' ? 'View Case Study' : 'عرض المشروع';
   const caseStudiesLabel =
     content.portfolio?.fields?.[`caseStudiesLabel_${lang}`] ||
     (lang === 'en' ? 'Case Studies' : 'دراسات الحالة');
