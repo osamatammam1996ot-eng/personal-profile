@@ -110,7 +110,7 @@ function useDustCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>, isD
 }
 
 /* ─── Face sprite builder ───────────────────────────────────────────────────── */
-function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar'): THREE.Sprite {
+function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boolean): THREE.Sprite {
   const SZ = 256;
   const cv = document.createElement('canvas');
   cv.width = SZ; cv.height = SZ;
@@ -137,19 +137,32 @@ function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar'): THREE.Sprite {
   // Use Space Grotesk to match site font
   cx.font = '700 68px "Space Grotesk",Arial,sans-serif';
   cx.textAlign = 'center'; cx.textBaseline = 'middle';
-  cx.shadowColor = tool.glow; cx.shadowBlur = 20;
-  cx.fillStyle = tool.glow;
+  
+  if (isDarkTheme) {
+    cx.shadowColor = tool.glow; 
+    cx.shadowBlur = 20;
+    cx.fillStyle = tool.glow;
+  } else {
+    // Darker variant for light mode
+    const darkR = Math.floor(rr * 0.5);
+    const darkG = Math.floor(gg * 0.5);
+    const darkB = Math.floor(bb * 0.5);
+    cx.shadowColor = 'rgba(255,255,255,0.8)'; 
+    cx.shadowBlur = 4;
+    cx.fillStyle = `rgb(${darkR},${darkG},${darkB})`;
+  }
   cx.fillText(tool.abbr, 128, 108);
   cx.shadowBlur = 0;
 
   cx.font = '600 21px "Space Grotesk",Arial,sans-serif';
-  cx.fillStyle = 'rgba(240,244,255,.94)';
-  cx.shadowColor = 'rgba(0,0,0,.8)'; cx.shadowBlur = 5;
+  cx.fillStyle = isDarkTheme ? 'rgba(240,244,255,.94)' : 'rgba(15,23,42,.94)';
+  cx.shadowColor = isDarkTheme ? 'rgba(0,0,0,.8)' : 'rgba(255,255,255,.8)'; 
+  cx.shadowBlur = 5;
   cx.fillText(tool.name, 128, 162);
   cx.shadowBlur = 0;
 
   cx.font = '400 14px "Inter",Arial,sans-serif';
-  cx.fillStyle = 'rgba(136,146,170,.8)';
+  cx.fillStyle = isDarkTheme ? 'rgba(136,146,170,.8)' : 'rgba(71,85,105,.95)';
   cx.fillText(tool.cat[lang] || tool.cat.en, 128, 188);
 
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({
@@ -194,6 +207,9 @@ export function Tools({ isDark = false }: ToolsProps) {
   const keyLightRef = useRef<THREE.DirectionalLight   | null>(null);
   const rimLightRef = useRef<THREE.DirectionalLight   | null>(null);
   const fillLightRef= useRef<THREE.PointLight         | null>(null);
+  
+  const panelsRef = useRef<{ sprite: THREE.Sprite; grp: THREE.Group; idx: number }[]>([]);
+  const rebuildSpritesRef = useRef<(() => void) | null>(null);
 
   useDustCanvas(dustRef, isDark);
 
@@ -257,7 +273,8 @@ export function Tools({ isDark = false }: ToolsProps) {
     ROOT.add(new THREE.Mesh(new THREE.DodecahedronGeometry(1.565, 0), wireMat));
 
     const PR = 1.55 * 0.794;
-    const PANELS: { sprite: THREE.Sprite; grp: THREE.Group; idx: number }[] = [];
+    const PANELS = panelsRef.current;
+    PANELS.length = 0; // reset on re-init
 
     for (let fi = 0; fi < 12; fi++) {
       const [nx, ny, nz] = FACE_NORMALS_NORMALIZED[fi];
@@ -269,24 +286,27 @@ export function Tools({ isDark = false }: ToolsProps) {
         new THREE.Vector3(nx, ny, nz),
       );
       grp.quaternion.copy(quat);
-      const sp = makeFaceSprite(TOOLS[fi], lang);
+      const sp = makeFaceSprite(TOOLS[fi], lang, isDark);
       sp.position.set(0, 0, 0.018);
       grp.add(sp);
       PANELS.push({ sprite: sp, grp, idx: fi });
     }
 
-    const rebuildSprites = () => {
+    const rebuildSprites = (forceIsDark?: boolean) => {
+      const currentDark = forceIsDark !== undefined ? forceIsDark : isDark;
       for (let fi = 0; fi < 12; fi++) {
+        if (!PANELS[fi]) continue;
         const old = PANELS[fi].sprite;
         old.material.map?.dispose();
         old.material.dispose();
         PANELS[fi].grp.remove(old);
-        const sp = makeFaceSprite(TOOLS[fi], lang);
+        const sp = makeFaceSprite(TOOLS[fi], lang, currentDark);
         sp.position.set(0, 0, 0.018);
         PANELS[fi].grp.add(sp);
         PANELS[fi].sprite = sp;
       }
     };
+    rebuildSpritesRef.current = rebuildSprites;
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(rebuildSprites);
     }
@@ -372,8 +392,10 @@ export function Tools({ isDark = false }: ToolsProps) {
         } else {
           targetO = 0.0;
         }
-        const sp = PANELS[ri].sprite;
-        sp.material.opacity += (targetO - sp.material.opacity) * 0.10;
+        if (panelsRef.current[ri]) {
+          const sp = panelsRef.current[ri].sprite;
+          sp.material.opacity += (targetO - sp.material.opacity) * 0.10;
+        }
       }
 
       camera.lookAt(0, 0, 0);
@@ -437,6 +459,11 @@ export function Tools({ isDark = false }: ToolsProps) {
 
     shell.needsUpdate = true;
     wire.needsUpdate  = true;
+    
+    // Also rebuild text sprites to match theme contrast
+    if (rebuildSpritesRef.current) {
+      rebuildSpritesRef.current(isDark);
+    }
   }, [isDark]);
 
   /* ─── Nav handlers ───────────────────────────────────────────────────────── */
