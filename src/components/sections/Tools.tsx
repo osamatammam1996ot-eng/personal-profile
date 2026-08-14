@@ -431,8 +431,8 @@ export function Tools({ isDark = false }: ToolsProps) {
 
     if (isDark) {
       /* ── dark palette (original) ── */
-      shell.color.set(0x0b0822);
-      shell.emissive.set(0x120940);
+      shell.color.set(0x15113d);
+      shell.emissive.set(0x241573);
       shell.specular.set(0x9966ff);
       shell.shininess = 80;
       shell.opacity   = 0.65;
@@ -446,8 +446,8 @@ export function Tools({ isDark = false }: ToolsProps) {
       fill.color.set(0xa855f7); fill.intensity = 0.6;
     } else {
       /* ── light palette — frosted indigo gem ── */
-      shell.color.set(0xc4b8f8);    // soft lavender-indigo body
-      shell.emissive.set(0x4338ca); // rich indigo emissive keeps depth warm
+      shell.color.set(0xe0d8fa);    // softer, lighter lavender body
+      shell.emissive.set(0x6357e6); // lighter indigo emissive
       shell.specular.set(0xffffff); // pure white highlights = clear 3D facets
       shell.shininess = 140;        // higher shininess = sharper, glassier specular
       shell.opacity   = 0.78;       // slightly more opaque so it reads on light bg

@@ -120,8 +120,8 @@ export const DecorativeShape = memo(function DecorativeShape({
     if (!s) return;
 
     if (isDark) {
-      s.shellMat.color.set(0x0b0822);
-      s.shellMat.emissive.set(0x120940);
+      s.shellMat.color.set(0x15113d);
+      s.shellMat.emissive.set(0x241573);
       s.shellMat.specular.set(0x9966ff);
       s.shellMat.shininess = 80;
       s.shellMat.opacity = 0.55;
@@ -132,8 +132,8 @@ export const DecorativeShape = memo(function DecorativeShape({
       s.rimLight.color.set(0x38bdf8); s.rimLight.intensity = 0.5;
       s.fillLight.color.set(0xa855f7); s.fillLight.intensity = 0.4;
     } else {
-      s.shellMat.color.set(0xc4b8f8);
-      s.shellMat.emissive.set(0x4338ca);
+      s.shellMat.color.set(0xe0d8fa);
+      s.shellMat.emissive.set(0x6357e6);
       s.shellMat.specular.set(0xffffff);
       s.shellMat.shininess = 140;
       s.shellMat.opacity = 0.60;
@@ -212,8 +212,8 @@ export const DecorativeShape = memo(function DecorativeShape({
     // Shell mesh
     const geom = createGeometry(shape);
     const shellMat = new THREE.MeshPhongMaterial({
-      color: isDarkRef.current ? 0x0b0822 : 0xc4b8f8,
-      emissive: isDarkRef.current ? 0x120940 : 0x4338ca,
+      color: isDarkRef.current ? 0x15113d : 0xe0d8fa,
+      emissive: isDarkRef.current ? 0x241573 : 0x6357e6,
       specular: isDarkRef.current ? 0x9966ff : 0xffffff,
       shininess: isDarkRef.current ? 80 : 140,
       transparent: true,
