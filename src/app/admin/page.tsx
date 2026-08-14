@@ -11,6 +11,7 @@ import { DEFAULT_CMS_DATA } from '../../types/cms';
 import { HomeEditor } from '../../components/cms/editors/HomeEditor';
 import { CaseStudiesEditor } from '../../components/cms/editors/CaseStudiesEditor';
 import { GlobalSettingsEditor } from '../../components/cms/editors/GlobalSettingsEditor';
+import { RecommendationsEditor } from '../../components/cms/editors/RecommendationsEditor';
 import { Button } from '../../components/ui/button';
 
 // Deep-merge helper: ensures every key from `base` exists in the result,
@@ -60,6 +61,7 @@ const NAV: NavSection[] = [
       { id: 'home-skills', label: 'Skills (Craft Engine)', icon: '🔮' },
       { id: 'home-tools', label: 'Tools', icon: '🛠️' },
       { id: 'home-portfolio', label: 'Portfolio Projects', icon: '💼' },
+      { id: 'home-recommendations', label: 'Recommendations', icon: '💬' },
       { id: 'home-contact', label: 'Contact', icon: '✉️' },
     ],
   },
@@ -218,6 +220,7 @@ export default function AdminDashboard() {
     if (id === 'home-hero') return draft.sections.hero;
     if (id === 'home-whyhireme') return draft.sections.whyHireMe;
     if (id === 'home-portfolio') return draft.sections.portfolio;
+    if (id === 'home-recommendations') return draft.sections.recommendations;
     if (id === 'home-contact') return draft.sections.contact;
     if (id === 'cs-1') return draft.caseStudies.find(c => c.id === 1)?.visible ?? true;
     if (id === 'cs-2') return draft.caseStudies.find(c => c.id === 2)?.visible ?? true;
@@ -434,11 +437,17 @@ export default function AdminDashboard() {
             {/* Editors */}
             {!loading && draft && (
               <>
-                {activeSection.startsWith('home-') && (
+                {activeSection.startsWith('home-') && activeSection !== 'home-recommendations' && (
                   <HomeEditor
                     draft={draft}
                     updateDraft={updateDraft}
                     activeSection={activeSection}
+                  />
+                )}
+                {activeSection === 'home-recommendations' && (
+                  <RecommendationsEditor
+                    draft={draft}
+                    updateDraft={updateDraft}
                   />
                 )}
                 {activeSection.startsWith('cs-') && (
@@ -459,7 +468,6 @@ export default function AdminDashboard() {
           </div>
         </main>
       </div>
-
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         * { box-sizing: border-box; }
@@ -481,6 +489,7 @@ function getActiveSectionLabel(id: string): string {
     'home-skills': 'Skills (Craft Engine)',
     'home-tools': 'Tools',
     'home-portfolio': 'Portfolio Projects',
+    'home-recommendations': 'Recommendations',
     'home-contact': 'Contact',
     'cs-1': 'Nexus Analytics Platform',
     'cs-2': 'Orion Enterprise Suite',

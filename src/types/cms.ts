@@ -7,6 +7,7 @@ export interface CmsSections {
   skills: boolean;
   portfolio: boolean;
   tools: boolean;
+  recommendations: boolean;
   contact: boolean;
   footer: boolean;
 }
@@ -76,6 +77,15 @@ export interface CmsCaseStudy {
   media: CmsCaseStudyMedia[];
 }
 
+export interface CmsRecommendation {
+  id: string;
+  visible: boolean;
+  name: string;
+  position: Bilingual;
+  comment: Bilingual;
+  avatar: string;
+}
+
 export interface CmsSkills {
   heading1: Bilingual;
   heading2: Bilingual;
@@ -130,6 +140,7 @@ export interface CmsData {
   contact: CmsContact;
   projects: CmsProject[];
   caseStudies: CmsCaseStudy[];
+  recommendations: CmsRecommendation[];
   global: CmsGlobal;
   updatedAt: string;
 }
@@ -147,6 +158,7 @@ export const DEFAULT_CMS_DATA: any = {
     skills: true,
     portfolio: true,
     tools: true,
+    recommendations: true,
     contact: true,
     footer: true,
   },
@@ -517,11 +529,46 @@ export const DEFAULT_CMS_DATA: any = {
     },
   ],
   global: {
-    seoTitle: 'Osama Tammam \u2014 Senior UX/UI & AI Product Designer',
-    seoDescription: 'Seven years building products for teams that couldn\u2019t afford to ship the wrong thing. Senior UX/UI Designer & AI Product Designer based in Cairo, Egypt.',
+    seoTitle: 'Osama Tammam \u2014 Product Designer',
+    seoDescription: 'Senior UX/UI Designer based in Cairo, crafting hard products into inevitable experiences.',
     ownerName: 'Osama Tammam',
-    ownerEmail: 'osamatammam1996ot.eng@gmail.com',
-    footerTagline: 'Making hard products feel inevitable.',
+    ownerEmail: 'hello@osamatammam.com',
+    footerTagline: 'Made with passion and precision.',
   },
+  recommendations: [
+    {
+      id: 'rec-1',
+      visible: true,
+      name: 'Sarah Jenkins',
+      position: { en: 'CTO at Nexus', ar: 'الرئيس التنفيذي للتكنولوجيا في نكسس' },
+      comment: { 
+        en: 'Osama completely transformed our platform. His attention to detail, both in aesthetic design and technical architecture, resulted in an interface our users actually love to use.', 
+        ar: 'قام أسامة بتحويل منصتنا بالكامل. اهتمامه بالتفاصيل، سواء في التصميم الجمالي أو البنية التقنية، أدى إلى واجهة يحب مستخدمونا استخدامها حقًا.' 
+      },
+      avatar: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000'
+    },
+    {
+      id: 'rec-2',
+      visible: true,
+      name: 'Michael Chen',
+      position: { en: 'VP of Product, Orion', ar: 'نائب رئيس المنتج، أوريون' },
+      comment: { 
+        en: 'Working with Osama was a masterclass in modern UI development. He seamlessly bridged the gap between our design system and robust React components.', 
+        ar: 'كان العمل مع أسامة بمثابة درس رئيسي في تطوير واجهة المستخدم الحديثة. لقد نجح في سد الفجوة بين نظام التصميم لدينا ومكونات React القوية.' 
+      },
+      avatar: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2000'
+    },
+    {
+      id: 'rec-3',
+      visible: true,
+      name: 'Elena Rostova',
+      position: { en: 'Design Lead, Lumina AI', ar: 'قائد التصميم، لومينا للذكاء الاصطناعي' },
+      comment: { 
+        en: 'I rarely see engineers with such a strong eye for design. Osama perfectly translated our futuristic aesthetic into performant, smooth web experiences.', 
+        ar: 'نادرًا ما أرى مهندسين لديهم مثل هذه العين القوية للتصميم. قام أسامة بترجمة جمالياتنا المستقبلية بشكل مثالي إلى تجارب ويب سلسة وعالية الأداء.' 
+      },
+      avatar: 'https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&q=80&w=2000'
+    }
+  ],
   updatedAt: new Date().toISOString(),
 };

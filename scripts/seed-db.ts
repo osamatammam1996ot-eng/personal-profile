@@ -143,6 +143,49 @@ async function seed() {
     return cs;
   });
 
+  console.log('Injecting mock recommendations...');
+  if (!cms.recommendations || cms.recommendations.length === 0) {
+    cms.recommendations = [
+      {
+        id: 'rec-1',
+        visible: true,
+        name: 'Sarah Jenkins',
+        position: { en: 'CTO at Nexus', ar: 'الرئيس التنفيذي للتكنولوجيا في نكسس' },
+        comment: { 
+          en: 'Osama completely transformed our platform. His attention to detail, both in aesthetic design and technical architecture, resulted in an interface our users actually love to use.', 
+          ar: 'قام أسامة بتحويل منصتنا بالكامل. اهتمامه بالتفاصيل، سواء في التصميم الجمالي أو البنية التقنية، أدى إلى واجهة يحب مستخدمونا استخدامها حقًا.' 
+        },
+        avatar: MOCK_IMAGES[0]
+      },
+      {
+        id: 'rec-2',
+        visible: true,
+        name: 'Michael Chen',
+        position: { en: 'VP of Product, Orion', ar: 'نائب رئيس المنتج، أوريون' },
+        comment: { 
+          en: 'Working with Osama was a masterclass in modern UI development. He seamlessly bridged the gap between our design system and robust React components.', 
+          ar: 'كان العمل مع أسامة بمثابة درس رئيسي في تطوير واجهة المستخدم الحديثة. لقد نجح في سد الفجوة بين نظام التصميم لدينا ومكونات React القوية.' 
+        },
+        avatar: MOCK_IMAGES[1]
+      },
+      {
+        id: 'rec-3',
+        visible: true,
+        name: 'Elena Rostova',
+        position: { en: 'Design Lead, Lumina AI', ar: 'قائد التصميم، لومينا للذكاء الاصطناعي' },
+        comment: { 
+          en: 'I rarely see engineers with such a strong eye for design. Osama perfectly translated our futuristic aesthetic into performant, smooth web experiences.', 
+          ar: 'نادرًا ما أرى مهندسين لديهم مثل هذه العين القوية للتصميم. قام أسامة بترجمة جمالياتنا المستقبلية بشكل مثالي إلى تجارب ويب سلسة وعالية الأداء.' 
+        },
+        avatar: MOCK_IMAGES[2]
+      }
+    ];
+  }
+
+  if (cms.sections.recommendations === undefined) {
+    cms.sections.recommendations = true;
+  }
+
   console.log('Uploading thorough data back to Supabase...');
   const { error: upsertError } = await supabase
     .from('cms_data')

@@ -8,6 +8,7 @@ import { WhyHireMe } from '../components/sections/WhyHireMe';
 import { Skills } from '../components/sections/Skills';
 import { Portfolio } from '../components/sections/Portfolio';
 import { Tools } from '../components/sections/Tools';
+import { Recommendations } from '../components/sections/Recommendations';
 import { Contact } from '../components/sections/Contact';
 import { Footer } from '../components/layout/Footer';
 import { CaseStudy } from '../components/shared/CaseStudy';
@@ -122,6 +123,7 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
             case 'skills': return <Skills key={id} isDark={isDark} />;
             case 'portfolio': return <Portfolio key={id} isDark={isDark} onCursorChange={handleCursorChange} onViewCase={handleViewCase} />;
             case 'tools': return <Tools key={id} isDark={isDark} />;
+            case 'recommendations': return <Recommendations key={id} isDark={isDark} />;
             case 'contact': return <Contact key={id} isDark={isDark} />;
             case 'footer': return <Footer key={id} isDark={isDark} />;
             default: return null;
