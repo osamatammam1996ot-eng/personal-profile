@@ -18,12 +18,24 @@ import { ErrorBoundary } from '../components/layout/ErrorBoundary';
 
 export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: { id: number; title: string } | null } = {}) {
   const [isDark, setIsDark] = useState(true);
+  const [themeLoaded, setThemeLoaded] = useState(false);
   const [cursor, setCursor] = useState({ visible: false, x: 0, y: 0 });
   const [caseStudy, setCaseStudy] = useState<{ id: number; title: string } | null>(initialCaseStudy);
   const { isRTL, fontBody } = useLanguage();
   const { cmsData, loading, error } = useCms();
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem('ot_theme');
+    if (savedTheme) {
+      setIsDark(savedTheme === 'dark');
+    }
+    setThemeLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (themeLoaded) {
+      localStorage.setItem('ot_theme', isDark ? 'dark' : 'light');
+    }
     if (isDark) {
       document.documentElement.classList.add('dark');
     } else {

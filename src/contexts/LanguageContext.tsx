@@ -17,6 +17,15 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>('en');
+  const [langLoaded, setLangLoaded] = useState(false);
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('ot_lang') as Lang;
+    if (savedLang === 'en' || savedLang === 'ar') {
+      setLang(savedLang);
+    }
+    setLangLoaded(true);
+  }, []);
 
   // Use static translations only - no backend, no dynamic data fetching
   const t = translations[lang];
@@ -26,9 +35,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const fontBody = isRTL ? 'Cairo, sans-serif' : 'Inter, sans-serif';
 
   useEffect(() => {
+    if (langLoaded) {
+      localStorage.setItem('ot_lang', lang);
+    }
     document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
     document.documentElement.setAttribute('lang', lang);
-  }, [lang, isRTL]);
+  }, [lang, isRTL, langLoaded]);
 
   const toggleLang = () => setLang(l => (l === 'en' ? 'ar' : 'en'));
 
