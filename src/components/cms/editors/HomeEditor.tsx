@@ -423,7 +423,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                     <label className={labelClasses}>English tags (comma-separated)</label>
                     <input
                       className={inputClasses}
-                      value={project.tags.en.join(', ')}
+                      value={project.tags?.en?.join(', ') || ''}
                       onChange={(e) => updateProject(index, (current) => ({ ...current, tags: { ...current.tags, en: splitComma(e.target.value) } }))}
                     />
                   </div>
@@ -432,7 +432,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                     <input
                       className={inputClasses}
                       dir="rtl"
-                      value={project.tags.ar.join(', ')}
+                      value={project.tags?.ar?.join(', ') || ''}
                       onChange={(e) => updateProject(index, (current) => ({ ...current, tags: { ...current.tags, ar: splitComma(e.target.value) } }))}
                     />
                   </div>
@@ -459,6 +459,256 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
             </div>
           );
         })}
+      </div>
+    );
+  }
+
+  if (activeSection === 'home-skills') {
+    return (
+      <div className="grid gap-3">
+        <h2 className="text-white mt-0">Skills Section</h2>
+        <BilingualField
+          label="Heading 1"
+          en={draft.skills.heading1.en}
+          ar={draft.skills.heading1.ar}
+          onChangeEn={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, heading1: { ...prev.skills.heading1, en: value } } }))}
+          onChangeAr={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, heading1: { ...prev.skills.heading1, ar: value } } }))}
+        />
+        <BilingualField
+          label="Heading 2"
+          en={draft.skills.heading2.en}
+          ar={draft.skills.heading2.ar}
+          onChangeEn={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, heading2: { ...prev.skills.heading2, en: value } } }))}
+          onChangeAr={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, heading2: { ...prev.skills.heading2, ar: value } } }))}
+        />
+        <BilingualField
+          label="Description"
+          multiline
+          en={draft.skills.desc.en}
+          ar={draft.skills.desc.ar}
+          onChangeEn={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, desc: { ...prev.skills.desc, en: value } } }))}
+          onChangeAr={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, desc: { ...prev.skills.desc, ar: value } } }))}
+        />
+
+        {[0, 1, 2].map((index) => {
+          const disc = draft.skills.disciplines[index] ?? {
+            title: { en: '', ar: '' },
+            tagline: { en: '', ar: '' },
+            tags: { en: [], ar: [] },
+          };
+          return (
+            <div key={index} className={cardClasses}>
+              <p className="m-0 mb-2.5 text-white font-bold text-[13px]">Discipline {index + 1}</p>
+              <div className="grid gap-2.5">
+                <BilingualField
+                  label="Title"
+                  en={disc.title.en}
+                  ar={disc.title.ar}
+                  onChangeEn={(value) => updateDraft((prev) => {
+                    const d = [...prev.skills.disciplines];
+                    d[index] = { ...d[index], title: { ...d[index].title, en: value } };
+                    return { ...prev, skills: { ...prev.skills, disciplines: d } };
+                  })}
+                  onChangeAr={(value) => updateDraft((prev) => {
+                    const d = [...prev.skills.disciplines];
+                    d[index] = { ...d[index], title: { ...d[index].title, ar: value } };
+                    return { ...prev, skills: { ...prev.skills, disciplines: d } };
+                  })}
+                />
+                <BilingualField
+                  label="Tagline"
+                  multiline
+                  en={disc.tagline.en}
+                  ar={disc.tagline.ar}
+                  onChangeEn={(value) => updateDraft((prev) => {
+                    const d = [...prev.skills.disciplines];
+                    d[index] = { ...d[index], tagline: { ...d[index].tagline, en: value } };
+                    return { ...prev, skills: { ...prev.skills, disciplines: d } };
+                  })}
+                  onChangeAr={(value) => updateDraft((prev) => {
+                    const d = [...prev.skills.disciplines];
+                    d[index] = { ...d[index], tagline: { ...d[index].tagline, ar: value } };
+                    return { ...prev, skills: { ...prev.skills, disciplines: d } };
+                  })}
+                />
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div>
+                    <label className={labelClasses}>English tags (comma-separated)</label>
+                    <input
+                      className={inputClasses}
+                      value={disc.tags?.en?.join(', ') || ''}
+                      onChange={(e) => updateDraft((prev) => {
+                        const d = [...prev.skills.disciplines];
+                        d[index] = { ...d[index], tags: { ...d[index].tags, en: splitComma(e.target.value) } };
+                        return { ...prev, skills: { ...prev.skills, disciplines: d } };
+                      })}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClasses}>Arabic tags (comma-separated)</label>
+                    <input
+                      className={inputClasses}
+                      dir="rtl"
+                      value={disc.tags?.ar?.join(', ') || ''}
+                      onChange={(e) => updateDraft((prev) => {
+                        const d = [...prev.skills.disciplines];
+                        d[index] = { ...d[index], tags: { ...d[index].tags, ar: splitComma(e.target.value) } };
+                        return { ...prev, skills: { ...prev.skills, disciplines: d } };
+                      })}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (activeSection === 'home-tools') {
+    return (
+      <div className="grid gap-3">
+        <h2 className="text-white mt-0">Tools Section</h2>
+        <BilingualField
+          label="Title"
+          en={draft.tools.title.en}
+          ar={draft.tools.title.ar}
+          onChangeEn={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, title: { ...prev.tools.title, en: value } } }))}
+          onChangeAr={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, title: { ...prev.tools.title, ar: value } } }))}
+        />
+        <BilingualField
+          label="Description"
+          multiline
+          en={draft.tools.desc.en}
+          ar={draft.tools.desc.ar}
+          onChangeEn={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, desc: { ...prev.tools.desc, en: value } } }))}
+          onChangeAr={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, desc: { ...prev.tools.desc, ar: value } } }))}
+        />
+        <BilingualField
+          label="Click Hint"
+          en={draft.tools.clickHint.en}
+          ar={draft.tools.clickHint.ar}
+          onChangeEn={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, clickHint: { ...prev.tools.clickHint, en: value } } }))}
+          onChangeAr={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, clickHint: { ...prev.tools.clickHint, ar: value } } }))}
+        />
+        <BilingualField
+          label="Proficiency Label"
+          en={draft.tools.proficiency.en}
+          ar={draft.tools.proficiency.ar}
+          onChangeEn={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, proficiency: { ...prev.tools.proficiency, en: value } } }))}
+          onChangeAr={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, proficiency: { ...prev.tools.proficiency, ar: value } } }))}
+        />
+        
+        <h3 className="text-white mt-4 text-sm">Tools List</h3>
+        <p className="text-[#a0a0a8] text-xs m-0 mb-2">Edit text content for the 12 tools (colors and order are fixed to maintain 3D harmony).</p>
+        
+        {draft.tools.toolsList.map((tool, index) => (
+          <div key={index} className={cardClasses}>
+            <p className="m-0 mb-2.5 text-white font-bold text-[13px]">{tool.name || `Tool ${index + 1}`}</p>
+            <div className="grid gap-2.5">
+              <div className="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label className={labelClasses}>Name (EN)</label>
+                  <input
+                    className={inputClasses}
+                    value={tool.name}
+                    onChange={(e) => updateDraft((prev) => {
+                      const t = [...prev.tools.toolsList];
+                      t[index] = { ...t[index], name: e.target.value };
+                      return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className={labelClasses}>Abbreviation</label>
+                  <input
+                    className={inputClasses}
+                    value={tool.abbr}
+                    onChange={(e) => updateDraft((prev) => {
+                      const t = [...prev.tools.toolsList];
+                      t[index] = { ...t[index], abbr: e.target.value };
+                      return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                    })}
+                  />
+                </div>
+              </div>
+              <BilingualField
+                label="Category"
+                en={tool.cat.en}
+                ar={tool.cat.ar}
+                onChangeEn={(value) => updateDraft((prev) => {
+                  const t = [...prev.tools.toolsList];
+                  t[index] = { ...t[index], cat: { ...t[index].cat, en: value } };
+                  return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                })}
+                onChangeAr={(value) => updateDraft((prev) => {
+                  const t = [...prev.tools.toolsList];
+                  t[index] = { ...t[index], cat: { ...t[index].cat, ar: value } };
+                  return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                })}
+              />
+              <BilingualField
+                label="Description"
+                multiline
+                en={tool.desc.en}
+                ar={tool.desc.ar}
+                onChangeEn={(value) => updateDraft((prev) => {
+                  const t = [...prev.tools.toolsList];
+                  t[index] = { ...t[index], desc: { ...t[index].desc, en: value } };
+                  return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                })}
+                onChangeAr={(value) => updateDraft((prev) => {
+                  const t = [...prev.tools.toolsList];
+                  t[index] = { ...t[index], desc: { ...t[index].desc, ar: value } };
+                  return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                })}
+              />
+              <div className="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label className={labelClasses}>English tags (comma-separated)</label>
+                  <input
+                    className={inputClasses}
+                    value={tool.tags?.en?.join(', ') || ''}
+                    onChange={(e) => updateDraft((prev) => {
+                      const t = [...prev.tools.toolsList];
+                      t[index] = { ...t[index], tags: { ...t[index].tags, en: splitComma(e.target.value) } };
+                      return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className={labelClasses}>Arabic tags (comma-separated)</label>
+                  <input
+                    className={inputClasses}
+                    dir="rtl"
+                    value={tool.tags?.ar?.join(', ') || ''}
+                    onChange={(e) => updateDraft((prev) => {
+                      const t = [...prev.tools.toolsList];
+                      t[index] = { ...t[index], tags: { ...t[index].tags, ar: splitComma(e.target.value) } };
+                      return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                    })}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className={labelClasses}>Proficiency (%)</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  className={inputClasses}
+                  value={tool.proficiency}
+                  onChange={(e) => updateDraft((prev) => {
+                    const t = [...prev.tools.toolsList];
+                    t[index] = { ...t[index], proficiency: parseInt(e.target.value) || 0 };
+                    return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                  })}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     );
   }

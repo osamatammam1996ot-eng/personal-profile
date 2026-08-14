@@ -300,77 +300,10 @@ export const DEFAULT_CMS_DATA: any = {
     {
       id: 1, visible: true,
       title: { en: 'Nexus Analytics', ar: 'نيكسس أناليتكس' },
-      heroImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000',
-      meta: { role: { en: 'Lead UX/UI Designer', ar: 'مصمم UX/UI رئيسي' }, timeline: { en: '6 months', ar: '6 أشهر' }, team: { en: '3 designers, 8 engineers', ar: '3 مصممين، 8 مهندسين' }, industry: { en: 'Technology / SaaS', ar: 'تكنولوجيا / SaaS' } },
-      metrics: [
-        { value: '-40%', label: { en: 'Cognitive Load Reduction', ar: 'تقليل التحميل المعرفي' }, sub: { en: 'measured via task time', ar: 'تم قياسه عبر وقت المهمة' } },
-        { value: '+28%', label: { en: 'User Activation', ar: 'تفعيل المستخدمين' }, sub: { en: 'within first 30 days', ar: 'خلال أول 30 يوم' } },
-        { value: '4.6/5', label: { en: 'Satisfaction Score', ar: 'درجة الرضا' }, sub: { en: 'from 500+ users', ar: 'من 500+ مستخدم' } },
-      ],
-      problem: {
-        narrative: { en: 'Nexus Analytics was powerful but overwhelming. Users struggled to find key metrics, leading to high churn rates and support tickets. The goal was to simplify the interface without losing advanced functionality.', ar: 'كانت تحليلات نيكسس قوية ولكنها مربكة. عانى المستخدمون في العثور على المقاييس الرئيسية، مما أدى إلى ارتفاع معدلات التوقف وتذاكر الدعم. كان الهدف هو تبسيط الواجهة دون فقدان الوظائف المتقدمة.' },
-        painPoints: [
-          { icon: 'target', title: { en: 'Information Overload', ar: 'عبء المعلومات' }, desc: { en: 'Too many data points on the main dashboard', ar: 'العديد من نقاط البيانات في لوحة القيادة' } },
-          { icon: 'users', title: { en: 'Steep Learning Curve', ar: 'منحنى تعلم حاد' }, desc: { en: 'New users required 2 weeks of onboarding', ar: 'احتاج المستخدمون الجدد إلى أسبوعين من التدريب' } }
-        ]
-      },
-      research: {
-        methods: { en: ['User Interviews', 'Heatmaps', 'A/B Testing'], ar: ['مقابلات المستخدمين', 'الخرائط الحرارية', 'اختبار أ/ب'] },
-        insights: [
-          { id: '1', quote: { en: "I just need to see my daily sales, I don't care about the rest.", ar: "أحتاج فقط إلى رؤية مبيعاتي اليومية، لا أهتم بالباقي." }, author: { en: 'Marketing Manager', ar: 'مدير التسويق' }, theme: { en: 'Customization', ar: 'التخصيص' } },
-          { id: '2', quote: { en: "The charts are too small to read on my laptop.", ar: "المخططات صغيرة جدا للقراءة على حاسوبي." }, author: { en: 'Sales Lead', ar: 'قائد المبيعات' }, theme: { en: 'Accessibility', ar: 'إمكانية الوصول' } }
-        ],
-        findings: { en: [], ar: [] }
-      },
-      process: {
-        steps: [
-          { phase: 'Discovery', title: { en: 'Mapping the Journey', ar: 'رسم الرحلة' }, duration: { en: '2 weeks', ar: 'أسبوعين' }, desc: { en: 'We mapped out the 5 core user personas and their daily tasks.', ar: 'حددنا 5 شخصيات أساسية للمستخدمين ومهامهم اليومية.' } },
-          { phase: 'Ideation', title: { en: 'Wireframing', ar: 'رسم الهياكل' }, duration: { en: '3 weeks', ar: '3 أسابيع' }, desc: { en: 'Created low-fidelity wireframes to test structural changes quickly.', ar: 'أنشأنا هياكل سلكية منخفضة الدقة لاختبار التغييرات الهيكلية بسرعة.' } }
-        ],
-        tradeoffs: [
-          { decision: { en: 'Removed the sidebar widget', ar: 'إزالة أداة الشريط الجانبي' }, rationale: { en: 'It took up 20% of screen real estate but was used by only 5% of users.', ar: 'كانت تشغل 20% من مساحة الشاشة ولكن استخدمها 5% فقط.' } }
-        ]
-      },
-      solution: {
-        screens: [
-          { title: { en: 'Modular Dashboard', ar: 'لوحة قيادة معيارية' }, desc: { en: 'Users can now drag and drop the widgets they care about most.', ar: 'يمكن للمستخدمين الآن سحب وإفلات الأدوات التي يهتمون بها أكثر.' }, image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2000', callouts: { en: ['Draggable widgets', 'Auto-saving layouts'], ar: ['أدوات قابلة للسحب', 'حفظ التخطيطات تلقائيا'] }, align: 'left' }
-        ]
-      },
-      video: {
-        url: 'https://cdn.coverr.co/videos/coverr-a-man-typing-on-a-laptop-5271/1080p.mp4',
-        youtubeId: '',
-        aspectRatio: '16:9',
-        title: { en: 'Dashboard Walkthrough', ar: 'جولة في لوحة القيادة' },
-        desc: { en: 'A quick look at the new customizable features.', ar: 'نظرة سريعة على الميزات الجديدة القابلة للتخصيص.' },
-        duration: '1:30'
-      },
-      screenshots: [
-        { image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000', caption: { en: 'Analytics View', ar: 'عرض التحليلات' }, tag: { en: 'Web', ar: 'ويب' } },
-        { image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=1000', caption: { en: 'Mobile App', ar: 'تطبيق الهاتف' }, tag: { en: 'iOS', ar: 'نظام iOS' } }
-      ],
-      results: {
-        metrics: [
-          { value: '+40%', label: { en: 'Engagement', ar: 'التفاعل' }, sub: { en: 'MoM Growth', ar: 'نمو شهري' } }
-        ],
-        quote: { text: { en: "The new dashboard changed how our team works. We save hours every week.", ar: "غيرت اللوحة الجديدة طريقة عمل فريقنا. نوفر ساعات كل أسبوع." }, author: { en: 'Sarah J.', ar: 'سارة ج.' }, role: { en: 'VP of Operations', ar: 'نائب الرئيس للعمليات' } }
-      },
-      reflection: {
-        summary: { en: 'Looking back, I would have involved engineering earlier to validate the modular drag-and-drop system, which took longer than expected to build.', ar: 'بالنظر إلى الوراء، كنت سأشرك الهندسة في وقت مبكر للتحقق من صحة النظام المعياري.' },
-        lessons: { en: ['Test complex interactions early', 'Don\'t assume user technical literacy'], ar: ['اختبر التفاعلات المعقدة مبكرا', 'لا تفترض معرفة المستخدم التقنية'] },
-        next: { en: ['Implement dark mode', 'Add custom charting options'], ar: ['تنفيذ الوضع الداكن', 'إضافة خيارات تخطيط مخصصة'] }
-      },
-
-      settings: { showProblem: true, showResearch: true, showProcess: true, showSolution: true, showMedia: true, showResults: true, showReflection: true },
-      labels: {
-        overview: { en: 'Overview', ar: 'نظرة عامة' },
-        problem: { en: 'The Problem', ar: 'المشكلة' },
-        research: { en: 'Research & Discovery', ar: 'البحث والاكتشاف' },
-        process: { en: 'Design Process', ar: 'عملية التصميم' },
-        solution: { en: 'The Solution', ar: 'الحل' },
-        media: { en: 'Walkthrough', ar: 'جولة' },
-        results: { en: 'Results & Impact', ar: 'النتائج والأثر' },
-        reflection: { en: 'Reflection', ar: 'تأملات' }
-      }
+      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000',
+      tags: { en: ['SaaS', 'AI', 'Data Viz', 'B2B'], ar: ['SaaS', 'AI', 'بيانات', 'B2B'] },
+      desc: { en: 'Advanced data analytics dashboard for B2B SaaS platforms.', ar: 'لوحة تحليلات بيانات متقدمة لمنصات SaaS B2B.' },
+      accent: '#6366f1'
     },
     
     {
