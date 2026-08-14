@@ -161,9 +161,12 @@ function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boole
   cx.fillText(tool.name, 128, 162);
   cx.shadowBlur = 0;
 
-  cx.font = '400 14px "Inter",Arial,sans-serif';
-  cx.fillStyle = isDarkTheme ? 'rgba(136,146,170,.8)' : 'rgba(71,85,105,.95)';
+  cx.font = '500 14px "Inter",Arial,sans-serif';
+  cx.fillStyle = isDarkTheme ? 'rgba(136,146,170,.8)' : 'rgba(15,23,42,.85)';
+  cx.shadowColor = isDarkTheme ? 'transparent' : 'rgba(255,255,255,0.8)';
+  cx.shadowBlur = isDarkTheme ? 0 : 3;
   cx.fillText(tool.cat[lang] || tool.cat.en, 128, 188);
+  cx.shadowBlur = 0;
 
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({
     map: new THREE.CanvasTexture(cv),
