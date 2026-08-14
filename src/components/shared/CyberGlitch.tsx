@@ -15,10 +15,7 @@ export function CyberGlitch() {
         'a, button, input, textarea, select, [role="button"], [role="link"], [tabindex]:not([tabindex="-1"])'
       );
 
-      // Also ignore clicks inside the admin dashboard
-      const isAdmin = window.location.pathname.startsWith('/admin');
-
-      if (isInteractive || isAdmin) {
+      if (isInteractive) {
         return;
       }
 
@@ -46,8 +43,7 @@ export function CyberGlitch() {
         const isInteractive = target.closest(
           'a, button, input, textarea, select, [role="button"], [role="link"], [tabindex]:not([tabindex="-1"])'
         );
-        const isAdmin = window.location.pathname.startsWith('/admin');
-        if (!isInteractive && !isAdmin) {
+        if (!isInteractive) {
             e.preventDefault();
         }
     };
