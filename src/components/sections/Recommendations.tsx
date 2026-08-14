@@ -115,19 +115,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
       <div className="container relative z-10 px-4 mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-16 flex flex-col items-center text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center gap-3 mb-6"
-          >
-            <div className="h-[1px] w-8 bg-brand/50"></div>
-            <span className="text-brand font-mono text-[11px] uppercase tracking-[0.2em] font-bold">
-              {lang === 'en' ? 'Recommendations' : 'التوصيات'}
-            </span>
-            <div className="h-[1px] w-8 bg-brand/50"></div>
-          </motion.div>
+
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
