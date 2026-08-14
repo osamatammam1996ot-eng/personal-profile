@@ -60,7 +60,7 @@ function getPositionStyle(
     height: size,
     pointerEvents: 'none',
     overflow: 'visible',
-    zIndex: 5,
+    zIndex: 18,
   };
 
   switch (position) {
