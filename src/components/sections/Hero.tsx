@@ -96,6 +96,9 @@ export function Hero({ isDark }: HeroProps) {
         }}
       />
 
+      {/* Overlay layer requested by user */}
+      <div className="absolute inset-0 z-[15] pointer-events-none bg-overlay" />
+
       {/* Decorative 3D Shape */}
       <DecorativeShape
         shape="icosahedron"
