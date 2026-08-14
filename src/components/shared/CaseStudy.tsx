@@ -83,14 +83,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
       animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
       exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
       transition={{ duration: 0.4 }}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 200,
-        background: 'rgba(10, 10, 12, 0.95)',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
+      className="fixed inset-0 z-[200] flex flex-col bg-overlay"
     >
       {/* Header */}
       <div style={{
