@@ -151,7 +151,7 @@ export type CmsCaseStudyRaw = CmsCaseStudy;
 
 // Default CMS data
 export const DEFAULT_CMS_DATA: any = {
-  sectionOrder: ['hero', 'whyHireMe', 'skills', 'portfolio', 'tools', 'contact', 'footer'],
+  sectionOrder: ['hero', 'whyHireMe', 'skills', 'portfolio', 'recommendations', 'tools', 'contact', 'footer'],
   sections: {
     hero: true,
     whyHireMe: true,

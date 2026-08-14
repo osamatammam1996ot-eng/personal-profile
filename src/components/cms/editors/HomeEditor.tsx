@@ -99,7 +99,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
   };
 
   if (activeSection === 'home-visibility') {
-    const defaultOrder = ['hero', 'whyHireMe', 'skills', 'portfolio', 'tools', 'contact', 'footer'];
+    const defaultOrder = ['hero', 'whyHireMe', 'skills', 'portfolio', 'recommendations', 'tools', 'contact', 'footer'];
     const currentOrder = draft.sectionOrder || defaultOrder;
 
     const labelMap: Record<string, string> = {
@@ -107,6 +107,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
       whyHireMe: 'Why Hire Me',
       skills: 'Skills',
       portfolio: 'Portfolio',
+      recommendations: 'Recommendations',
       tools: 'Tools',
       contact: 'Contact',
       footer: 'Footer'

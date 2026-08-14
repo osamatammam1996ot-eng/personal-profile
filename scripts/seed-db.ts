@@ -186,6 +186,15 @@ async function seed() {
     cms.sections.recommendations = true;
   }
 
+  if (cms.sectionOrder && !cms.sectionOrder.includes('recommendations')) {
+    const toolsIdx = cms.sectionOrder.indexOf('tools');
+    if (toolsIdx !== -1) {
+      cms.sectionOrder.splice(toolsIdx, 0, 'recommendations');
+    } else {
+      cms.sectionOrder.push('recommendations');
+    }
+  }
+
   console.log('Uploading thorough data back to Supabase...');
   const { error: upsertError } = await supabase
     .from('cms_data')
