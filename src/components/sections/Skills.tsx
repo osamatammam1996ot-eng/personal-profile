@@ -99,8 +99,8 @@ export function Skills({ isDark }: SkillsProps) {
 
     // 3. Solid (Prototyping / Intro)
     const shellMat = new THREE.MeshPhongMaterial({
-      color: isDark ? 0x0b0822 : 0xc4b8f8,
-      emissive: isDark ? 0x120940 : 0x4338ca,
+      color: isDark ? 0x15113d : 0xe0d8fa,
+      emissive: isDark ? 0x241573 : 0x6357e6,
       specular: isDark ? 0x9966ff : 0xffffff,
       shininess: isDark ? 80 : 140,
       transparent: true,
@@ -270,8 +270,8 @@ export function Skills({ isDark }: SkillsProps) {
     if (!s) return;
 
     if (isDark) {
-      s.shellMat.color.setHex(0x0b0822);
-      s.shellMat.emissive.setHex(0x120940);
+      s.shellMat.color.setHex(0x15113d);
+      s.shellMat.emissive.setHex(0x241573);
       s.shellMat.specular.setHex(0x9966ff);
       s.shellMat.shininess = 80;
 
@@ -285,8 +285,8 @@ export function Skills({ isDark }: SkillsProps) {
       s.rimLight.intensity = 0.5;
       s.fillLight.color.setHex(0xa855f7);
     } else {
-      s.shellMat.color.setHex(0xc4b8f8);
-      s.shellMat.emissive.setHex(0x4338ca);
+      s.shellMat.color.setHex(0xe0d8fa);
+      s.shellMat.emissive.setHex(0x6357e6);
       s.shellMat.specular.setHex(0xffffff);
       s.shellMat.shininess = 140;
 
