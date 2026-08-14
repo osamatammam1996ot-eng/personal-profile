@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import { DecorativeShape } from '../shared/DecorativeShape';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { CmsToolItem } from '../../types/cms';
 
 interface ToolsProps { isDark?: boolean; }
@@ -839,7 +840,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         position: 'relative', zIndex: 10,
       }}>
         <NavArrow onClick={prev} label="Previous tool" isDark={isDark} navBd={navBd} navBg={navBg} navHovBd={navHovBd} navHovBg={navHovBg} headingC={headingC}>
-          {isRTL ? <>&#8594;</> : <>&#8592;</>}
+          {isRTL ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
         </NavArrow>
 
         {/* dots */}
@@ -862,7 +863,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         </div>
 
         <NavArrow onClick={next} label="Next tool" isDark={isDark} navBd={navBd} navBg={navBg} navHovBd={navHovBd} navHovBg={navHovBg} headingC={headingC}>
-          {isRTL ? <>&#8592;</> : <>&#8594;</>}
+          {isRTL ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
         </NavArrow>
       </div>
 
