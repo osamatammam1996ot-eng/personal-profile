@@ -15,10 +15,10 @@ interface WhyHireMeProps {
 const CARDS_VISUAL = [
   {
     id: 'systems',
-    iconGrad: 'linear-gradient(135deg, #06B6D4 0%, #6366F1 100%)',
-    iconShadow: 'rgba(6,182,212,0.26)',
-    ambientStop: 'rgba(6,182,212,0.08)',
-    accentLine: 'rgba(6,182,212,0.4)',
+    iconGrad: 'var(--brand-gradient)',
+    iconShadow: 'color-mix(in srgb, var(--color-brand) 26%, transparent)',
+    ambientStop: 'color-mix(in srgb, var(--color-brand) 8%, transparent)',
+    accentLine: 'color-mix(in srgb, var(--color-brand) 40%, transparent)',
     rotate: -1,
     renderIcon: () => (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -33,13 +33,13 @@ const CARDS_VISUAL = [
       </svg>
     ),
     delay: 0,
-    glow: '#06B6D4',
+    glow: 'var(--color-brand)',
   },
   {
     id: 'ai',
-    iconGrad: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
-    iconShadow: 'rgba(99,102,241,0.26)',
-    ambientStop: 'rgba(99,102,241,0.08)',
+    iconGrad: 'var(--brand-gradient)',
+    iconShadow: 'color-mix(in srgb, var(--color-brand) 26%, transparent)',
+    ambientStop: 'color-mix(in srgb, var(--color-brand) 8%, transparent)',
     accentLine: 'color-mix(in srgb, var(--color-brand) 40%, transparent)',
     rotate: -2,
     renderIcon: () => (
@@ -59,14 +59,14 @@ const CARDS_VISUAL = [
       </svg>
     ),
     delay: 0.08,
-    glow: '#8B5CF6',
+    glow: 'var(--color-brand)',
   },
   {
     id: 'enterprise',
-    iconGrad: 'linear-gradient(135deg, #A78BFA 0%, #06B6D4 100%)',
-    iconShadow: 'rgba(167,139,250,0.26)',
-    ambientStop: 'rgba(167,139,250,0.08)',
-    accentLine: 'rgba(167,139,250,0.4)',
+    iconGrad: 'var(--brand-gradient)',
+    iconShadow: 'color-mix(in srgb, var(--color-brand) 26%, transparent)',
+    ambientStop: 'color-mix(in srgb, var(--color-brand) 8%, transparent)',
+    accentLine: 'color-mix(in srgb, var(--color-brand) 40%, transparent)',
     rotate: 2,
     renderIcon: () => (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -74,14 +74,14 @@ const CARDS_VISUAL = [
       </svg>
     ),
     delay: 0.16,
-    glow: '#A78BFA',
+    glow: 'var(--color-brand)',
   },
   {
     id: 'conversion',
-    iconGrad: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)',
-    iconShadow: 'rgba(139,92,246,0.26)',
-    ambientStop: 'rgba(139,92,246,0.08)',
-    accentLine: 'rgba(139,92,246,0.4)',
+    iconGrad: 'var(--brand-gradient)',
+    iconShadow: 'color-mix(in srgb, var(--color-brand) 26%, transparent)',
+    ambientStop: 'color-mix(in srgb, var(--color-brand) 8%, transparent)',
+    accentLine: 'color-mix(in srgb, var(--color-brand) 40%, transparent)',
     rotate: 1.5,
     renderIcon: () => (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -90,7 +90,7 @@ const CARDS_VISUAL = [
       </svg>
     ),
     delay: 0.24,
-    glow: '#8B5CF6',
+    glow: 'var(--color-brand)',
   },
 ];
 
@@ -344,7 +344,7 @@ function CardsRow({ isDark }: { isDark: boolean }) {
             onHoverStart={() => setHoveredId(card.id)}
             onHoverEnd={() => setHoveredId(null)}
             animate={isHovered
-              ? { y: -22, scale: 1.07, zIndex: 30, filter: `drop-shadow(0 0 32px ${card.glow}dd) drop-shadow(0 18px 48px ${card.glow}66)` }
+              ? { y: -22, scale: 1.07, zIndex: 30, filter: `drop-shadow(0 0 32px color-mix(in srgb, ${card.glow} 86%, transparent)) drop-shadow(0 18px 48px color-mix(in srgb, ${card.glow} 40%, transparent))` }
               : isSibling
               ? { y: [0, -10 - i * 3, 0, -6 - i * 2, 0], scale: 0.94, zIndex: 1, filter: 'brightness(0.55) saturate(0.7)' }
               : { y: [0, -10 - i * 3, 0, -6 - i * 2, 0], scale: 1, zIndex: 1, filter: 'brightness(1) saturate(1)' }
@@ -366,7 +366,7 @@ function CardsRow({ isDark }: { isDark: boolean }) {
               transition={{ duration: 0.45, ease: 'easeOut' }}
               style={{
                 position: 'absolute', inset: -22, borderRadius: 32, zIndex: 0, pointerEvents: 'none',
-                background: `radial-gradient(ellipse 85% 75% at 50% 65%, ${card.glow}55 0%, transparent 68%)`,
+                background: `radial-gradient(ellipse 85% 75% at 50% 65%, color-mix(in srgb, ${card.glow} 33%, transparent) 0%, transparent 68%)`,
                 filter: 'blur(14px)',
               }}
             />
@@ -385,7 +385,7 @@ function CardsRow({ isDark }: { isDark: boolean }) {
               }}
               style={{
                 position: 'absolute', inset: -5, borderRadius: 24, zIndex: 0, pointerEvents: 'none',
-                backgroundImage: `conic-gradient(from 0deg, transparent 60%, ${card.glow}bb 80%, ${card.glow}ff 90%, transparent 100%)`,
+                backgroundImage: `conic-gradient(from 0deg, transparent 60%, color-mix(in srgb, ${card.glow} 73%, transparent) 80%, ${card.glow} 90%, transparent 100%)`,
                 padding: 1.5,
                 WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                 WebkitMaskComposite: 'xor',
