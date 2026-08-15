@@ -7,27 +7,6 @@ interface GlobalSettingsEditorProps {
 }
 
 export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEditorProps) {
-  const updateDiscipline = (
-    index: number,
-    updater: (item: CmsData['skills']['disciplines'][number]) => CmsData['skills']['disciplines'][number],
-  ) => {
-    updateDraft((prev) => {
-      const disciplines = [...prev.skills.disciplines];
-      const base = disciplines[index] ?? {
-        title: { en: '', ar: '' },
-        tagline: { en: '', ar: '' },
-        tags: { en: [], ar: [] },
-      };
-      disciplines[index] = updater(base);
-      return {
-        ...prev,
-        skills: {
-          ...prev.skills,
-          disciplines,
-        },
-      };
-    });
-  };
 
   return (
     <div className="grid gap-3">
@@ -82,110 +61,7 @@ export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEdito
         </div>
       </div>
 
-      <BilingualField
-        label="Skills Heading 1"
-        en={draft.skills.heading1.en}
-        ar={draft.skills.heading1.ar}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, heading1: { ...prev.skills.heading1, en: value } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, heading1: { ...prev.skills.heading1, ar: value } } }))}
-      />
-      <BilingualField
-        label="Skills Heading 2"
-        en={draft.skills.heading2.en}
-        ar={draft.skills.heading2.ar}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, heading2: { ...prev.skills.heading2, en: value } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, heading2: { ...prev.skills.heading2, ar: value } } }))}
-      />
-      <BilingualField
-        label="Skills Description"
-        multiline
-        en={draft.skills.desc.en}
-        ar={draft.skills.desc.ar}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, desc: { ...prev.skills.desc, en: value } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, skills: { ...prev.skills, desc: { ...prev.skills.desc, ar: value } } }))}
-      />
 
-      {[0, 1, 2].map((index) => {
-        const discipline = draft.skills.disciplines[index] ?? {
-          title: { en: '', ar: '' },
-          tagline: { en: '', ar: '' },
-          tags: { en: [], ar: [] },
-        };
-
-        return (
-          <div key={index} className={cardClasses}>
-            <p className="m-0 mb-2.5 text-white font-bold text-[13px]">
-              Discipline {index + 1}
-            </p>
-            <div className="grid gap-2.5">
-              <BilingualField
-                label="Title"
-                en={discipline.title.en}
-                ar={discipline.title.ar}
-                onChangeEn={(value) => updateDiscipline(index, (current) => ({ ...current, title: { ...current.title, en: value } }))}
-                onChangeAr={(value) => updateDiscipline(index, (current) => ({ ...current, title: { ...current.title, ar: value } }))}
-              />
-              <BilingualField
-                label="Tagline"
-                multiline
-                en={discipline.tagline.en}
-                ar={discipline.tagline.ar}
-                onChangeEn={(value) => updateDiscipline(index, (current) => ({ ...current, tagline: { ...current.tagline, en: value } }))}
-                onChangeAr={(value) => updateDiscipline(index, (current) => ({ ...current, tagline: { ...current.tagline, ar: value } }))}
-              />
-              <div className="grid grid-cols-2 gap-2.5">
-                <div>
-                  <label className={labelClasses}>Tags EN (comma-separated)</label>
-                  <input
-                    className={inputClasses}
-                    value={discipline.tags.en.join(', ')}
-                    onChange={(e) => updateDiscipline(index, (current) => ({ ...current, tags: { ...current.tags, en: splitComma(e.target.value) } }))}
-                  />
-                </div>
-                <div>
-                  <label className={labelClasses}>Tags AR (comma-separated)</label>
-                  <input
-                    dir="rtl"
-                    className={inputClasses}
-                    value={discipline.tags.ar.join(', ')}
-                    onChange={(e) => updateDiscipline(index, (current) => ({ ...current, tags: { ...current.tags, ar: splitComma(e.target.value) } }))}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })}
-
-      <BilingualField
-        label="Tools Title"
-        en={draft.tools.title.en}
-        ar={draft.tools.title.ar}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, title: { ...prev.tools.title, en: value } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, title: { ...prev.tools.title, ar: value } } }))}
-      />
-      <BilingualField
-        label="Tools Description"
-        multiline
-        en={draft.tools.desc.en}
-        ar={draft.tools.desc.ar}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, desc: { ...prev.tools.desc, en: value } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, desc: { ...prev.tools.desc, ar: value } } }))}
-      />
-      <BilingualField
-        label="Tools Click Hint"
-        en={draft.tools.clickHint.en}
-        ar={draft.tools.clickHint.ar}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, clickHint: { ...prev.tools.clickHint, en: value } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, clickHint: { ...prev.tools.clickHint, ar: value } } }))}
-      />
-      <BilingualField
-        label="Tools Proficiency Label"
-        en={draft.tools.proficiency.en}
-        ar={draft.tools.proficiency.ar}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, proficiency: { ...prev.tools.proficiency, en: value } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, proficiency: { ...prev.tools.proficiency, ar: value } } }))}
-      />
 
       <BilingualField
         label="Footer Copyright"
