@@ -217,10 +217,11 @@ export function Hero({ isDark }: HeroProps) {
             </span>
 
             <span
-              className="font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)] bg-[image:var(--brand-gradient)] bg-clip-text text-transparent"
+              className="font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)]"
               style={{
                 letterSpacing: '-0.01em',
                 direction: isRTL ? 'rtl' : 'ltr',
+                color: dark ? '#ffffff' : '#000000',
               }}
             >
               {displayText}
