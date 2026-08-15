@@ -135,12 +135,12 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
                 <div>
                   <label className={labelClasses}>Type</label>
                   <select
-                    className={inputClasses}
+                    className={`${inputClasses} h-[50px] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M1.5%201.75L6%206.25L10.5%201.75%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.5)%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_8px] bg-[position:right_20px_center] bg-no-repeat pr-11 cursor-pointer`}
                     value={item.type}
                     onChange={(e) => handleUpdateMedia(idx, 'type', e.target.value)}
                   >
-                    <option value="image">Image</option>
-                    <option value="video">Video (MP4/YouTube)</option>
+                    <option value="image" className="bg-[#1a1a24]">Image</option>
+                    <option value="video" className="bg-[#1a1a24]">Video (MP4/YouTube)</option>
                   </select>
                 </div>
                 <div>
