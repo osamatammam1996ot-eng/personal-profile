@@ -86,6 +86,7 @@ function ProjectCard({
     >
       {/* ── Image ── */}
       <div
+        onClick={() => onViewCase(project.id, project.title)}
         className="relative overflow-hidden rounded-2xl aspect-[16/10] flex-1 min-w-[340px] cursor-none group"
         onMouseEnter={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: true }))}
         onMouseLeave={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: false }))}
