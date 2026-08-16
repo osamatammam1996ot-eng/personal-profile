@@ -224,6 +224,29 @@ export async function uploadImageAction(formData: FormData) {
       return { url: blob.url, filename: safeName };
     }
 
+    // Tier 3: Local Filesystem Fallback
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
+      const safeName = `cms-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
+      
+      const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      
+      const filePath = path.join(uploadDir, safeName);
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      fs.writeFileSync(filePath, buffer);
+      
+      return { url: `/uploads/${safeName}`, filename: safeName };
+    } catch (fsErr) {
+      console.error('Local FS upload error:', fsErr);
+    }
+
     return { error: 'No storage backend available. Configure Supabase Storage or Vercel Blob.' };
   } catch (e) {
     console.error('Image upload action error:', e);
@@ -260,6 +283,18 @@ export async function deleteImageAction(filename: string) {
       } catch (err) {
         console.warn('Vercel Blob delete failed:', err);
       }
+    }
+
+    // Tier 3: Local Filesystem Fallback
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      const filePath = path.join(process.cwd(), 'public', 'uploads', filename);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    } catch (fsErr) {
+      console.warn('Local FS delete failed:', fsErr);
     }
 
     return { success: true };
