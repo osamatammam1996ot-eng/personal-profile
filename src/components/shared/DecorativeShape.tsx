@@ -292,10 +292,7 @@ export const DecorativeShape = memo(function DecorativeShape({
     const BASE_SPIN = 0.0008; // very slow idle rotation
 
     const loop = () => {
-      if (!isVisibleRef.current) {
-        sceneState.rafId = requestAnimationFrame(loop);
-        return;
-      }
+      if (!isVisibleRef.current) return;
 
       const targetX = rotationOffset[0]
         + (mouseRef.current.active ? mouseRef.current.y * MAX_TILT : 0)
@@ -338,14 +335,21 @@ export const DecorativeShape = memo(function DecorativeShape({
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
+        const wasVisible = isVisibleRef.current;
         isVisibleRef.current = entry.isIntersecting;
-        if (entry.isIntersecting && !sceneState.initialized) {
-          sceneState.initialized = true;
-          onResize(); // ensure size is correct
-          if (reducedMotionRef.current) {
-            // Single static render
-            renderer.render(scene, camera);
-          } else {
+        
+        if (entry.isIntersecting) {
+          if (!sceneState.initialized) {
+            sceneState.initialized = true;
+            onResize(); // ensure size is correct
+            if (reducedMotionRef.current) {
+              // Single static render
+              renderer.render(scene, camera);
+            } else {
+              sceneState.rafId = requestAnimationFrame(loop);
+            }
+          } else if (!wasVisible && !reducedMotionRef.current) {
+            // Restart loop when re-entering viewport
             sceneState.rafId = requestAnimationFrame(loop);
           }
         }

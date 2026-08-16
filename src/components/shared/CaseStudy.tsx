@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useCms } from '../../contexts/CmsContext';
@@ -153,16 +154,20 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                 )}
                 
                 {currentMedia.type === 'image' && (
-                  <img
-                    src={currentMedia.url}
-                    alt={`${data.title} media ${currentIndex + 1}`}
-                    onLoad={() => handleMediaLoad(currentIndex)}
-                    style={{
-                      maxWidth: '100%', maxHeight: '100%', objectFit: 'contain',
-                      borderRadius: 16, boxShadow: '0 24px 80px rgba(0,0,0,0.5)',
-                      opacity: loaded[currentIndex] ? 1 : 0, transition: 'opacity 0.3s ease'
-                    }}
-                  />
+                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <Image
+                      src={currentMedia.url}
+                      alt={`${data.title} media ${currentIndex + 1}`}
+                      fill
+                      sizes="100vw"
+                      onLoad={() => handleMediaLoad(currentIndex)}
+                      style={{
+                        objectFit: 'contain',
+                        borderRadius: 16, boxShadow: '0 24px 80px rgba(0,0,0,0.5)',
+                        opacity: loaded[currentIndex] ? 1 : 0, transition: 'opacity 0.3s ease'
+                      }}
+                    />
+                  </div>
                 )}
 
                 {currentMedia.type === 'video' && (
@@ -231,7 +236,9 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
               }}
             >
               {item.type === 'image' ? (
-                <img src={item.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                  <Image src={item.url} alt="thumbnail" fill sizes="60px" style={{ objectFit: 'cover' }} />
+                </div>
               ) : (
                 <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#222' }}>
                   <span style={{ fontSize: '0.6rem', color: '#fff', fontWeight: 600 }}>VIDEO</span>

@@ -63,7 +63,6 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
   }, [isDark]);
 
   useEffect(() => {
-    document.documentElement.style.scrollBehavior = 'smooth';
     document.body.style.margin = '0';
     document.body.style.padding = '0';
     document.body.style.overflowX = 'clip';

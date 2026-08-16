@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { DecorativeShape } from '../shared/DecorativeShape';
@@ -99,15 +100,16 @@ function ProjectCard({
         onMouseLeave={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: false }))}
       >
         <motion.div
-          className="w-full h-full"
+          className="w-full h-full relative"
           style={{ y }}
         >
-          <img
+          <Image
             src={project.image}
             alt={project.title}
-            loading="eager"
-            fetchPriority="high"
-            className="w-full h-[110%] -mt-[5%] object-cover transition-transform duration-700"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority={index < 2}
+            className="object-cover transition-transform duration-700 scale-110"
           />
         </motion.div>
         {/* Hover overlay */}

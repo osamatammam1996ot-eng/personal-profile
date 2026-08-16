@@ -1,4 +1,5 @@
 import { useCms } from '../../contexts/CmsContext';
+import Image from 'next/image';
 
 interface LogoMarqueeProps {
   isDark: boolean;
@@ -39,12 +40,13 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
       <div className="flex w-max animate-logo-marquee items-center gap-16 md:gap-24 px-8 md:px-12">
         {duplicatedLogos.map((logo, idx) => {
           const LogoElement = (
-            <div className="flex items-center justify-center grayscale-[50%] opacity-60 transition-all duration-300 hover:grayscale-0 hover:opacity-100 flex-shrink-0">
-              <img 
+            <div className="flex items-center justify-center grayscale-[50%] opacity-60 transition-all duration-300 hover:grayscale-0 hover:opacity-100 flex-shrink-0 relative h-8 md:h-10 w-32">
+              <Image 
                 src={logo.url} 
                 alt={logo.name} 
-                className="h-8 md:h-10 w-auto object-contain max-w-[200px]"
-                loading="lazy"
+                fill
+                className="object-contain"
+                sizes="128px"
               />
             </div>
           );

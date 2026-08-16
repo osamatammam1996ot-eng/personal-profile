@@ -465,8 +465,13 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
             `linear-gradient(90deg, color-mix(in srgb, var(--color-brand) 5%, transparent) 1px, transparent 1px)`,
           ].join(', '),
           backgroundSize: '60px 60px',
-          WebkitMaskImage: 'radial-gradient(ellipse 90% 80% at 50% 35%, black 0%, transparent 70%)',
-          maskImage: 'radial-gradient(ellipse 90% 80% at 50% 35%, black 0%, transparent 70%)',
+        }}
+      />
+      {/* Fade out edges of grid without expensive CSS masks */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 90% 80% at 50% 35%, transparent 0%, var(--surface) 70%)'
         }}
       />
 
