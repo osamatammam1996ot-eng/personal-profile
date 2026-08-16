@@ -135,7 +135,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
           </motion.button>
         )}
 
-        <div style={{ width: '100%', height: '100%', padding: '80px 100px 100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'absolute', top: 80, bottom: media.length > 1 ? 120 : 40, left: 100, right: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <AnimatePresence mode="wait">
             {currentMedia ? (
               <motion.div
