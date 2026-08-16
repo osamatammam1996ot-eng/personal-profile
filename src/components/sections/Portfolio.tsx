@@ -114,6 +114,8 @@ function ProjectCard({
           <img
             src={project.image}
             alt={project.title}
+            loading="eager"
+            fetchPriority="high"
             className="w-full h-[110%] -mt-[5%] object-cover transition-transform duration-700"
           />
         </div>
