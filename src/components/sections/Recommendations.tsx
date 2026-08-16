@@ -106,7 +106,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
   return (
     <section 
       id="recommendations" 
-      className="relative w-full py-32 overflow-hidden flex flex-col items-center justify-center bg-surface"
+      className="relative w-full py-32 overflow-hidden flex flex-col items-center justify-center bg-surface-elevated border-t border-border-default"
     >
       {/* Background glowing shape */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-60">
