@@ -3,13 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "motion/react";
 
-interface CustomCursorProps {
-  portfolioHoverVisible: boolean;
-  portfolioX: number;
-  portfolioY: number;
-}
-
-export function CustomCursor({ portfolioHoverVisible, portfolioX, portfolioY }: CustomCursorProps) {
+export function CustomCursor() {
+  const [portfolioHoverVisible, setPortfolioHoverVisible] = useState(false);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
@@ -36,12 +31,19 @@ export function CustomCursor({ portfolioHoverVisible, portfolioX, portfolioY }: 
       }
     };
 
+    const handlePortfolioHover = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setPortfolioHoverVisible(customEvent.detail);
+    };
+
     window.addEventListener("mousemove", moveCursor);
     window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener("portfolioHover", handlePortfolioHover);
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
       window.removeEventListener("mouseover", handleMouseOver);
+      window.removeEventListener("portfolioHover", handlePortfolioHover);
     };
   }, [cursorX, cursorY, isVisible]);
 
@@ -59,8 +61,10 @@ export function CustomCursor({ portfolioHoverVisible, portfolioX, portfolioY }: 
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             className="fixed z-[9999] pointer-events-none flex items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-hover opacity-90 backdrop-blur-sm shadow-[0_8px_30px_var(--color-brand)]"
             style={{
-              left: portfolioX - 40,
-              top: portfolioY - 40,
+              x: cursorXSpring,
+              y: cursorYSpring,
+              translateX: "-50%",
+              translateY: "-50%",
               width: 80,
               height: 80,
             }}

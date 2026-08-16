@@ -21,7 +21,6 @@ import { ErrorBoundary } from '../components/layout/ErrorBoundary';
 export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: { id: number; title: string } | null } = {}) {
   const [isDark, setIsDark] = useState(true);
   const [themeLoaded, setThemeLoaded] = useState(false);
-  const [cursor, setCursor] = useState({ visible: false, x: 0, y: 0 });
   const [caseStudy, setCaseStudy] = useState<{ id: number; title: string } | null>(initialCaseStudy);
   const { isRTL, fontBody } = useLanguage();
   const { cmsData, loading, error } = useCms();
@@ -81,10 +80,6 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
     });
   }, [cmsData.sectionOrder]);
 
-  const handleCursorChange = (visible: boolean, x: number, y: number) => {
-    setCursor({ visible, x, y });
-  };
-
   const handleViewCase = (projectId: number, projectTitle: string) => {
     setCaseStudy({ id: projectId, title: projectTitle });
   };
@@ -100,11 +95,7 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
       className="min-h-screen bg-surface transition-colors duration-400 overflow-clip portfolio-mode"
     >
       {/* Global custom cursor */}
-      <CustomCursor
-        portfolioHoverVisible={cursor.visible}
-        portfolioX={cursor.x}
-        portfolioY={cursor.y}
-      />
+      <CustomCursor />
 
       {error && (
         <div className="p-4 bg-danger text-white text-center font-medium">
@@ -123,7 +114,7 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
             case 'logoMarquee': return <LogoMarquee key={id} isDark={isDark} />;
             case 'whyHireMe': return <WhyHireMe key={id} isDark={isDark} />;
             case 'skills': return <Skills key={id} isDark={isDark} />;
-            case 'portfolio': return <Portfolio key={id} isDark={isDark} onCursorChange={handleCursorChange} onViewCase={handleViewCase} />;
+            case 'portfolio': return <Portfolio key={id} isDark={isDark} onViewCase={handleViewCase} />;
             case 'tools': return <Tools key={id} isDark={isDark} />;
             case 'recommendations': return <Recommendations key={id} isDark={isDark} />;
             case 'contact': return <Contact key={id} isDark={isDark} />;

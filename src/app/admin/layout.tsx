@@ -17,7 +17,7 @@ export default async function AdminLayout({
   return (
     <div dir="ltr" className="min-h-screen text-left portfolio-mode text-text-primary">
       <DashboardBackground />
-      <CustomCursor portfolioHoverVisible={false} portfolioX={0} portfolioY={0} />
+      <CustomCursor />
       {children}
     </div>
   );

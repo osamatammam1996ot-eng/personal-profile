@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { DecorativeShape } from '../shared/DecorativeShape';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -7,7 +7,6 @@ import { useCms } from '../../contexts/CmsContext';
 
 interface PortfolioProps {
   isDark: boolean;
-  onCursorChange: (visible: boolean, x: number, y: number) => void;
   onViewCase: (projectId: number, projectTitle: string) => void;
 }
 
@@ -53,7 +52,6 @@ function ProjectCard({
   viewCaseLabel,
   isDark,
   index,
-  onCursorChange,
   onViewCase,
 }: {
   project: typeof PROJECTS_STATIC[0];
@@ -62,24 +60,17 @@ function ProjectCard({
   viewCaseLabel: string;
   isDark: boolean;
   index: number;
-  onCursorChange: (visible: boolean, x: number, y: number) => void;
   onViewCase: (projectId: number, projectTitle: string) => void;
 }) {
   const { lang, fontHeading, fontBody, isRTL } = useLanguage();
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [parallaxOffset, setParallaxOffset] = useState(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const center = rect.top + rect.height / 2 - window.innerHeight / 2;
-      setParallaxOffset(center * 0.12);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+  
+  // As scrollYProgress goes 0 -> 1, y goes from 60px down to -60px
+  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   const dark = isDark;
 
@@ -104,12 +95,12 @@ function ProjectCard({
       {/* ── Image ── */}
       <div
         className="relative overflow-hidden rounded-2xl aspect-[16/10] flex-1 min-w-[340px] cursor-none group"
-        onMouseMove={(e) => onCursorChange(true, e.clientX, e.clientY)}
-        onMouseLeave={() => onCursorChange(false, 0, 0)}
+        onMouseEnter={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: true }))}
+        onMouseLeave={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: false }))}
       >
-        <div
+        <motion.div
           className="w-full h-full"
-          style={{ transform: `translateY(${parallaxOffset}px)`, transition: 'transform 0.1s linear' }}
+          style={{ y }}
         >
           <img
             src={project.image}
@@ -118,7 +109,7 @@ function ProjectCard({
             fetchPriority="high"
             className="w-full h-[110%] -mt-[5%] object-cover transition-transform duration-700"
           />
-        </div>
+        </motion.div>
         {/* Hover overlay */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-500"
@@ -185,7 +176,7 @@ function ProjectCard({
   );
 }
 
-export function Portfolio({ isDark, onCursorChange, onViewCase }: PortfolioProps) {
+export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
   const { lang, fontHeading, fontBody } = useLanguage();
   const { cmsData, content } = useCms();
   const dark = isDark;
@@ -267,7 +258,6 @@ export function Portfolio({ isDark, onCursorChange, onViewCase }: PortfolioProps
               viewCaseLabel={viewCaseLabel}
               isDark={dark}
               index={index}
-              onCursorChange={onCursorChange}
               onViewCase={onViewCase}
             />
           ))}
