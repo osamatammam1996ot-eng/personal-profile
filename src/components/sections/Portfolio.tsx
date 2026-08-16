@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { DecorativeShape } from '../shared/DecorativeShape';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -64,14 +64,6 @@ function ProjectCard({
   onViewCase: (projectId: number, projectTitle: string) => void;
 }) {
   const { lang, fontHeading, fontBody, isRTL } = useLanguage();
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-  
-  // As scrollYProgress goes 0 -> 1, y goes from 60px down to -60px
-  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   const dark = isDark;
 
@@ -86,7 +78,6 @@ function ProjectCard({
 
   return (
     <motion.div
-      ref={sectionRef}
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
@@ -99,10 +90,7 @@ function ProjectCard({
         onMouseEnter={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: true }))}
         onMouseLeave={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: false }))}
       >
-        <motion.div
-          className="w-full h-full relative"
-          style={{ y }}
-        >
+        <div className="w-full h-full relative">
           <Image
             src={project.image}
             alt={project.title}
@@ -111,7 +99,7 @@ function ProjectCard({
             priority={index < 2}
             className="object-cover transition-transform duration-700 scale-110"
           />
-        </motion.div>
+        </div>
         {/* Hover overlay */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-500"
