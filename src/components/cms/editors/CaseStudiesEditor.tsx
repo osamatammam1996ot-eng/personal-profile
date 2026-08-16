@@ -2,6 +2,7 @@ import { Button } from '../../ui/button';
 import type { CmsData } from '../../../types/cms';
 import { Trash2, Plus, GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import { cardClasses, inputClasses, labelClasses } from '../../../components/cms/shared/BilingualField';
+import { ImageUploader } from '../../../components/cms/shared/ImageUploader';
 
 interface CaseStudiesEditorProps {
   draft: CmsData;
@@ -144,13 +145,24 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
                   </select>
                 </div>
                 <div>
-                  <label className={labelClasses}>URL</label>
-                  <input
-                    className={inputClasses}
-                    placeholder={item.type === 'image' ? 'https://example.com/image.png' : 'https://example.com/video.mp4'}
-                    value={item.url}
-                    onChange={(e) => handleUpdateMedia(idx, 'url', e.target.value)}
-                  />
+                  {item.type === 'image' ? (
+                    <ImageUploader
+                      label="Image"
+                      value={item.url}
+                      onChange={(url) => handleUpdateMedia(idx, 'url', url)}
+                      helpText="Recommended: 16:9 ratio (e.g., 1920x1080px)"
+                    />
+                  ) : (
+                    <>
+                      <label className={labelClasses}>Video URL</label>
+                      <input
+                        className={inputClasses}
+                        placeholder="https://example.com/video.mp4 or YouTube URL"
+                        value={item.url}
+                        onChange={(e) => handleUpdateMedia(idx, 'url', e.target.value)}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
 

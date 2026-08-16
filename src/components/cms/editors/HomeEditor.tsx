@@ -2,6 +2,7 @@ import type { CmsData } from '../../../types/cms';
 import { useState } from 'react';
 import { Button } from '../../ui/button';
 import { BilingualField, splitComma, cardClasses, inputClasses, labelClasses } from '../../../components/cms/shared/BilingualField';
+import { ImageUploader } from '../../../components/cms/shared/ImageUploader';
 
 interface HomeEditorProps {
   draft: CmsData;
@@ -406,12 +407,12 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
                   </div>
                 </div>
                 <div className="grid grid-cols-[1fr_140px] gap-3">
-                  <div>
-                    <label className={labelClasses}>Image URL</label>
-                    <input
-                      className={inputClasses}
+                  <div className="col-span-2">
+                    <ImageUploader
+                      label="Image"
                       value={project.image}
-                      onChange={(e) => updateProject(index, (current) => ({ ...current, image: e.target.value }))}
+                      onChange={(url) => updateProject(index, (current) => ({ ...current, image: url }))}
+                      helpText="Recommended: 16:10 ratio (e.g., 1600x1000px)"
                     />
                   </div>
                   <div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { CmsData, CmsRecommendation } from '../../../types/cms';
 import { Button } from '../../ui/button';
 import { BilingualField, cardClasses, inputClasses, labelClasses } from '../../../components/cms/shared/BilingualField';
+import { ImageUploader } from '../../../components/cms/shared/ImageUploader';
 import { Trash2, Plus, GripVertical, Image as ImageIcon, Check, X } from 'lucide-react';
 
 interface RecommendationsEditorProps {
@@ -139,20 +140,11 @@ export function RecommendationsEditor({ draft, updateDraft }: RecommendationsEdi
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                 {/* Avatar Preview & URL */}
                 <div className="md:col-span-3 flex flex-col gap-3">
-                  <label className={labelClasses}>Avatar Image</label>
-                  <div className="aspect-square rounded-xl bg-white/5 border border-admin-border-subtle overflow-hidden relative group flex items-center justify-center">
-                    {rec.avatar ? (
-                      <img src={rec.avatar} alt={rec.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <ImageIcon size={32} className="text-white/20" />
-                    )}
-                  </div>
-                  <input
-                    type="text"
+                  <ImageUploader
+                    label="Avatar Image"
                     value={rec.avatar}
-                    onChange={(e) => updateRecommendation(rec.id, (r) => ({ ...r, avatar: e.target.value }))}
-                    className={inputClasses}
-                    placeholder="Image URL..."
+                    onChange={(url) => updateRecommendation(rec.id, (r) => ({ ...r, avatar: url }))}
+                    helpText="Recommended: 1:1 square (e.g., 200x200px)"
                   />
                 </div>
 

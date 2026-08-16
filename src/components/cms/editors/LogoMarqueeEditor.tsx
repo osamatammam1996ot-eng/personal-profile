@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { CmsData, CmsLogo } from '../../../types/cms';
 import { Button } from '../../ui/button';
 import { cardClasses, inputClasses, labelClasses } from '../../../components/cms/shared/BilingualField';
+import { ImageUploader } from '../../../components/cms/shared/ImageUploader';
 import { Trash2, Plus, GripVertical, Image as ImageIcon, Check, X } from 'lucide-react';
 
 interface LogoMarqueeEditorProps {
@@ -140,22 +141,12 @@ export function LogoMarqueeEditor({ draft, updateDraft }: LogoMarqueeEditorProps
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                 {/* Logo Preview & URL */}
                 <div className="md:col-span-3 flex flex-col gap-3">
-                  <label className={labelClasses}>Image URL</label>
-                  <div className="aspect-[4/3] rounded-xl bg-white/5 border border-admin-border-subtle overflow-hidden relative group flex items-center justify-center p-4">
-                    {logo.url ? (
-                      <img src={logo.url} alt={logo.name} className="w-full h-full object-contain filter invert opacity-80" />
-                    ) : (
-                      <ImageIcon size={32} className="text-white/20" />
-                    )}
-                  </div>
-                  <input
-                    type="text"
+                  <ImageUploader
+                    label="Image URL"
                     value={logo.url}
-                    onChange={(e) => updateLogo(logo.id, (l) => ({ ...l, url: e.target.value }))}
-                    className={inputClasses}
-                    placeholder="https://..."
+                    onChange={(url) => updateLogo(logo.id, (l) => ({ ...l, url }))}
+                    helpText="Tip: SVGs or high-res transparent PNGs work best. Max height 200px."
                   />
-                  <p className="text-[10px] text-white/40">Tip: SVGs or high-res transparent PNGs work best. Will be scaled automatically.</p>
                 </div>
 
                 <div className="md:col-span-9 flex flex-col gap-6">
