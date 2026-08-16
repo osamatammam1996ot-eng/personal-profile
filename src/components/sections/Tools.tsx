@@ -16,99 +16,9 @@ import type { CmsToolItem } from '../../types/cms';
 
 interface ToolsProps { isDark?: boolean; }
 
-/* ─── Tool data ─────────────────────────────────────────────────────────────── */
-const TOOLS = [
-  { name: 'Figma',         abbr: 'Fi', cat: 'Design & Prototyping', desc: 'Primary environment for UI systems, components and interactive prototypes.',  tags: ['UI Design','Components','Proto'],  rgb: [0.62,0.28,1.00] as [number,number,number], glow: '#a855f7' },
-  { name: 'Framer',        abbr: 'Fr', cat: 'Motion & Web',          desc: 'Turning static designs into production-ready animated web experiences.',       tags: ['Animation','CMS','Web'],          rgb: [0.05,0.60,1.00] as [number,number,number], glow: '#0ea5e9' },
-  { name: 'After Effects', abbr: 'Ae', cat: 'Motion Graphics',       desc: 'Micro-interactions, loading states and brand animation sequences.',            tags: ['Motion','Lottie','Brand'],        rgb: [0.55,0.22,0.95] as [number,number,number], glow: '#818cf8' },
-  { name: 'Midjourney',    abbr: 'Mj', cat: 'AI Imagery',            desc: 'Ideation and moodboarding with generative visuals for design direction.',     tags: ['AI Art','Moodboard','Concept'],   rgb: [0.10,0.75,0.65] as [number,number,number], glow: '#14b8a6' },
-  { name: 'ChatGPT',       abbr: 'Gp', cat: 'AI Collaboration',      desc: 'Research, copywriting and rapid UX strategy ideation.',                       tags: ['Research','Copy','Strategy'],     rgb: [0.25,0.80,0.42] as [number,number,number], glow: '#22c55e' },
-  { name: 'Notion',        abbr: 'No', cat: 'Docs & Planning',       desc: 'Design documentation, project wikis and client-facing deliverable hubs.',    tags: ['Docs','Wiki','Delivery'],         rgb: [0.75,0.75,0.90] as [number,number,number], glow: '#cbd5e1' },
-  { name: 'Jira',          abbr: 'Ji', cat: 'Project Management',    desc: 'Sprint planning and cross-functional collaboration with engineering.',        tags: ['Agile','Sprints','Backlog'],      rgb: [0.10,0.42,1.00] as [number,number,number], glow: '#3b82f6' },
-  { name: 'Photoshop',     abbr: 'Ps', cat: 'Image Editing',         desc: 'Pixel-perfect compositing, retouching and visual asset production.',         tags: ['Compositing','Assets','Photo'],   rgb: [0.18,0.55,1.00] as [number,number,number], glow: '#60a5fa' },
-  { name: 'Illustrator',   abbr: 'Ai', cat: 'Vector & Icons',        desc: 'Icon systems, custom illustrations and scalable brand marks.',               tags: ['Icons','Vectors','Brand'],        rgb: [1.00,0.55,0.10] as [number,number,number], glow: '#f97316' },
-  { name: 'Mobbin',        abbr: 'Mb', cat: 'User Research',         desc: 'Discover real patterns in how users navigate — before a single line ships.',  tags: ['Testing','Usability','UX'],       rgb: [1.00,0.30,0.50] as [number,number,number], glow: '#f43f5e' },
-  { name: 'Lottie',        abbr: 'Lo', cat: 'Animation Export',      desc: 'Lightweight JSON animations for seamless developer handoff.',                tags: ['Export','JSON','Handoff'],        rgb: [1.00,0.84,0.10] as [number,number,number], glow: '#eab308' },
-  { name: 'Webflow',       abbr: 'Wf', cat: 'No-Code Web',           desc: 'Visual web building with production-ready HTML & CSS output.',                tags: ['Web','CMS','CSS'],                rgb: [0.35,0.65,1.00] as [number,number,number], glow: '#38bdf8' },
-];
-
-const SKILL_LEVELS: Record<string, number> = {
-  'Figma': 98, 'Framer': 85, 'After Effects': 80,
-  'Midjourney': 78, 'ChatGPT': 88, 'Notion': 90,
-  'Jira': 82, 'Photoshop': 85, 'Illustrator': 80,
-  'Mobbin': 75, 'Lottie': 78, 'Webflow': 75,
-};
-
-/* ─── Face normals — same as reference HTML ──────────────────────────────── */
-const PHI = (1 + Math.sqrt(5)) / 2;
-const FACE_NORMALS_RAW: [number,number,number][] = [
-  // Group B: (±1, 0, ±φ) — face centres, replaces wrong vertex coords (±1,±1,±1)
-  [ 1, 0,  PHI], [-1, 0,  PHI], [ 1, 0, -PHI], [-1, 0, -PHI],
-  // Group C: (±φ, ±1, 0) — face centres, replaces wrong vertex coords (±1,±1,±1)
-  [ PHI, 1, 0], [-PHI, 1, 0], [ PHI, -1, 0], [-PHI, -1, 0],
-  // Group A: (0, ±φ, ±1) — already correct, untouched
-  [ 0, PHI, 1], [ 0,-PHI, 1], [ 0, PHI,-1], [ 0,-PHI,-1],
-];
-function normalize3(v: [number,number,number]): [number,number,number] {
-  const l = Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
-  return [v[0]/l, v[1]/l, v[2]/l];
-}
-const FACE_NORMALS_NORMALIZED = FACE_NORMALS_RAW.map(normalize3);
-// REMAP removed — face fi holds TOOLS[fi], goTo(i) brings face i to front directly
-
-/* ─── Dust particles (2-D canvas) ────────────────────────────────────────────── */
-function useDustCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>, isDark: boolean) {
-  useEffect(() => {
-    const cv = canvasRef.current;
-    if (!cv) return;
-    const cx = cv.getContext('2d');
-    if (!cx) return;
-
-    let W = 0, H = 0, rafId = 0;
-    const pts: { x:number; y:number; r:number; vx:number; vy:number; a:number }[] = [];
-
-    function resize() {
-      W = cv!.width  = cv!.offsetWidth;
-      H = cv!.height = cv!.offsetHeight;
-    }
-    function make() {
-      pts.length = 0;
-      for (let i = 0; i < 60; i++) {
-        pts.push({
-          x: Math.random() * W, y: Math.random() * H,
-          r: Math.random() * 1.3 + 0.25,
-          vx: (Math.random() - 0.5) * 0.09,
-          vy: (Math.random() - 0.5) * 0.09,
-          a: Math.random() * 0.2 + 0.04,
-        });
-      }
-    }
-    function draw() {
-      cx!.clearRect(0, 0, W, H);
-      // Use indigo/violet matching site's accent palette
-      const dustColor = isDark ? '99,102,241' : '139,92,246';
-      for (const p of pts) {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-        if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-        cx!.beginPath();
-        cx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        cx!.fillStyle = `rgba(${dustColor},${p.a})`;
-        cx!.fill();
-      }
-      rafId = requestAnimationFrame(draw);
-    }
-
-    function onResize() { resize(); make(); }
-    resize(); make(); draw();
-    window.addEventListener('resize', onResize);
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', onResize);
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvasRef, isDark]);
-}
+import { DustCanvas } from './tools/DustCanvas';
+import { ActiveToolCard } from './tools/ActiveToolCard';
+import { FACE_NORMALS_NORMALIZED, rotForFace } from './tools/constants';
 
 /* ─── Face sprite builder ───────────────────────────────────────────────────── */
 function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boolean): THREE.Sprite {
@@ -177,20 +87,7 @@ function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boole
   return sp;
 }
 
-/* ─── rotForFace — correct derivation ───────────────────────────────────────── */
-// We need ROOT rotation (rx around X, then ry around Y in Three.js XYZ Euler order)
-// such that face normal [nx,ny,nz] ends up pointing at +Z (toward camera).
-//
-// Three.js XYZ Euler applies as M = Rx * Ry (Ry is applied first, then Rx).
-// Solving  Rx(rx) * Ry(ry) * [nx,ny,nz]ᵀ = [0,0,1]ᵀ  gives:
-//   Step 1 — Ry maps x to 0:  ry = atan2(-nx, nz)
-//   Step 2 — Rx maps y' to 0: rx = atan2(ny, sqrt(nx²+nz²))
-function rotForFace(i: number): { rx: number; ry: number } {
-  const [nx, ny, nz] = FACE_NORMALS_NORMALIZED[i];
-  const ry = Math.atan2(-nx, nz);
-  const rx = Math.atan2(ny, Math.sqrt(nx * nx + nz * nz));
-  return { rx, ry };
-}
+
 
 /* ─── Main component ─────────────────────────────────────────────────────────── */
 export function Tools({ isDark = false }: ToolsProps) {
@@ -215,7 +112,6 @@ export function Tools({ isDark = false }: ToolsProps) {
   const panelsRef = useRef<{ sprite: THREE.Sprite; grp: THREE.Group; idx: number }[]>([]);
   const rebuildSpritesRef = useRef<((forceIsDark?: boolean) => void) | null>(null);
 
-  useDustCanvas(dustRef, isDark);
 
   /* ─── Three.js scene ───────────────────────────────────────────────────── */
   useEffect(() => {
@@ -555,9 +451,9 @@ export function Tools({ isDark = false }: ToolsProps) {
       }} />
 
       {/* dust canvas */}
-      <canvas
-        ref={dustRef}
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}
+      <DustCanvas 
+        isDark={isDark} 
+        className="absolute inset-0 w-full h-full pointer-events-none z-[1]" 
       />
 
 
@@ -640,275 +536,38 @@ export function Tools({ isDark = false }: ToolsProps) {
           transition: 'border-color .4s ease, box-shadow .4s ease',
         }} />
 
-        {/* Info card — desktop: right of wrap */}
-        <AnimatePresence>
-          {cardVisible && (
-            <motion.div
-              key={tool.name}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.34,1.56,0.64,1] }}
-              className="hidden lg:block tools-desktop-card"
-              style={{
-                position: 'absolute',
-                right: -8, top: '50%',
-                transform: 'translateY(-50%) translateX(115%)',
-                width: 224,
-                background: cardBg,
-                border: `1px solid ${cardBd}`,
-                borderRadius: 16,
-                padding: 20,
-                backdropFilter: 'blur(24px)',
-                boxShadow: cardShadow,
-                zIndex: 100,
-                
-              }}
-            >
-              {/* icon badge */}
-              <div style={{
-                width: 46, height: 46, borderRadius: 14,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 17, fontWeight: 700, marginBottom: 12,
-                letterSpacing: '-0.02em',
-                
-                background: `rgba(${tool.rgb.map(v=>Math.round(v*255)).join(',')},0.18)`,
-                border: `1px solid ${tool.glow}66`,
-                color: isDark ? tool.glow : `rgba(${tool.rgb.map(v=>Math.floor(v*255*0.6)).join(',')},1)`,
-              }}>
-                {tool.abbr}
-              </div>
-
-              <div style={{
-                fontSize: '0.95rem', fontWeight: 600,
-                
-                color: headingC, marginBottom: 2,
-              }}>
-                {tool.name}
-              </div>
-              <div style={{
-                fontSize: '0.65rem', letterSpacing: '0.10em',
-                color: mutedC, marginBottom: 10,
-              }}>
-                {(tool.cat?.[lang] || tool.cat?.en)}
-              </div>
-              <div style={{
-                fontSize: '0.75rem', lineHeight: 1.65,
-                color: bodyC, marginBottom: 12,
-              }}>
-                {(tool.desc?.[lang] || tool.desc?.en)}
-              </div>
-
-              {/* skill bar */}
-              <div style={{ marginBottom: 12 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                  <span style={{
-                    fontSize: '0.65rem', letterSpacing: '0.10em',
-                    color: mutedC,
-                  }}>
-                    {proficiencyLabel}
-                  </span>
-                  <span style={{
-                    fontSize: '0.7rem', fontWeight: 700,
-                    background: 'var(--brand-gradient)',
-                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                  }}>
-                    {pct}%
-                  </span>
-                </div>
-                <div style={{
-                  height: 4, borderRadius: 100,
-                  background: barTrack,
-                  overflow: 'hidden',
-                }}>
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${pct}%` }}
-                    transition={{ duration: 0.9, ease: [0.34, 1.10, 0.64, 1], delay: 0.1 }}
-                    style={{
-                      height: '100%', borderRadius: 100,
-                      background: 'var(--brand-gradient)',
-                      boxShadow: `0 0 8px rgba(99,102,241,0.6)`,
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                {(tool.tags?.[lang] || tool.tags?.en || []).map(tag => (
-                  <span key={tag} style={{
-                    fontSize: '0.6rem', fontWeight: 500, padding: '3px 8px', borderRadius: 100,
-                    background: tagBg, color: tagC,
-                    border: `1px solid ${tagBd}`,
-                  }}>{tag}</span>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
+        {/* Info card — desktop and mobile merged into ActiveToolCard */}
       </div>
 
-      {/* Mobile card — below canvas, taking up exact layout space */}
-      <div className="block lg:hidden relative w-full max-w-[340px] mx-auto min-h-[220px] mb-6">
-        <AnimatePresence>
-          {cardVisible && (
-            <motion.div
-              key={`mob-${tool.name}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.35, ease: [0.34,1.56,0.64,1] }}
-              className="tools-mobile-card"
-              style={{
-                position: 'absolute',
-                top: 0, left: 0, width: '100%',
-                background: cardBg,
-                border: `1px solid ${cardBd}`,
-                borderRadius: 16,
-                padding: 20, backdropFilter: 'blur(24px)',
-                boxShadow: cardShadow,
-                zIndex: 100,
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                <div style={{
-                  width: 40, height: 40, borderRadius: 12, flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 15, fontWeight: 700, letterSpacing: '-0.02em',
-                  background: `rgba(${tool.rgb.map(v=>Math.round(v*255)).join(',')},0.18)`,
-                  border: `1px solid ${tool.glow}66`,
-                  color: isDark ? tool.glow : `rgba(${tool.rgb.map(v=>Math.floor(v*255*0.6)).join(',')},1)`,
-                }}>{tool.abbr}</div>
-                <div>
-                  <div style={{
-                    fontSize: '0.9rem', fontWeight: 600,
-                    color: headingC,
-                  }}>
-                    {tool.name}
-                  </div>
-                  <div style={{
-                    fontSize: '0.6rem', letterSpacing: '0.10em',
-                    color: mutedC, marginTop: 2,
-                  }}>
-                    {(tool.cat?.[lang] || tool.cat?.en)}
-                  </div>
-                </div>
-              </div>
-              <div style={{ fontSize: '0.75rem', lineHeight: 1.65, color: bodyC, marginBottom: 10 }}>
-                {(tool.desc?.[lang] || tool.desc?.en)}
-              </div>
-              {/* skill bar mobile */}
-              <div style={{ marginBottom: 10 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
-                  <span style={{ fontSize: '0.6rem', letterSpacing: '0.10em', color: mutedC }}>{proficiencyLabel}</span>
-                  <span style={{
-                    fontSize: '0.7rem', fontWeight: 700, 
-                    background: 'var(--brand-gradient)',
-                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                  }}>{pct}%</span>
-                </div>
-                <div style={{ height: 4, borderRadius: 100, background: barTrack, overflow: 'hidden' }}>
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${pct}%` }}
-                    transition={{ duration: 0.9, ease: [0.34, 1.10, 0.64, 1], delay: 0.1 }}
-                    style={{
-                      height: '100%', borderRadius: 100,
-                      background: 'var(--brand-gradient)',
-                      boxShadow: '0 0 8px rgba(99,102,241,0.6)',
-                    }}
-                  />
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                {(tool.tags?.[lang] || tool.tags?.en || []).map(tag => (
-                  <span key={tag} style={{
-                    fontSize: '0.6rem', fontWeight: 500, padding: '3px 8px', borderRadius: 100,
-                    background: tagBg, color: tagC, border: `1px solid ${tagBd}`,
-                  }}>{tag}</span>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* ── Navigation ── */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 16, marginTop: 30,
-        position: 'relative', zIndex: 10,
-      }}>
-        <NavArrow onClick={prev} label="Previous tool" isDark={isDark} navBd={navBd} navBg={navBg} navHovBd={navHovBd} navHovBg={navHovBg} headingC={headingC}>
-          {isRTL ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
-        </NavArrow>
-
-        {/* dots */}
-        <div style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
-          {TOOLS.map((t: any, i: number) => (
-            <button
-              key={t.name}
-              onClick={() => goTo(i)}
-              aria-label={t.name}
-              style={{
-                width: i === activeIdx ? 18 : 6,
-                height: 6, borderRadius: i === activeIdx ? 3 : '50%',
-                border: 'none', cursor: 'pointer', padding: 0,
-                background: i === activeIdx ? '#6366f1' : dotInact,
-                boxShadow: i === activeIdx ? '0 0 10px rgba(99,102,241,0.7)' : 'none',
-                transition: 'all .28s ease',
-              }}
-            />
-          ))}
-        </div>
-
-        <NavArrow onClick={next} label="Next tool" isDark={isDark} navBd={navBd} navBg={navBg} navHovBd={navHovBd} navHovBg={navHovBg} headingC={headingC}>
-          {isRTL ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
-        </NavArrow>
-      </div>
-
-      <p style={{
-        marginTop: 14, fontSize: '0.75rem', color: hintC,
-        letterSpacing: '0.04em', textAlign: 'center',
-        position: 'relative', zIndex: 10,
-        
-      }}>
-        {clickHint}
-      </p>
-
-      <style>{`
-        @keyframes tools-pulse {
-          0%,100%{opacity:1;transform:scale(1)}
-          50%{opacity:.5;transform:scale(.7)}
-        }
-      `}</style>
+      <ActiveToolCard
+        tool={tool as any}
+        cardVisible={cardVisible}
+        lang={lang}
+        isRTL={isRTL}
+        isDark={isDark}
+        proficiencyLabel={proficiencyLabel}
+        clickHint={clickHint}
+        tools={TOOLS as any}
+        activeIdx={activeIdx}
+        goTo={goTo}
+        prev={prev}
+        next={next}
+        surfaceBg={cardBg}
+        cardBd={cardBd}
+        headingC={headingC}
+        bodyC={bodyC}
+        mutedC={mutedC}
+        barTrack={barTrack}
+        tagBg={tagBg}
+        tagBd={tagBd}
+        tagC={tagC}
+        navBd={navBd}
+        navBg={navBg}
+        navHovBd={navHovBd}
+        navHovBg={navHovBg}
+        dotInact={dotInact}
+        hintC={hintC}
+      />
     </section>
-  );
-}
-
-/* ─── Nav arrow button ──────────────────────────────────────────────────────── */
-function NavArrow({
-  onClick, label, children, isDark: _isDark,
-  navBd, navBg, navHovBd, navHovBg, headingC,
-}: {
-  onClick: () => void; label: string; children: React.ReactNode;
-  isDark: boolean; navBd: string; navBg: string; navHovBd: string; navHovBg: string; headingC: string;
-}) {
-  const [hov, setHov] = useState(false);
-  return (
-    <button
-      onClick={onClick} aria-label={label}
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{
-        width: 38, height: 38, borderRadius: '50%', flexShrink: 0,
-        border: `1px solid ${hov ? navHovBd : navBd}`,
-        background: hov ? navHovBg : navBg,
-        color: headingC, cursor: 'pointer',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 16, lineHeight: 1,
-        transform: hov ? 'scale(1.08)' : 'scale(1)',
-        transition: 'background .2s, border-color .2s, transform .15s',
-      }}
-    >{children}</button>
   );
 }
