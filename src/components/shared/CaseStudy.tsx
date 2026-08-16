@@ -124,19 +124,13 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
             onClick={isRTL ? handleNext : handlePrev}
             whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
             whileTap={{ scale: 0.9 }}
-            style={{
-              position: 'absolute', left: 32, zIndex: 210,
-              width: 56, height: 56, borderRadius: '50%',
-              background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', color: '#fff', backdropFilter: 'blur(8px)'
-            }}
+            className="absolute z-[210] flex items-center justify-center rounded-full bg-black/50 border border-white/10 text-white backdrop-blur-md cursor-pointer bottom-[110px] left-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-[32px] w-[48px] h-[48px] md:w-[56px] md:h-[56px]"
           >
             <ChevronLeft size={28} />
           </motion.button>
         )}
 
-        <div style={{ position: 'absolute', top: 80, bottom: media.length > 1 ? 120 : 40, left: 100, right: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className={`absolute top-[80px] left-0 right-0 md:left-[100px] md:right-[100px] flex items-center justify-center ${media.length > 1 ? 'bottom-[170px] md:bottom-[120px]' : 'bottom-[40px]'}`}>
           <AnimatePresence mode="wait">
             {currentMedia ? (
               <motion.div
@@ -203,13 +197,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
             onClick={isRTL ? handlePrev : handleNext}
             whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
             whileTap={{ scale: 0.9 }}
-            style={{
-              position: 'absolute', right: 32, zIndex: 210,
-              width: 56, height: 56, borderRadius: '50%',
-              background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', color: '#fff', backdropFilter: 'blur(8px)'
-            }}
+            className="absolute z-[210] flex items-center justify-center rounded-full bg-black/50 border border-white/10 text-white backdrop-blur-md cursor-pointer bottom-[110px] right-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:right-[32px] w-[48px] h-[48px] md:w-[56px] md:h-[56px]"
           >
             <ChevronRight size={28} />
           </motion.button>
