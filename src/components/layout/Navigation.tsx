@@ -106,11 +106,8 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
           className="flex items-center gap-2 group"
           whileHover={{ scale: 1.02 }}
         >
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm"
-            style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}
-          >
-            <span style={{  fontWeight: 700 }}>OT</span>
+          <div className="relative h-7 flex items-center justify-center">
+            <img src="/logo.png" alt="OT Logo" className="h-full w-auto object-contain" />
           </div>
           <span
             className={`transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-900'}`}
