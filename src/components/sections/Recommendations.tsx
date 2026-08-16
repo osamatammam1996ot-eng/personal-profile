@@ -47,6 +47,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!shouldAnimate || !cardRef.current) return;
+    if (typeof window !== 'undefined' && window.matchMedia("(hover: none)").matches) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const posY = e.clientY - rect.top;
@@ -158,7 +159,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
               y: tiltY,
               transformStyle: 'preserve-3d',
             } : undefined}
-            className="relative z-10 w-full max-w-2xl min-h-[380px] md:min-h-[420px] flex flex-col bg-surface-elevated/80 backdrop-blur-xl border border-border-default rounded-3xl shadow-card transition-colors duration-300 hover:border-border-strong hover:bg-surface-elevated focus-within:border-border-strong focus-within:bg-surface-elevated overflow-hidden outline-none group"
+            className="relative z-10 w-full max-w-2xl min-h-[380px] md:min-h-[420px] flex flex-col max-md:bg-surface-elevated/95 md:bg-surface-elevated/80 max-md:backdrop-blur-none md:backdrop-blur-xl border border-border-default rounded-3xl shadow-card transition-colors duration-300 hover:border-border-strong hover:bg-surface-elevated focus-within:border-border-strong focus-within:bg-surface-elevated overflow-hidden outline-none group"
           >
             {/* Glow layer */}
             {shouldAnimate && (
@@ -224,13 +225,13 @@ export function Recommendations({ isDark }: RecommendationsProps) {
           <div className="absolute top-1/2 -translate-y-1/2 w-full max-w-4xl mx-auto flex justify-between px-4 z-20 pointer-events-none left-0 right-0">
             <button 
               onClick={handlePrev}
-              className="w-12 h-12 rounded-full bg-surface-elevated border border-border-default flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-elevated/80 hover:border-brand/50 transition-all pointer-events-auto shadow-sm backdrop-blur-md"
+              className="w-12 h-12 rounded-full bg-surface-elevated border border-border-default flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-elevated/80 hover:border-brand/50 transition-all pointer-events-auto shadow-sm max-md:backdrop-blur-none md:backdrop-blur-md"
             >
               <ChevronLeft size={24} />
             </button>
             <button 
               onClick={handleNext}
-              className="w-12 h-12 rounded-full bg-surface-elevated border border-border-default flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-elevated/80 hover:border-brand/50 transition-all pointer-events-auto shadow-sm backdrop-blur-md"
+              className="w-12 h-12 rounded-full bg-surface-elevated border border-border-default flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-elevated/80 hover:border-brand/50 transition-all pointer-events-auto shadow-sm max-md:backdrop-blur-none md:backdrop-blur-md"
             >
               <ChevronRight size={24} />
             </button>

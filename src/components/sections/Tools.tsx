@@ -7,7 +7,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useInView } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import { DecorativeShape } from '../shared/DecorativeShape';
@@ -97,6 +97,10 @@ export function Tools({ isDark = false }: ToolsProps) {
   const dustRef      = useRef<HTMLCanvasElement>(null);
   const glRef        = useRef<HTMLCanvasElement>(null);
   const wrapRef      = useRef<HTMLDivElement>(null);
+  const isInView     = useInView(wrapRef, { margin: "200px" });
+  const isInViewRef  = useRef(isInView);
+  useEffect(() => { isInViewRef.current = isInView; }, [isInView]);
+
   const [activeIdx, setActiveIdx]     = useState(0);
   const [cardVisible, setCardVisible] = useState(false);
   const currentIdxRef = useRef(0);
@@ -260,7 +264,11 @@ export function Tools({ isDark = false }: ToolsProps) {
 
     function loop() {
       rafId = requestAnimationFrame(loop);
-      elapsed += clock.getDelta();
+      
+      const delta = clock.getDelta();
+      if (!isInViewRef.current) return; // Pause calculations and rendering when off-screen
+
+      elapsed += delta;
       const t = elapsed;
 
       // Gentle vertical float only — no sway that fights the target rotation

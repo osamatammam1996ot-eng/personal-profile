@@ -220,6 +220,7 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
   const sY = useSpring(rotY, { stiffness: 300, damping: 28 });
 
   const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (typeof window !== 'undefined' && window.matchMedia("(hover: none)").matches) return;
     const r = ref.current?.getBoundingClientRect();
     if (!r) return;
     rotX.set(((e.clientY - r.top - r.height / 2) / (r.height / 2)) * -6);
@@ -443,6 +444,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
   const word3 = cmsData.whyHireMe.word3[lang] || (lang === 'en' ? 'Me' : 'أنا');
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if (typeof window !== 'undefined' && window.matchMedia("(hover: none)").matches) return;
     const rect = sectionRef.current?.getBoundingClientRect();
     if (!rect) return;
     rawX.set(((e.clientX - rect.left) / rect.width - 0.5) * 72);

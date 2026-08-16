@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import { useInView } from 'motion/react';
 
 interface DustCanvasProps {
   isDark: boolean;
@@ -7,6 +8,7 @@ interface DustCanvasProps {
 
 export function DustCanvas({ isDark, className = '' }: DustCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isInView = useInView(canvasRef, { margin: "200px" });
 
   useEffect(() => {
     const cv = canvasRef.current;
@@ -33,7 +35,15 @@ export function DustCanvas({ isDark, className = '' }: DustCanvasProps) {
         });
       }
     }
+    
+    // Only draw and request next frame if in view
     function draw() {
+      if (!isInView) {
+        // Just queue the next frame without doing math or drawing,
+        // or actually, we can just stop requesting animation frame
+        // and let the useEffect dependency re-trigger it.
+        return;
+      }
       cx!.clearRect(0, 0, W, H);
       // Use indigo/violet matching site's accent palette
       const dustColor = isDark ? '99,102,241' : '139,92,246';
@@ -50,14 +60,19 @@ export function DustCanvas({ isDark, className = '' }: DustCanvasProps) {
     }
 
     function onResize() { resize(); make(); }
-    resize(); make(); draw();
+    resize(); make(); 
+    
+    if (isInView) {
+      draw();
+    }
+    
     window.addEventListener('resize', onResize);
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', onResize);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvasRef, isDark]);
+  }, [canvasRef, isDark, isInView]);
 
   return <canvas ref={canvasRef} className={className} />;
 }

@@ -94,6 +94,7 @@ export function Contact({ isDark }: ContactProps) {
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!shouldAnimate || !cardRef.current) return;
+    if (typeof window !== 'undefined' && window.matchMedia("(hover: none)").matches) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const posY = e.clientY - rect.top;
@@ -259,7 +260,7 @@ export function Contact({ isDark }: ContactProps) {
               y,
               transformStyle: 'preserve-3d',
             } : undefined}
-            className="relative z-10 p-8 md:p-12 rounded-3xl border border-border-default bg-surface-elevated/80 backdrop-blur-xl shadow-card flex flex-col transition-colors duration-300 hover:border-border-strong hover:bg-surface-elevated focus-within:border-border-strong focus-within:bg-surface-elevated overflow-hidden outline-none"
+            className="relative z-10 p-8 md:p-12 rounded-3xl border border-border-default max-md:bg-surface-elevated/95 md:bg-surface-elevated/80 max-md:backdrop-blur-none md:backdrop-blur-xl shadow-card flex flex-col transition-colors duration-300 hover:border-border-strong hover:bg-surface-elevated focus-within:border-border-strong focus-within:bg-surface-elevated overflow-hidden outline-none"
           >
             {/* Glow layer */}
             {shouldAnimate && (

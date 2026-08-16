@@ -106,7 +106,7 @@ function ProjectCard({
           style={{ background: project.grad }}
         />
         {/* Corner tag — auto-flips in RTL */}
-        <div className="absolute top-4 start-4 px-3 py-1.5 rounded-lg bg-black/50 backdrop-blur-md border border-white/10">
+        <div className="absolute top-4 start-4 px-3 py-1.5 rounded-lg max-md:bg-black/80 max-md:backdrop-blur-none md:bg-black/50 md:backdrop-blur-md border border-white/10">
           <span className="font-medium text-xs text-white" >
             {projectLabel} {projectNum}
           </span>
