@@ -100,17 +100,9 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
       </div>
 
       <div className={cardClasses}>
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <p className="m-0 mb-1 text-text-primary font-bold text-[13px] tracking-wide">Media Gallery</p>
-            <p className="m-0 text-brand-hover text-xs">Add image or video URLs to display in the case study slider overlay.</p>
-          </div>
-          <button
-            onClick={handleAddMedia}
-            className="flex items-center gap-2 bg-brand/20 hover:bg-brand-gradient text-white border border-brand/50 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all hover:shadow-[0_0_15px_rgba(109,79,184,0.4)]"
-          >
-            <Plus size={14} /> Add Media
-          </button>
+        <div className="mb-6">
+          <p className="m-0 mb-1 text-text-primary font-bold text-[13px] tracking-wide">Media Gallery</p>
+          <p className="m-0 text-brand-hover text-xs">Add image or video URLs to display in the case study slider overlay.</p>
         </div>
 
         {caseStudy.media.length === 0 && (
@@ -176,6 +168,14 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
 
             </div>
           ))}
+        </div>
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={handleAddMedia}
+            className="flex items-center gap-2 bg-brand/20 hover:bg-brand-gradient text-white border border-brand/50 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all hover:shadow-[0_0_15px_rgba(109,79,184,0.4)]"
+          >
+            <Plus size={14} /> Add Media
+          </button>
         </div>
       </div>
     </div>
