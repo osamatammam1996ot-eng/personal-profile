@@ -15,7 +15,7 @@ import { LogoMarquee } from '../components/sections/LogoMarquee';
 import { CaseStudy } from '../components/shared/CaseStudy';
 import { CustomCursor } from '../components/shared/CustomCursor';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
-import { CmsProvider, useCms } from '../contexts/CmsContext';
+import { useCms } from '../contexts/CmsContext';
 import { ErrorBoundary } from '../components/layout/ErrorBoundary';
 
 export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: { id: number; title: string } | null } = {}) {

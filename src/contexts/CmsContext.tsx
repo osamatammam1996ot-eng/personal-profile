@@ -281,9 +281,9 @@ function mapCmsDataToLegacyContent(data: CmsData): ContentData {
   };
 }
 
-export function CmsProvider({ children }: { children: React.ReactNode }) {
-  const [cmsData, setCmsData] = useState<CmsData>(clone(DEFAULT_CMS_DATA));
-  const [content, setContent] = useState<ContentData>(() => mapCmsDataToLegacyContent(DEFAULT_CMS_DATA));
+export function CmsProvider({ children, initialData }: { children: React.ReactNode; initialData?: CmsData | null }) {
+  const [cmsData, setCmsData] = useState<CmsData>(() => initialData ? normalizeCmsData(initialData) : clone(DEFAULT_CMS_DATA));
+  const [content, setContent] = useState<ContentData>(() => mapCmsDataToLegacyContent(initialData ? normalizeCmsData(initialData) : DEFAULT_CMS_DATA));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -314,7 +314,7 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
         if (saved) {
           applyCmsData(JSON.parse(saved));
         } else {
-          applyCmsData(DEFAULT_CMS_DATA);
+          applyCmsData(initialData || DEFAULT_CMS_DATA);
         }
       }
     } catch (fetchError) {
@@ -323,17 +323,17 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
         if (saved) {
           applyCmsData(JSON.parse(saved));
         } else {
-          applyCmsData(DEFAULT_CMS_DATA);
+          applyCmsData(initialData || DEFAULT_CMS_DATA);
         }
       } catch {
-        applyCmsData(DEFAULT_CMS_DATA);
+        applyCmsData(initialData || DEFAULT_CMS_DATA);
       }
 
       console.warn('CMS fetch failed, using local/default data:', fetchError);
     } finally {
       setLoading(false);
     }
-  }, [applyCmsData]);
+  }, [applyCmsData, initialData]);
 
   useEffect(() => {
     fetchAllContent();

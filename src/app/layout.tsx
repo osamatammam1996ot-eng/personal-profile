@@ -9,6 +9,7 @@ const cairo = Cairo({ subsets: ["latin", "arabic"], display: "swap" });
 
 import { siteConfig } from "../config/seo";
 import { CyberGlitch } from "../components/shared/CyberGlitch";
+import { getCmsDataAction } from "./actions/cms";
 
 export const metadata: Metadata = {
   title: siteConfig.defaultTitle,
@@ -36,11 +37,12 @@ export const metadata: Metadata = {
 };
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { data: serverCmsData } = await getCmsDataAction();
   const jsonLdWebsite = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -95,7 +97,7 @@ export default function RootLayout({
       <body className={`${cairo.className} bg-background text-foreground antialiased`}>
         <ErrorBoundary>
           <LanguageProvider>
-            <CmsProvider>
+            <CmsProvider initialData={serverCmsData}>
               {children}
               <CyberGlitch />
             </CmsProvider>
