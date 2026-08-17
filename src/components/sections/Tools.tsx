@@ -469,7 +469,37 @@ export function Tools({ isDark = false }: ToolsProps) {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, m        {/* decorative bars matching Skills section */}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6, ease: [0.4,0,0.2,1] }}
+        style={{ textAlign: 'center', marginBottom: 44, position: 'relative', zIndex: 10 }}
+      >
+
+        {/* heading — Space Grotesk to match Skills */}
+        <h2
+          style={{
+            fontWeight: 700,
+            fontSize: 'clamp(2.5rem,5vw,4rem)',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.15,
+            color: 'var(--text-primary)',
+            margin: '0 0 16px',
+          }}
+        >
+          <span>{toolsTitle}</span>
+        </h2>
+
+        <p style={{
+          fontWeight: 400,
+          fontSize: '1rem',
+          color: bodyC,
+          lineHeight: 1.75,
+          maxWidth: 380,
+          margin: '0 auto',
+        }}>
+          {toolsDesc}
+        </p>
+
+        {/* decorative bars matching Skills section */}
         
       </motion.div>
 
