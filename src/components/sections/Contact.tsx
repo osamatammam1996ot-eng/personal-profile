@@ -57,14 +57,8 @@ export function Contact({ isDark }: ContactProps) {
 
   // --- 3D Hover Interaction ---
   const reducedMotion = useReducedMotion();
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const shouldAnimate = !reducedMotion;
   const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches);
-  }, []);
-
-  const shouldAnimate = !reducedMotion && !isTouchDevice;
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
