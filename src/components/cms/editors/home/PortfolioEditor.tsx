@@ -1,5 +1,5 @@
 import type { CmsData } from '../../../../types/cms';
-import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma } from '../../../../components/cms/shared/BilingualField';
+import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma, TagInput } from '../../../../components/cms/shared/BilingualField';
 import { ImageUploader } from '../../../../components/cms/shared/ImageUploader';
 
 interface PortfolioEditorProps {
@@ -55,23 +55,17 @@ export function PortfolioEditor({ draft, updateProject }: PortfolioEditorProps) 
                 onChangeAr={(value) => updateProject(index, (current) => ({ ...current, desc: { ...(current.desc || {}), ar: value } }))}
               />
               <div className="grid grid-cols-2 gap-2.5">
-                <div>
-                  <label className={labelClasses}>English tags (comma-separated)</label>
-                  <input
-                    className={inputClasses}
-                    value={project.tags?.en?.join(', ') || ''}
-                    onChange={(e) => updateProject(index, (current) => ({ ...current, tags: { ...current.tags, en: splitComma(e.target.value) } }))}
-                  />
-                </div>
-                <div>
-                  <label className={labelClasses}>Arabic tags (comma-separated)</label>
-                  <input
-                    className={inputClasses}
-                    dir="rtl"
-                    value={project.tags?.ar?.join(', ') || ''}
-                    onChange={(e) => updateProject(index, (current) => ({ ...current, tags: { ...current.tags, ar: splitComma(e.target.value) } }))}
-                  />
-                </div>
+                <TagInput
+                  label="English tags (comma-separated)"
+                  value={project.tags?.en || []}
+                  onChange={(val) => updateProject(index, (current) => ({ ...current, tags: { ...current.tags, en: val } }))}
+                />
+                <TagInput
+                  label="Arabic tags (comma-separated)"
+                  dir="rtl"
+                  value={project.tags?.ar || []}
+                  onChange={(val) => updateProject(index, (current) => ({ ...current, tags: { ...current.tags, ar: val } }))}
+                />
               </div>
               <div className="grid grid-cols-[1fr_140px] gap-3">
                 <div className="col-span-2">

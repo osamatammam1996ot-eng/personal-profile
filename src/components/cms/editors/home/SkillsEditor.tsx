@@ -1,5 +1,5 @@
 import type { CmsData } from '../../../../types/cms';
-import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma } from '../../../../components/cms/shared/BilingualField';
+import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma, TagInput } from '../../../../components/cms/shared/BilingualField';
 
 interface SkillsEditorProps {
   draft: CmsData;
@@ -75,31 +75,25 @@ export function SkillsEditor({ draft, updateDraft }: SkillsEditorProps) {
                 })}
               />
               <div className="grid grid-cols-2 gap-2.5">
-                <div>
-                  <label className={labelClasses}>English tags (comma-separated)</label>
-                  <input
-                    className={inputClasses}
-                    value={disc.tags?.en?.join(', ') || ''}
-                    onChange={(e) => updateDraft((prev) => {
-                      const d = [...prev.skills.disciplines];
-                      d[index] = { ...d[index], tags: { ...d[index].tags, en: splitComma(e.target.value) } };
-                      return { ...prev, skills: { ...prev.skills, disciplines: d } };
-                    })}
-                  />
-                </div>
-                <div>
-                  <label className={labelClasses}>Arabic tags (comma-separated)</label>
-                  <input
-                    className={inputClasses}
-                    dir="rtl"
-                    value={disc.tags?.ar?.join(', ') || ''}
-                    onChange={(e) => updateDraft((prev) => {
-                      const d = [...prev.skills.disciplines];
-                      d[index] = { ...d[index], tags: { ...d[index].tags, ar: splitComma(e.target.value) } };
-                      return { ...prev, skills: { ...prev.skills, disciplines: d } };
-                    })}
-                  />
-                </div>
+                <TagInput
+                  label="English tags (comma-separated)"
+                  value={disc.tags?.en || []}
+                  onChange={(val) => updateDraft((prev) => {
+                    const d = [...prev.skills.disciplines];
+                    d[index] = { ...d[index], tags: { ...d[index].tags, en: val } };
+                    return { ...prev, skills: { ...prev.skills, disciplines: d } };
+                  })}
+                />
+                <TagInput
+                  label="Arabic tags (comma-separated)"
+                  dir="rtl"
+                  value={disc.tags?.ar || []}
+                  onChange={(val) => updateDraft((prev) => {
+                    const d = [...prev.skills.disciplines];
+                    d[index] = { ...d[index], tags: { ...d[index].tags, ar: val } };
+                    return { ...prev, skills: { ...prev.skills, disciplines: d } };
+                  })}
+                />
               </div>
             </div>
           </div>

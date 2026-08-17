@@ -1,5 +1,5 @@
 import type { CmsData } from '../../../../types/cms';
-import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma } from '../../../../components/cms/shared/BilingualField';
+import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma, TagInput } from '../../../../components/cms/shared/BilingualField';
 
 interface ToolsEditorProps {
   draft: CmsData;
@@ -105,31 +105,25 @@ export function ToolsEditor({ draft, updateDraft }: ToolsEditorProps) {
               })}
             />
             <div className="grid grid-cols-2 gap-2.5">
-              <div>
-                <label className={labelClasses}>English tags (comma-separated)</label>
-                <input
-                  className={inputClasses}
-                  value={tool.tags?.en?.join(', ') || ''}
-                  onChange={(e) => updateDraft((prev) => {
-                    const t = [...prev.tools.toolsList];
-                    t[index] = { ...t[index], tags: { ...t[index].tags, en: splitComma(e.target.value) } };
-                    return { ...prev, tools: { ...prev.tools, toolsList: t } };
-                  })}
-                />
-              </div>
-              <div>
-                <label className={labelClasses}>Arabic tags (comma-separated)</label>
-                <input
-                  className={inputClasses}
-                  dir="rtl"
-                  value={tool.tags?.ar?.join(', ') || ''}
-                  onChange={(e) => updateDraft((prev) => {
-                    const t = [...prev.tools.toolsList];
-                    t[index] = { ...t[index], tags: { ...t[index].tags, ar: splitComma(e.target.value) } };
-                    return { ...prev, tools: { ...prev.tools, toolsList: t } };
-                  })}
-                />
-              </div>
+              <TagInput
+                label="English tags (comma-separated)"
+                value={tool.tags?.en || []}
+                onChange={(val) => updateDraft((prev) => {
+                  const t = [...prev.tools.toolsList];
+                  t[index] = { ...t[index], tags: { ...t[index].tags, en: val } };
+                  return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                })}
+              />
+              <TagInput
+                label="Arabic tags (comma-separated)"
+                dir="rtl"
+                value={tool.tags?.ar || []}
+                onChange={(val) => updateDraft((prev) => {
+                  const t = [...prev.tools.toolsList];
+                  t[index] = { ...t[index], tags: { ...t[index].tags, ar: val } };
+                  return { ...prev, tools: { ...prev.tools, toolsList: t } };
+                })}
+              />
             </div>
             <div>
               <label className={labelClasses}>Proficiency (%)</label>

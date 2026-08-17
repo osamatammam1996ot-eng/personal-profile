@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface BilingualFieldProps {
   label: string;
@@ -18,6 +18,42 @@ export function splitComma(value: string): string[] {
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+export function TagInput({ 
+  label, 
+  value, 
+  onChange, 
+  dir = "ltr" 
+}: { 
+  label: string; 
+  value: string[]; 
+  onChange: (val: string[]) => void; 
+  dir?: "ltr" | "rtl";
+}) {
+  const [localValue, setLocalValue] = useState(value?.join(', ') || '');
+
+  useEffect(() => {
+    const ext = value?.join(', ') || '';
+    if (splitComma(localValue).join(',') !== splitComma(ext).join(',')) {
+      setLocalValue(ext);
+    }
+  }, [value]);
+
+  return (
+    <div>
+      <label className={labelClasses}>{label}</label>
+      <input
+        className={inputClasses}
+        dir={dir}
+        value={localValue}
+        onChange={(e) => {
+          setLocalValue(e.target.value);
+          onChange(splitComma(e.target.value));
+        }}
+      />
+    </div>
+  );
 }
 
 export function BilingualField({
