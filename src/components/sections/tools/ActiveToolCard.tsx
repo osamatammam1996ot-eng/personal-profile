@@ -43,9 +43,9 @@ export function ActiveToolCard({
   const pct = safeTool.proficiency || 80;
 
   return (
-    <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 280, maxWidth: 420 }}>
+    <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 280, maxWidth: 420, width: '100%' }}>
       {/* ── Info Card ── */}
-      <div style={{ height: 260, position: 'relative', width: '100%', perspective: 1200, zIndex: 10 }}>
+      <div style={{ minHeight: 260, position: 'relative', width: '100%', perspective: 1200, zIndex: 10, display: 'flex', flexDirection: 'column' }}>
         <AnimatePresence mode="wait">
           {cardVisible && tool && (
             <motion.div
@@ -55,7 +55,7 @@ export function ActiveToolCard({
               exit={{ opacity: 0, y: -10, rotateX: -5 }}
               transition={{ duration: 0.35, ease: [0.34, 1.10, 0.64, 1] }}
               style={{
-                position: 'absolute', inset: 0,
+                width: '100%', flex: '1',
                 background: surfaceBg, borderRadius: 20, padding: 28,
                 border: `1px solid ${cardBd}`,
                 boxShadow: isDark ? '0 16px 40px rgba(0,0,0,0.6)' : '0 16px 40px rgba(100,110,140,0.15)',
