@@ -141,7 +141,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
 
         {/* Card Stage */}
         <motion.div 
-          className="relative w-full max-w-4xl mx-auto flex items-center justify-center mt-4"
+          className="relative w-full max-w-4xl mx-auto flex max-md:flex-col items-center justify-center mt-4"
           style={{ perspective: 1000 }}
         >
           <motion.div
@@ -222,7 +222,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
 
         {/* Navigation Controls */}
         {recs.length > 1 && (
-          <div className="absolute top-1/2 -translate-y-1/2 w-full max-w-4xl mx-auto flex justify-between px-4 z-20 pointer-events-none left-0 right-0">
+          <div className="md:absolute max-md:mt-6 md:top-1/2 md:-translate-y-1/2 w-full max-w-4xl mx-auto flex max-md:justify-center max-md:gap-6 md:justify-between px-4 z-20 md:pointer-events-none left-0 right-0">
             <button 
               onClick={handlePrev}
               className="w-12 h-12 rounded-full bg-surface-elevated border border-border-default flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-elevated/80 hover:border-brand/50 transition-all pointer-events-auto shadow-sm max-md:backdrop-blur-none md:backdrop-blur-md"
