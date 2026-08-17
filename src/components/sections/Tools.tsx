@@ -469,113 +469,82 @@ export function Tools({ isDark = false }: ToolsProps) {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 0.6, ease: [0.4,0,0.2,1] }}
-        style={{ textAlign: 'center', marginBottom: 44, position: 'relative', zIndex: 10 }}
-      >
-
-
-        {/* heading — Space Grotesk to match Skills */}
-        <h2
-          style={{
-            fontWeight: 700,
-            fontSize: 'clamp(2.5rem,5vw,4rem)',
-            letterSpacing: '-0.02em',
-            lineHeight: 1.15,
-            color: 'var(--text-primary)',
-            margin: '0 0 16px',
-          }}
-        >
-          <span>{toolsTitle}</span>
-        </h2>
-
-        <p style={{
-          
-          fontWeight: 400,
-          fontSize: '1rem',
-          color: bodyC,
-          lineHeight: 1.75,
-          maxWidth: 380,
-          margin: '0 auto',
-        }}>
-          {toolsDesc}
-        </p>
-
-        {/* decorative bars matching Skills section */}
+        viewport={{ once: true, m        {/* decorative bars matching Skills section */}
         
       </motion.div>
 
-      {/* ── Canvas wrap ── */}
-      <div
-        ref={wrapRef}
-        style={{
-          position: 'relative',
-          width: 'min(580px,88vw)', height: 'min(580px,88vw)',
-          margin: '0 auto', overflow: 'visible', zIndex: 5,
-        }}
-      >
-        {/* Three.js GL canvas */}
-        <canvas
-          ref={glRef}
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-24 w-full max-w-[1200px]">
+        {/* ── Canvas wrap ── */}
+        <div
+          ref={wrapRef}
           style={{
+            position: 'relative',
+            width: 'min(580px,88vw)', height: 'min(580px,88vw)',
+            margin: '0', overflow: 'visible', zIndex: 5,
+            flexShrink: 0
+          }}
+        >
+          {/* Three.js GL canvas */}
+          <canvas
+            ref={glRef}
+            style={{
+              position: 'absolute', top: '50%', left: '50%',
+              transform: 'translate(-50%,-50%)',
+              width: '130%', height: '130%',
+              display: 'block', cursor: 'default',
+            }}
+          />
+
+          {/* Active ring overlay */}
+          <div style={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%,-50%)',
-            width: '130%', height: '130%',
-            display: 'block', cursor: 'default',
-          }}
+            width: 160, height: 160, borderRadius: '50%',
+            pointerEvents: 'none', zIndex: 10,
+            border: cardVisible
+              ? isDark
+                ? `2px solid ${ringC}`
+                : `2.5px solid ${tool.glow}`
+              : '2px solid rgba(0,0,0,0)',
+            boxShadow: cardVisible
+              ? isDark
+                ? `0 0 22px 4px ${tool.glow}88, inset 0 0 22px 2px ${tool.glow}44`
+                : `0 0 28px 6px ${tool.glow}99, inset 0 0 18px 3px ${tool.glow}55, 0 0 0 4px ${tool.glow}22`
+              : 'none',
+            transition: 'border-color .4s ease, box-shadow .4s ease',
+          }} />
+        </div>
+
+        <ActiveToolCard
+          tool={tool as any}
+          cardVisible={cardVisible}
+          lang={lang}
+          isRTL={isRTL}
+          isDark={isDark}
+          proficiencyLabel={proficiencyLabel}
+          clickHint={clickHint}
+          tools={TOOLS as any}
+          activeIdx={activeIdx}
+          goTo={goTo}
+          prev={prev}
+          next={next}
+          surfaceBg={cardBg}
+          cardBd={cardBd}
+          headingC={headingC}
+          bodyC={bodyC}
+          mutedC={mutedC}
+          barTrack={barTrack}
+          tagBg={tagBg}
+          tagBd={tagBd}
+          tagC={tagC}
+          navBd={navBd}
+          navBg={navBg}
+          navHovBd={navHovBd}
+          navHovBg={navHovBg}
+          dotInact={dotInact}
+          hintC={hintC}
         />
-
-        {/* Active ring overlay */}
-        <div style={{
-          position: 'absolute', top: '50%', left: '50%',
-          transform: 'translate(-50%,-50%)',
-          width: 160, height: 160, borderRadius: '50%',
-          pointerEvents: 'none', zIndex: 10,
-          border: cardVisible
-            ? isDark
-              ? `2px solid ${ringC}`
-              : `2.5px solid ${tool.glow}`
-            : '2px solid rgba(0,0,0,0)',
-          boxShadow: cardVisible
-            ? isDark
-              ? `0 0 22px 4px ${tool.glow}88, inset 0 0 22px 2px ${tool.glow}44`
-              : `0 0 28px 6px ${tool.glow}99, inset 0 0 18px 3px ${tool.glow}55, 0 0 0 4px ${tool.glow}22`
-            : 'none',
-          transition: 'border-color .4s ease, box-shadow .4s ease',
-        }} />
-
-        {/* Info card — desktop and mobile merged into ActiveToolCard */}
       </div>
-
-      <ActiveToolCard
-        tool={tool as any}
-        cardVisible={cardVisible}
-        lang={lang}
-        isRTL={isRTL}
-        isDark={isDark}
-        proficiencyLabel={proficiencyLabel}
-        clickHint={clickHint}
-        tools={TOOLS as any}
-        activeIdx={activeIdx}
-        goTo={goTo}
-        prev={prev}
-        next={next}
-        surfaceBg={cardBg}
-        cardBd={cardBd}
-        headingC={headingC}
-        bodyC={bodyC}
-        mutedC={mutedC}
-        barTrack={barTrack}
-        tagBg={tagBg}
-        tagBd={tagBd}
-        tagC={tagC}
-        navBd={navBd}
-        navBg={navBg}
-        navHovBd={navHovBd}
-        navHovBg={navHovBg}
-        dotInact={dotInact}
-        hintC={hintC}
-      />
     </section>
   );
 }
