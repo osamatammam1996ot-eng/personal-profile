@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'motion/react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { DecorativeShape } from '../shared/DecorativeShape';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
+import { Button } from '../ui/button';
 
 interface PortfolioProps {
   isDark: boolean;
@@ -262,16 +263,16 @@ export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="flex justify-center mt-24"
         >
-          <a
-            href="#contact"
-            className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-brand/10 text-brand font-bold text-[15px] border border-brand/20 hover:bg-brand hover:text-white hover:border-brand transition-all duration-300 shadow-[0_0_15px_rgba(109,79,184,0.15)] hover:shadow-[0_0_25px_rgba(109,79,184,0.4)] no-underline"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+          <Button
+            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-[0.92rem] hover:scale-[1.04] transition-all"
+            style={{
+              background: 'var(--brand-gradient)',
             }}
           >
             {lang === 'en' ? 'Request full portfolio' : 'طلب معرض الأعمال الكامل'}
-          </a>
+            <ArrowRight size={15} className={`transition-transform duration-200 ${lang === 'ar' ? '-scale-x-100' : ''}`} />
+          </Button>
         </motion.div>
       </div>
     </section>
