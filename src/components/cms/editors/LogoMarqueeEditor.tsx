@@ -76,14 +76,9 @@ export function LogoMarqueeEditor({ draft, updateDraft }: LogoMarqueeEditorProps
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-white text-2xl font-bold tracking-tight">Logo Marquee</h2>
-          <p className="text-white/50 text-sm mt-1">Manage the infinitely scrolling logo strip.</p>
-        </div>
-        <Button onClick={addLogo} className="gap-2 bg-brand hover:bg-brand-hover text-white">
-          <Plus size={16} /> Add Logo
-        </Button>
+      <div>
+        <h2 className="text-white text-2xl font-bold tracking-tight">Logo Marquee</h2>
+        <p className="text-white/50 text-sm mt-1">Manage the infinitely scrolling logo strip.</p>
       </div>
 
       <div className="space-y-4">
@@ -185,6 +180,14 @@ export function LogoMarqueeEditor({ draft, updateDraft }: LogoMarqueeEditorProps
             <p className="text-white/60 font-medium mb-1">No logos added</p>
             <p className="text-white/40 text-sm mb-4">Add your first logo to display the marquee strip.</p>
             <Button onClick={addLogo} variant="outline" className="gap-2 border-admin-border-subtle text-white/70">
+              <Plus size={16} /> Add Logo
+            </Button>
+          </div>
+        )}
+
+        {logos.length > 0 && (
+          <div className="flex justify-center pt-2">
+            <Button onClick={addLogo} className="gap-2 bg-brand hover:bg-brand-hover text-white">
               <Plus size={16} /> Add Logo
             </Button>
           </div>
