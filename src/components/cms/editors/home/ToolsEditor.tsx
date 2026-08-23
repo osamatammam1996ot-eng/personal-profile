@@ -40,12 +40,12 @@ export function ToolsEditor({ draft, updateDraft }: ToolsEditorProps) {
         onChangeAr={(value) => updateDraft((prev) => ({ ...prev, tools: { ...prev.tools, proficiency: { ...prev.tools.proficiency, ar: value } } }))}
       />
       
-      <h3 className="text-white mt-4 text-sm">Tools List</h3>
-      <p className="text-[#a0a0a8] text-xs m-0 mb-2">Edit text content for the 12 tools (colors and order are fixed to maintain 3D harmony).</p>
+      <h3 className="text-white mt-4 text-base">Tools List</h3>
+      <p className="text-[#a0a0a8] text-sm m-0 mb-2">Edit text content for the 12 tools (colors and order are fixed to maintain 3D harmony).</p>
       
       {draft.tools.toolsList.map((tool, index) => (
         <div key={index} className={cardClasses}>
-          <p className="m-0 mb-2.5 text-white font-bold text-[13px]">{tool.name || `Tool ${index + 1}`}</p>
+          <p className="m-0 mb-2.5 text-white font-bold text-base">{tool.name || `Tool ${index + 1}`}</p>
           <div className="grid gap-2.5">
             <div className="grid grid-cols-2 gap-2.5">
               <div>

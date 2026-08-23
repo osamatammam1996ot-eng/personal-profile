@@ -64,23 +64,22 @@ export function ActiveToolCard({
             >
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 600, color: headingC, letterSpacing: '-0.02em' }}>
+                  <h3 className="text-xl font-semibold m-0 tracking-tight" style={{ color: headingC }}>
                     {tool.name}
                   </h3>
-                  <div style={{ fontSize: '0.6rem', letterSpacing: '0.10em', color: mutedC, marginTop: 2 }}>
+                  <div className="text-xs tracking-widest mt-0.5" style={{ color: mutedC }}>
                     {(tool.cat?.[lang] || tool.cat?.en)}
                   </div>
                 </div>
               </div>
-              <div style={{ fontSize: '0.75rem', lineHeight: 1.65, color: bodyC, marginBottom: 10 }}>
+              <div className="text-base leading-relaxed mb-2.5" style={{ color: bodyC }}>
                 {(tool.desc?.[lang] || tool.desc?.en)}
               </div>
               {/* skill bar */}
               <div style={{ marginBottom: 10 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
-                  <span style={{ fontSize: '0.6rem', letterSpacing: '0.10em', color: mutedC }}>{proficiencyLabel}</span>
-                  <span style={{
-                    fontSize: '0.7rem', fontWeight: 700, 
+                  <span className="text-xs tracking-widest" style={{ color: mutedC }}>{proficiencyLabel}</span>
+                  <span className="text-sm font-bold" style={{
                     background: 'var(--brand-gradient)',
                     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
                   }}>{pct}%</span>
@@ -100,8 +99,7 @@ export function ActiveToolCard({
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                 {(tool.tags?.[lang] || tool.tags?.en || []).map((tag: string) => (
-                  <span key={tag} style={{
-                    fontSize: '0.6rem', fontWeight: 500, padding: '3px 8px', borderRadius: 100,
+                  <span key={tag} className="text-sm font-medium px-2 py-1 rounded-full" style={{
                     background: tagBg, color: tagC, border: `1px solid ${tagBd}`,
                   }}>{tag}</span>
                 ))}
@@ -141,10 +139,7 @@ export function ActiveToolCard({
         </NavArrow>
       </div>
 
-      <p style={{
-        marginTop: 14, fontSize: '0.75rem', color: hintC,
-        letterSpacing: '0.04em', textAlign: 'center', position: 'relative', zIndex: 10,
-      }}>
+      <p className="mt-3.5 text-sm text-center relative z-10 tracking-wide" style={{ color: hintC }}>
         {clickHint}
       </p>
 
@@ -170,13 +165,14 @@ function NavArrow({
     <button
       onClick={onClick} aria-label={label}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      className="text-lg"
       style={{
         width: 38, height: 38, borderRadius: '50%', flexShrink: 0,
         border: `1px solid ${hov ? navHovBd : navBd}`,
         background: hov ? navHovBg : navBg,
         color: headingC, cursor: 'pointer',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 16, lineHeight: 1,
+        lineHeight: 1,
         transform: hov ? 'scale(1.08)' : 'scale(1)',
         transition: 'background .2s, border-color .2s, transform .15s',
       }}

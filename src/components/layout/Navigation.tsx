@@ -110,8 +110,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
             <img src="/logo.png" alt="OT Logo" className="h-full w-auto object-contain" />
           </div>
           <span
-            className={`transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-900'}`}
-            style={{  fontWeight: 600, fontSize: '1rem' }}
+            className={`text-lg font-semibold transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-900'}`}
           >
             {isRTL ? 'أسامة تمام' : 'Osama Tammam'}
           </span>
@@ -125,11 +124,8 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
               <button
                 key={link.href}
                 onClick={() => scrollTo(link.href)}
-                className="relative px-4 py-2 rounded-lg transition-colors duration-200 group"
+                className="relative px-4 py-2 rounded-lg transition-colors duration-200 group text-base font-medium"
                 style={{
-                  
-                  fontWeight: 500,
-                  fontSize: '0.9rem',
                   color: isActive
                     ? isDark ? '#a5b4fc' : '#6366f1'
                     : isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.55)',
@@ -171,10 +167,9 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.18 }}
+                className="text-sm font-bold"
                 style={{
                   fontFamily: isRTL ? 'Inter, sans-serif' : 'Cairo, sans-serif',
-                  fontWeight: 700,
-                  fontSize: '0.78rem',
                   letterSpacing: isRTL ? '0.04em' : 0,
                 }}
               >

@@ -143,10 +143,10 @@ export function Hero({ isDark }: HeroProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: [0.4, 0, 0.2, 1] }}
+          className="text-sm"
           style={{
             fontFamily: fontBody,
             fontWeight: 400,
-            fontSize: '0.76rem',
             letterSpacing: isRTL ? '0.06em' : '0.16em',
             textTransform: 'none',
             color: dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)',
@@ -256,7 +256,7 @@ export function Hero({ isDark }: HeroProps) {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.34, ease: [0.4, 0, 0.2, 1] }}
-          className="font-body text-[0.98rem] leading-[1.78] max-w-[540px] mb-6"
+          className="font-body text-lg leading-[1.78] max-w-[540px] mb-6"
           style={{
             color: dark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
             whiteSpace: 'pre-line',
@@ -275,7 +275,7 @@ export function Hero({ isDark }: HeroProps) {
         >
           <Button
             onClick={() => scrollToSection('work')}
-            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-[0.92rem] hover:scale-[1.04] transition-all"
+            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-base hover:scale-[1.04] transition-all"
             style={{
               background: 'var(--brand-gradient)',
             }}
@@ -287,7 +287,7 @@ export function Hero({ isDark }: HeroProps) {
           <Button
             onClick={() => scrollToSection('contact')}
             variant="outline"
-            className="flex items-center gap-2 px-7 py-6 rounded-xl font-body font-medium text-[0.92rem] border-[rgba(255,255,255,0.14)] hover:scale-[1.04] transition-transform"
+            className="flex items-center gap-2 px-7 py-6 rounded-xl font-body font-medium text-base border-[rgba(255,255,255,0.14)] hover:scale-[1.04] transition-transform"
             style={{
               background: 'transparent',
               color: dark ? 'rgba(224,224,255,0.85)' : '#0f0f1e',
@@ -306,7 +306,7 @@ export function Hero({ isDark }: HeroProps) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4 }}
       >
-        <p className={`font-body text-[0.68rem] tracking-widest text-text-secondary`} style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)' }}>
+        <p className={`font-body text-xs tracking-widest text-text-secondary`} style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)' }}>
           {heroScroll}
         </p>
         <motion.div

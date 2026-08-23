@@ -366,7 +366,7 @@ export function Skills({ isDark }: SkillsProps) {
             <button
               key={num}
               onClick={() => scrollToChapter(num)}
-              className={`text-[10px] lg:text-xs font-bold transition-colors duration-300 tracking-widest ${activeChapter === num ? 'text-brand' : 'text-white/30 hover:text-white/80'}`}
+              className={`text-[10px] lg:text-sm font-bold transition-colors duration-300 tracking-widest ${activeChapter === num ? 'text-brand' : 'text-white/30 hover:text-white/80'}`}
               
             >
               {num === 0 ? 'Intro' : `0${num}`}
@@ -382,10 +382,10 @@ export function Skills({ isDark }: SkillsProps) {
             <h1 className="font-bold text-4xl md:text-6xl text-text-primary mb-6 leading-tight" >
               {getStr(skills.heading1)}<br />{getStr(skills.heading2)}
             </h1>
-            <p className="text-text-secondary text-base md:text-lg leading-relaxed" >
+            <p className="text-text-secondary text-lg md:text-xl leading-relaxed" >
               “{getStr(skills.desc)}”
             </p>
-            <div className="mt-8 md:mt-12 flex items-center gap-3 text-text-muted text-xs md:text-sm">
+            <div className="mt-8 md:mt-12 flex items-center gap-3 text-text-muted text-sm md:text-base">
               <span className="w-10 h-px bg-text-muted/30"></span>
               Scroll to explore
             </div>
@@ -395,12 +395,12 @@ export function Skills({ isDark }: SkillsProps) {
           <div id="ui-01" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-sm opacity-0 pointer-events-auto`}>
             <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >01</h2>
             <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc1?.title).replace(/\n/g, ' ')}</h3>
-            <p className="text-text-secondary text-sm md:text-base mb-6 md:mb-8" >
+            <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
               “{getStr(disc1?.tagline)}”
             </p>
             <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-white/10`}>
               {getArr(disc1?.tags).map((cap: string) => (
-                <li key={cap} className="text-text-secondary text-xs md:text-sm tracking-wide hover:text-[#38bdf8] transition-colors cursor-default" >
+                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-[#38bdf8] transition-colors cursor-default" >
                   {cap}
                 </li>
               ))}
@@ -411,12 +411,12 @@ export function Skills({ isDark }: SkillsProps) {
           <div id="ui-02" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'left-6 md:left-10 pr-12 md:pr-0' : 'right-6 md:right-10 pl-12 md:pl-0'} max-w-sm opacity-0 pointer-events-auto`}>
             <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >02</h2>
             <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc2?.title).replace(/\n/g, ' ')}</h3>
-            <p className="text-text-secondary text-sm md:text-base mb-6 md:mb-8" >
+            <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
               “{getStr(disc2?.tagline)}”
             </p>
             <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-white/10`}>
               {getArr(disc2?.tags).map((cap: string) => (
-                <li key={cap} className="text-text-secondary text-xs md:text-sm tracking-wide hover:text-brand transition-colors cursor-default" >
+                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
                 </li>
               ))}
@@ -428,13 +428,13 @@ export function Skills({ isDark }: SkillsProps) {
             <div className="md:w-1/2">
               <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >03</h2>
               <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc3?.title).replace(/\n/g, ' ')}</h3>
-              <p className="text-text-secondary text-sm md:text-base mb-6 md:mb-8" >
+              <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
                 “{getStr(disc3?.tagline)}”
               </p>
             </div>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-white/10 pt-4 md:pt-6">
               {getArr(disc3?.tags).map((cap: string) => (
-                <li key={cap} className="text-text-secondary text-xs md:text-sm tracking-wide hover:text-brand transition-colors cursor-default" >
+                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
                 </li>
               ))}

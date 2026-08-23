@@ -69,7 +69,7 @@ export function CustomCursor() {
               height: 80,
             }}
           >
-            <span className="text-white text-center tracking-wider leading-snug font-semibold text-[0.62rem]">
+            <span className="text-white text-center tracking-wider leading-snug font-semibold text-xs">
               View<br />Project
             </span>
           </motion.div>

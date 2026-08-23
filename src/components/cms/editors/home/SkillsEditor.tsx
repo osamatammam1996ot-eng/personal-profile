@@ -41,7 +41,7 @@ export function SkillsEditor({ draft, updateDraft }: SkillsEditorProps) {
         };
         return (
           <div key={index} className={cardClasses}>
-            <p className="m-0 mb-2.5 text-white font-bold text-[13px]">Discipline {index + 1}</p>
+            <p className="m-0 mb-2.5 text-white font-bold text-base">Discipline {index + 1}</p>
             <div className="grid gap-2.5">
               <BilingualField
                 label="Title"

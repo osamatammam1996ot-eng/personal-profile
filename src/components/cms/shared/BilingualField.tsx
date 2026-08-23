@@ -10,8 +10,8 @@ interface BilingualFieldProps {
 }
 
 export const cardClasses = "bg-admin-glass-card hover:bg-admin-glass-card-hover border border-admin-border-subtle hover:border-admin-border-strong rounded-2xl p-6 shadow-2xl backdrop-blur-3xl transition-all duration-300 relative overflow-hidden group";
-export const inputClasses = "w-full rounded-[14px] border border-admin-border-subtle bg-black/20 text-white px-5 py-3.5 text-sm transition-all duration-300 focus:outline-none focus:bg-black/40 focus:border-white/30 focus:shadow-[0_0_20px_rgba(255,255,255,0.05)] placeholder:text-white/30 hover:border-white/20";
-export const labelClasses = "text-[11px] font-bold text-white/50 mb-2 block uppercase tracking-[0.15em] ml-1";
+export const inputClasses = "w-full rounded-[14px] border border-admin-border-subtle bg-black/20 text-white px-5 py-3.5 text-base transition-all duration-300 focus:outline-none focus:bg-black/40 focus:border-white/30 focus:shadow-[0_0_20px_rgba(255,255,255,0.05)] placeholder:text-white/30 hover:border-white/20";
+export const labelClasses = "text-xs font-bold text-white/50 mb-2 block uppercase tracking-[0.15em] ml-1";
 
 export function splitComma(value: string): string[] {
   return value
@@ -69,7 +69,7 @@ export function BilingualField({
 
   return (
     <div className={cardClasses}>
-      <h3 className="m-0 mb-5 text-white font-bold text-[15px] tracking-wide flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-brand-gradient shadow-[0_0_10px_var(--cursor-glow)]" />{label}</h3>
+      <h3 className="m-0 mb-5 text-white font-bold text-lg tracking-wide flex items-center gap-3"><div className="w-1.5 h-1.5 rounded-full bg-brand-gradient shadow-[0_0_10px_var(--cursor-glow)]" />{label}</h3>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className={labelClasses}>English</label>

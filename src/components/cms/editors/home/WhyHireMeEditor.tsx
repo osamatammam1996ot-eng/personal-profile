@@ -40,7 +40,7 @@ export function WhyHireMeEditor({ draft, updateDraft, updateWhyCard }: WhyHireMe
         };
         return (
           <div key={index} className={cardClasses}>
-            <p className="m-0 mb-2.5 text-white font-bold text-[13px]">
+            <p className="m-0 mb-2.5 text-white font-bold text-base">
               Card {index + 1}
             </p>
             <div className="grid gap-2.5">

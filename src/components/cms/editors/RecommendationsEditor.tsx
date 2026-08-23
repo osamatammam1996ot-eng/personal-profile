@@ -78,7 +78,7 @@ export function RecommendationsEditor({ draft, updateDraft }: RecommendationsEdi
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-white text-2xl font-bold tracking-tight">Recommendations</h2>
-          <p className="text-white/50 text-sm mt-1">Manage testimonials displayed in the Voices in Orbit section.</p>
+          <p className="text-white/50 text-base mt-1">Manage testimonials displayed in the Voices in Orbit section.</p>
         </div>
         <Button onClick={addRecommendation} className="gap-2 bg-brand hover:bg-brand-hover text-white">
           <Plus size={16} /> Add Recommendation
@@ -106,7 +106,7 @@ export function RecommendationsEditor({ draft, updateDraft }: RecommendationsEdi
                     <GripVertical size={18} />
                   </div>
                   <h3 className="text-white font-semibold flex items-center gap-2">
-                    <span className="w-6 h-6 rounded bg-white/5 text-white/50 flex items-center justify-center text-xs">
+                    <span className="w-6 h-6 rounded bg-white/5 text-white/50 flex items-center justify-center text-sm">
                       {index + 1}
                     </span>
                     Recommendation
@@ -188,7 +188,7 @@ export function RecommendationsEditor({ draft, updateDraft }: RecommendationsEdi
               <ImageIcon size={24} />
             </div>
             <p className="text-white/60 font-medium mb-1">No recommendations yet</p>
-            <p className="text-white/40 text-sm mb-4">Add your first recommendation to show on the portfolio.</p>
+            <p className="text-white/40 text-base mb-4">Add your first recommendation to show on the portfolio.</p>
             <Button onClick={addRecommendation} variant="outline" className="gap-2 border-admin-border-subtle text-white/70">
               <Plus size={16} /> Add Recommendation
             </Button>

@@ -89,7 +89,7 @@ export function ContactEditor({ draft, updateDraft }: ContactEditorProps) {
       />
 
       <div className={cardClasses}>
-        <p className="m-0 mb-2.5 text-white font-bold text-[13px]">Social Links</p>
+        <p className="m-0 mb-2.5 text-white font-bold text-base">Social Links</p>
         <div className="grid grid-cols-2 gap-2.5">
           <div>
             <label className={labelClasses}>WhatsApp</label>

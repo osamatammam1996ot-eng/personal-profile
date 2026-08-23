@@ -27,8 +27,8 @@ export function PortfolioEditor({ draft, updateProject }: PortfolioEditorProps) 
         return (
           <div key={index} className={cardClasses}>
             <div className="flex justify-between items-center mb-3">
-              <p className="m-0 text-text-primary font-bold text-[13px] tracking-wide">Project {index + 1}</p>
-              <label className="text-text-secondary text-xs flex items-center gap-2 font-medium">
+              <p className="m-0 text-text-primary font-bold text-base tracking-wide">Project {index + 1}</p>
+              <label className="text-text-secondary text-sm flex items-center gap-2 font-medium">
                 <input
                   type="checkbox"
                   checked={project.visible}

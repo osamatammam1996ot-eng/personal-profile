@@ -185,7 +185,7 @@ export function Contact({ isDark }: ContactProps) {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-success"></span>
             </span>
-            <span className="text-sm font-medium text-text-muted">
+            <span className="text-base font-medium text-text-muted">
               {availability}
             </span>
           </motion.div>
@@ -207,7 +207,7 @@ export function Contact({ isDark }: ContactProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-base font-normal text-text-secondary leading-relaxed max-w-md mb-12"
+            className="text-lg font-normal text-text-secondary leading-relaxed max-w-md mb-12"
           >
             {bodyText}
           </motion.p>
@@ -221,7 +221,7 @@ export function Contact({ isDark }: ContactProps) {
             className="flex items-start gap-4 p-5 rounded-xl border border-border-default bg-surface/50 max-w-md"
           >
             <Calendar className="w-5 h-5 text-brand shrink-0 mt-0.5" />
-            <p className="text-sm font-normal text-text-secondary leading-relaxed">
+            <p className="text-base font-normal text-text-secondary leading-relaxed">
               {meetingAction}{' '}
               <a href="#" className="text-brand font-medium hover:text-brand-hover hover:underline inline-flex items-center gap-1 transition-colors">
                 {meetingLink} <ArrowRight className="w-3.5 h-3.5" />
@@ -268,7 +268,7 @@ export function Contact({ isDark }: ContactProps) {
             )}
             
             <motion.span 
-              className="relative z-10 text-xs font-bold text-brand uppercase tracking-wider mb-6 block"
+              className="relative z-10 text-sm font-bold text-brand uppercase tracking-wider mb-6 block"
               style={shouldAnimate ? { z: zTitle } : undefined}
             >
               {emailLabel}
@@ -290,7 +290,7 @@ export function Contact({ isDark }: ContactProps) {
                 <button onClick={handleCopy} aria-label="Copy email address" className="hover:text-foreground transition-colors relative outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm">
                   <Copy className="w-5 h-5" />
                   {copied && (
-                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded">
+                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-sm bg-foreground text-background px-2 py-1 rounded">
                       Copied!
                     </span>
                   )}
@@ -317,7 +317,7 @@ export function Contact({ isDark }: ContactProps) {
                       <div style={{ color: social.color }}>
                         {social.icon}
                       </div>
-                      <span className="text-sm font-medium text-text-primary group-hover:text-foreground transition-colors">
+                      <span className="text-base font-medium text-text-primary group-hover:text-foreground transition-colors">
                         {social.name}
                       </span>
                     </div>
@@ -329,7 +329,7 @@ export function Contact({ isDark }: ContactProps) {
 
             {/* Bottom Note */}
             <motion.p 
-              className="relative z-10 text-sm font-normal text-text-muted leading-relaxed"
+              className="relative z-10 text-base font-normal text-text-muted leading-relaxed"
               style={shouldAnimate ? { z: zText } : undefined}
             >
               {bottomNote}

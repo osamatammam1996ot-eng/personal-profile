@@ -60,11 +60,11 @@ export function HeroEditor({ draft, updateDraft, updateHeroRole, addHeroRole, re
 
       <div className={cardClasses}>
         <div className="flex justify-between items-center mb-3">
-          <p className="m-0 text-text-primary font-bold text-[13px] tracking-wide">Roles</p>
+          <p className="m-0 text-text-primary font-bold text-base tracking-wide">Roles</p>
           <button
             type="button"
             onClick={addHeroRole}
-            className="bg-brand/20 hover:bg-brand/40 text-brand-hover border border-brand/50 rounded-lg px-3 py-1.5 text-xs font-bold cursor-pointer transition-colors"
+            className="bg-brand/20 hover:bg-brand/40 text-brand-hover border border-brand/50 rounded-lg px-3 py-1.5 text-sm font-bold cursor-pointer transition-colors"
           >
             + Add role
           </button>
@@ -77,22 +77,22 @@ export function HeroEditor({ draft, updateDraft, updateHeroRole, addHeroRole, re
               className="grid grid-cols-[1fr_1fr_auto] gap-3 items-end"
             >
               <div>
-                <label className="block text-[10px] font-bold text-text-muted mb-1 uppercase tracking-wider">English</label>
+                <label className="block text-sm font-bold text-text-muted mb-1 uppercase tracking-wider">English</label>
                 <input
                   type="text"
                   value={draft.hero.roles.en[index] || ''}
                   onChange={(e) => updateHeroRole(index, 'en', e.target.value)}
-                  className="w-full bg-surface-elevated border border-border-default rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/30 transition-all placeholder:text-text-muted/50"
+                  className="w-full bg-surface-elevated border border-border-default rounded-lg px-3 py-2 text-base text-text-primary focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/30 transition-all placeholder:text-text-muted/50"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-text-muted mb-1 uppercase tracking-wider text-right" dir="rtl">عربي</label>
+                <label className="block text-sm font-bold text-text-muted mb-1 uppercase tracking-wider text-right" dir="rtl">عربي</label>
                 <input
                   type="text"
                   dir="rtl"
                   value={draft.hero.roles.ar[index] || ''}
                   onChange={(e) => updateHeroRole(index, 'ar', e.target.value)}
-                  className="w-full bg-surface-elevated border border-border-default rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/30 transition-all placeholder:text-text-muted/50"
+                  className="w-full bg-surface-elevated border border-border-default rounded-lg px-3 py-2 text-base text-text-primary focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/30 transition-all placeholder:text-text-muted/50"
                 />
               </div>
               <Button

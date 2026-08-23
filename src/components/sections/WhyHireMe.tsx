@@ -278,7 +278,7 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
 
         {/* Title */}
         <h3
-          className="font-bold text-[14.72px] text-text-primary leading-[19.136px] mb-2 whitespace-normal"
+          className="font-bold text-lg text-text-primary leading-[19.136px] mb-2 whitespace-normal"
           
         >
           {card.title}
@@ -286,7 +286,7 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
 
         {/* Body */}
         <p
-          className="text-[12.16px] text-text-secondary leading-[20.064px] m-0"
+          className="text-base text-text-secondary leading-[20.064px] m-0"
           
         >
           {card.desc}

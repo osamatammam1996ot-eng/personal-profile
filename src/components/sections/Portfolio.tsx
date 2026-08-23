@@ -109,7 +109,7 @@ function ProjectCard({
         />
         {/* Corner tag — auto-flips in RTL */}
         <div className="absolute top-4 start-4 px-3 py-1.5 rounded-lg max-md:bg-black/80 max-md:backdrop-blur-none md:bg-black/50 md:backdrop-blur-md border border-white/10">
-          <span className="font-medium text-xs text-white" >
+          <span className="font-medium text-sm text-white" >
             {projectLabel} {projectNum}
           </span>
         </div>
@@ -122,7 +122,7 @@ function ProjectCard({
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="px-3 py-1 rounded-full text-xs font-medium bg-brand/10 border border-brand/20 text-brand dark:text-[#a5b4fc]"
+              className="px-3 py-1 rounded-full text-sm font-medium bg-brand/10 border border-brand/20 text-brand dark:text-[#a5b4fc]"
             >
               {tag}
             </span>
@@ -139,7 +139,7 @@ function ProjectCard({
 
         {/* Description */}
         <p
-          className="text-[0.95rem] text-text-secondary leading-relaxed m-0"
+          className="text-lg text-text-secondary leading-relaxed m-0"
           
         >
           {desc}
@@ -149,7 +149,7 @@ function ProjectCard({
 
         <motion.button
           onClick={() => onViewCase(project.id, project.title)}
-          className="inline-flex items-center gap-2 font-semibold text-[0.9rem] text-brand hover:text-brand-hover transition-colors bg-transparent border-none cursor-pointer p-0 self-start"
+          className="inline-flex items-center gap-2 font-semibold text-base text-brand hover:text-brand-hover transition-colors bg-transparent border-none cursor-pointer p-0 self-start"
           
           whileHover={{ x: isRTL ? -4 : 4 }}
           transition={{ duration: 0.2 }}
@@ -265,7 +265,7 @@ export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
         >
           <Button
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-[0.92rem] hover:scale-[1.04] transition-all"
+            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-base hover:scale-[1.04] transition-all"
             style={{
               background: 'var(--brand-gradient)',
             }}

@@ -488,9 +488,8 @@ export function Tools({ isDark = false }: ToolsProps) {
           <span>{toolsTitle}</span>
         </h2>
 
-        <p style={{
+        <p className="text-lg" style={{
           fontWeight: 400,
-          fontSize: '1rem',
           color: bodyC,
           lineHeight: 1.75,
           maxWidth: 380,

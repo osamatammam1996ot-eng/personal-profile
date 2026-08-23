@@ -131,7 +131,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-4 text-text-secondary text-base md:text-lg max-w-2xl"
+            className="mt-4 text-text-secondary text-lg md:text-xl max-w-2xl"
           >
             {lang === 'en' 
               ? "A few words from the people I've built, solved, and collaborated with." 
@@ -186,7 +186,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
                 style={shouldAnimate ? { z: zText } : undefined}
               >
                 <div className="flex-1 flex flex-col justify-center items-center text-center">
-                  <p className="text-lg md:text-xl text-text-primary leading-relaxed font-medium mb-8">
+                  <p className="text-xl md:text-xl text-text-primary leading-relaxed font-medium mb-8">
                     "{activeRec.comment[lang]}"
                   </p>
                   
@@ -202,7 +202,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
                     </div>
                     <div className={`flex flex-col ${isRTL ? 'text-right' : 'text-left'}`}>
                       <span className="text-text-primary font-bold tracking-wide">{activeRec.name}</span>
-                      <span className="text-brand text-sm font-medium">{activeRec.position[lang]}</span>
+                      <span className="text-brand text-base font-medium">{activeRec.position[lang]}</span>
                     </div>
                   </div>
                 </div>

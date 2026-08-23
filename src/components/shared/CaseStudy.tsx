@@ -93,10 +93,10 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
         padding: '0 32px', background: 'linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '1.2rem', letterSpacing: '-0.02em' }}>
+          <span className="text-xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
             {data.title}
           </span>
-          <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+          <span className="text-base" style={{ color: 'var(--text-muted)' }}>
             {currentIndex + 1} / {media.length || 1}
           </span>
         </div>
@@ -229,7 +229,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                 </div>
               ) : (
                 <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#222' }}>
-                  <span style={{ fontSize: '0.6rem', color: '#fff', fontWeight: 600 }}>VIDEO</span>
+                  <span className="text-xs font-semibold text-white">VIDEO</span>
                 </div>
               )}
             </button>
