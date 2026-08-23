@@ -366,7 +366,7 @@ export function Skills({ isDark }: SkillsProps) {
             <button
               key={num}
               onClick={() => scrollToChapter(num)}
-              className={`text-[10px] lg:text-sm font-bold transition-colors duration-300 tracking-widest ${activeChapter === num ? 'text-brand' : 'text-white/30 hover:text-white/80'}`}
+              className={`text-xs lg:text-sm font-bold transition-colors duration-300 tracking-widest ${activeChapter === num ? 'text-brand' : 'text-white/30 hover:text-white/80'}`}
               
             >
               {num === 0 ? 'Intro' : `0${num}`}
