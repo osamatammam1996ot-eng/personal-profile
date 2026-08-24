@@ -391,12 +391,14 @@ body.cyber-glitch-active {
 .animate-blob-3 { animation: blob-float-3 35s ease-in-out infinite; }
 .animate-noise { animation: noise-shift 8s steps(10) infinite; }
 
-@keyframes logo-marquee {
-  0% { transform: translateX(0); }
+@keyframes marqueeInfinite {
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-.animate-logo-marquee {
-  animation: logo-marquee 40s linear infinite;
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeInfinite 35s linear infinite;
   will-change: transform;
 }
