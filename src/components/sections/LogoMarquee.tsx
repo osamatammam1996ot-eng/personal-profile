@@ -1,60 +1,19 @@
 'use client';
-import { useRef } from 'react';
-import { useAnimationFrame } from 'motion/react';
 import { useCms } from '../../contexts/CmsContext';
 import Image from 'next/image';
 
 interface LogoMarqueeProps { isDark: boolean; }
 
-const SPEED = 80; // px per second
-
 export function LogoMarquee({ isDark }: LogoMarqueeProps) {
   const { cmsData } = useCms();
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const xRef    = useRef(0);
-
-  useAnimationFrame((_time, delta) => {
-    const el = wrapRef.current;
-    if (!el) return;
-
-    xRef.current -= (delta / 1000) * SPEED;
-
-    // scrollWidth is the total rendered width of both tracks combined.
-    // Dividing by 2 gives exactly one track's width.
-    // When we've scrolled that far, jumping back by one track is invisible
-    // because track-2 content == track-1 content.
-    const half = el.scrollWidth / 2;
-    if (half > 0 && xRef.current < -half) {
-      xRef.current += half;
-    }
-
-    el.style.transform = 'translateX(' + xRef.current + 'px)';
-  });
 
   if (!cmsData?.sections.logoMarquee) return null;
   const logos = (cmsData.logoMarquee || []).filter((l: any) => l.visible);
   if (logos.length === 0) return null;
 
-  // Repeat logos until we have at least 10 per track (fills any screen)
-  let track = [...logos];
-  while (track.length < 10) track = [...track, ...logos];
-
-  const LogoItem = ({ logo, uid }: { logo: any; uid: string }) => (
-    <div
-      key={uid}
-      style={{ flexShrink: 0, paddingLeft: 48, paddingRight: 48, position: 'relative', width: 128 + 96, height: 40 }}
-    >
-      <div style={{ position: 'relative', width: '100%', height: '100%', opacity: 0.6 }}>
-        <Image
-          src={logo.url}
-          alt={logo.name}
-          fill
-          style={{ objectFit: 'contain' }}
-          sizes="128px"
-        />
-      </div>
-    </div>
-  );
+  // Repeat until we have at least 8 — enough to fill any screen width
+  let items = [...logos];
+  while (items.length < 8) items = [...items, ...logos];
 
   const fadeL = isDark
     ? 'linear-gradient(to right, rgba(8,8,16,1), rgba(8,8,16,0))'
@@ -63,19 +22,59 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
     ? 'linear-gradient(to left, rgba(8,8,16,1), rgba(8,8,16,0))'
     : 'linear-gradient(to left, rgba(245,245,250,1), rgba(245,245,250,0))';
 
-  return (
-    <section style={{ width: '100%', overflow: 'hidden', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '32px 0', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: 128, background: fadeL, zIndex: 2, pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: 128, background: fadeR, zIndex: 2, pointerEvents: 'none' }} />
+  /*
+    HOW THIS WORKS:
+    - Two identical logo strips sit side by side (display: inline-block inside white-space: nowrap).
+    - Each strip runs the SAME animation: translateX(0) -> translateX(-100%) over 35s, linear, infinite.
+    - Strip 1 starts at natural position X=0, strip 2 starts at X=stripWidth.
+    - As both scroll left at the same speed, strip 2 enters the viewport from the right exactly
+      as strip 1 exits to the left.
+    - When both reset (instantaneously at the loop boundary), strip 1 is back at 0 and strip 2
+      is back at stripWidth — identical to the starting state. Zero visible gap, infinite loop.
+  */
+  const Strip = ({ prefix }: { prefix: string }) => (
+    <div style={{ display: 'inline-flex', alignItems: 'center', animation: 'logoScroll 35s linear infinite' }}>
+      {items.map((logo, i) => (
+        <div
+          key={prefix + i}
+          style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', margin: '0 40px', opacity: 0.6, flexShrink: 0 }}
+        >
+          <Image
+            src={logo.url}
+            alt={logo.name}
+            width={120}
+            height={40}
+            style={{ objectFit: 'contain', width: 'auto', maxHeight: 40 }}
+            unoptimized
+          />
+        </div>
+      ))}
+    </div>
+  );
 
-      {/* wrapRef: animated row. scrollWidth / 2 = one track. */}
-      <div
-        ref={wrapRef}
-        style={{ display: 'flex', alignItems: 'center', willChange: 'transform' }}
-      >
-        {track.map((logo, i) => <LogoItem key={'a' + i} logo={logo} uid={'a' + i} />)}
-        {track.map((logo, i) => <LogoItem key={'b' + i} logo={logo} uid={'b' + i} />)}
-      </div>
+  return (
+    <section style={{
+      width: '100%',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      borderTop: '1px solid rgba(255,255,255,0.06)',
+      borderBottom: '1px solid rgba(255,255,255,0.06)',
+      padding: '28px 0',
+      position: 'relative',
+    }}>
+      {/* Fade edges */}
+      <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 120, background: fadeL, zIndex: 2, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 120, background: fadeR, zIndex: 2, pointerEvents: 'none' }} />
+
+      <Strip prefix="a" />
+      <Strip prefix="b" />
+
+      <style>{`
+        @keyframes logoScroll {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-100%); }
+        }
+      `}</style>
     </section>
   );
 }
