@@ -22,13 +22,13 @@ const SOCIALS = [
     color: '#25D366',
   },
   {
-    name: 'Dribbble',
+    name: 'Facebook',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-        <path d="M12 0C5.373 0 0 5.372 0 12c0 6.627 5.373 12 12 12s12-5.373 12-12c0-6.628-5.373-12-12-12zm8.685 12.072c-.083-.021-2.038-.512-4.22-.19-.481-1.282-1.025-2.528-1.619-3.711 2.37-1.085 3.32-2.58 3.42-2.744a8.887 8.887 0 012.419 6.645zm-1.87-8.117c-.126.185-1.189 1.636-3.485 2.658-.87-1.603-1.848-3.132-2.91-4.577 2.646-.576 5.093.187 5.321.261-.295.589-.661 1.144-1.074 1.658h.148zm-8.87-1.12c1.026 1.463 1.97 3.013 2.816 4.63-2.923.83-5.918.775-6.28.766 1.055-2.457 2.923-4.428 5.464-5.396zm-6.19 7.15c.343.01 3.253.056 6.314-.739.561 1.134 1.076 2.316 1.542 3.535-3.322 1.026-5.46 3.109-5.645 3.303a8.847 8.847 0 01-2.21-6.099zm3.626 7.424c.218-.222 2.193-2.181 5.405-3.167 1.258 3.518 1.83 6.602 1.942 7.228-2.977.108-5.74-1.393-7.347-4.061zm9.467 3.738c-.131-.703-.736-3.874-2.023-7.382 2.05-.341 3.963.09 4.108.125a8.846 8.846 0 01-2.085 7.257z" />
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
       </svg>
     ),
-    color: '#EA4C89',
+    color: '#1877F2',
   },
   {
     name: 'LinkedIn',
@@ -151,11 +151,17 @@ export function Contact({ isDark }: ContactProps) {
     
   const meetingLink = cmsData?.contact?.meetingLink?.[lang] || (lang === 'en' ? 'Schedule a meeting' : 'حدد موعداً');
 
+  const makeAbsolute = (url: string) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `https://${url}`;
+};
+
   const socialLinks = {
-    WhatsApp: cmsData?.contact?.socials?.whatsapp || 'https://wa.me/1234567890',
-    Dribbble: 'https://dribbble.com', // fallback as dribbble wasn't in cms by default
-    LinkedIn: cmsData?.contact?.socials?.linkedin || 'https://linkedin.com',
-    Behance: cmsData?.contact?.socials?.behance || 'https://behance.net',
+    WhatsApp: cmsData?.contact?.socials?.whatsapp ? makeAbsolute(cmsData.contact.socials.whatsapp) : 'https://wa.me/1234567890',
+    Facebook: cmsData?.contact?.socials?.facebook ? makeAbsolute(cmsData.contact.socials.facebook) : 'https://facebook.com',
+    LinkedIn: cmsData?.contact?.socials?.linkedin ? makeAbsolute(cmsData.contact.socials.linkedin) : 'https://linkedin.com',
+    Behance: cmsData?.contact?.socials?.behance ? makeAbsolute(cmsData.contact.socials.behance) : 'https://behance.net',
   };
 
   const handleCopy = async (e: React.MouseEvent) => {
