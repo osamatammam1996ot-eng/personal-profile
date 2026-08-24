@@ -398,7 +398,7 @@ export function Skills({ isDark }: SkillsProps) {
             <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
               “{getStr(disc1?.tagline)}”
             </p>
-            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-white/10`}>
+            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-white/10 max-h-[40vh] overflow-y-auto`}>
               {getArr(disc1?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
@@ -414,7 +414,7 @@ export function Skills({ isDark }: SkillsProps) {
             <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
               “{getStr(disc2?.tagline)}”
             </p>
-            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-white/10`}>
+            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-white/10 max-h-[40vh] overflow-y-auto`}>
               {getArr(disc2?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
@@ -432,7 +432,7 @@ export function Skills({ isDark }: SkillsProps) {
                 “{getStr(disc3?.tagline)}”
               </p>
             </div>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-white/10 pt-4 md:pt-6">
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-white/10 pt-4 md:pt-6 max-h-[30vh] overflow-y-auto">
               {getArr(disc3?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
