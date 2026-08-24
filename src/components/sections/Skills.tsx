@@ -400,7 +400,7 @@ export function Skills({ isDark }: SkillsProps) {
             </p>
             <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-white/10`}>
               {getArr(disc1?.tags).map((cap: string) => (
-                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-[#38bdf8] transition-colors cursor-default" >
+                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
                 </li>
               ))}
