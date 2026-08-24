@@ -65,6 +65,21 @@ export function ContactEditor({ draft, updateDraft }: ContactEditorProps) {
         onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, note: { ...prev.contact.note, ar: value } } }))}
       />
       <BilingualField
+        label="Meeting Action"
+        multiline
+        en={draft.contact.meetingAction?.en || ''}
+        ar={draft.contact.meetingAction?.ar || ''}
+        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, meetingAction: { ...prev.contact.meetingAction, en: value, ar: prev.contact.meetingAction?.ar || '' } } }))}
+        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, meetingAction: { ...prev.contact.meetingAction, ar: value, en: prev.contact.meetingAction?.en || '' } } }))}
+      />
+      <BilingualField
+        label="Meeting Link"
+        en={draft.contact.meetingLink?.en || ''}
+        ar={draft.contact.meetingLink?.ar || ''}
+        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, meetingLink: { ...prev.contact.meetingLink, en: value, ar: prev.contact.meetingLink?.ar || '' } } }))}
+        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, meetingLink: { ...prev.contact.meetingLink, ar: value, en: prev.contact.meetingLink?.en || '' } } }))}
+      />
+      <BilingualField
         label="Email Label"
         en={draft.contact.emailLabel.en}
         ar={draft.contact.emailLabel.ar}

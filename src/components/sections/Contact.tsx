@@ -129,25 +129,27 @@ export function Contact({ isDark }: ContactProps) {
   const availability = cmsData?.contact?.availability?.[lang] || (lang === 'en' ? 'Available for new projects' : 'متاح لمشاريع جديدة');
   
   // Overriding headline and body to perfectly match the image context if it's English
-  const headline = lang === 'en' 
-    ? <>Got a problem<br/>worth solving?<br/>Let's talk about it.</>
-    : (cmsData?.contact?.headline1?.[lang] || 'هل لديك مشكلة تستحق الحل؟ دعنا نتحدث.');
+  const headline = cmsData?.contact?.headline1?.[lang] 
+    ? <>{cmsData.contact.headline1[lang]}<br/>{cmsData.contact.headline2?.[lang] || ''}<br/>{cmsData.contact.headline3?.[lang] || ''}</>
+    : (lang === 'en' 
+        ? <>Got a problem<br/>worth solving?<br/>Let's talk about it.</>
+        : 'هل لديك مشكلة تستحق الحل؟ دعنا نتحدث.');
     
-  const bodyText = lang === 'en' 
+  const bodyText = cmsData?.contact?.body?.[lang] || (lang === 'en' 
     ? 'I help product and engineering teams turn complex problems into intuitive digital experiences. Whether you have a clear roadmap or just an idea, I\'d love to hear about it and explore how we can build something impactful together.'
-    : (cmsData?.contact?.body?.[lang] || 'أنا أساعد فرق المنتج والهندسة على تحويل المشاكل المعقدة إلى تجارب رقمية بديهية.');
+    : 'أنا أساعد فرق المنتج والهندسة على تحويل المشاكل المعقدة إلى تجارب رقمية بديهية.');
 
-  const emailLabel = lang === 'en' ? 'EMAIL ME' : 'البريد الإلكتروني';
+  const emailLabel = cmsData?.contact?.emailLabel?.[lang] || (lang === 'en' ? 'EMAIL ME' : 'البريد الإلكتروني');
   
-  const bottomNote = lang === 'en'
+  const bottomNote = cmsData?.contact?.note?.[lang] || (lang === 'en'
     ? <>I typically respond within 24 hours.<br/>Looking forward to connecting!</>
-    : (cmsData?.contact?.note?.[lang] || 'أرد عادة خلال 24 ساعة. أتطلع للتواصل معك!');
+    : 'أرد عادة خلال 24 ساعة. أتطلع للتواصل معك!');
 
-  const meetingAction = lang === 'en'
+  const meetingAction = cmsData?.contact?.meetingAction?.[lang] || (lang === 'en'
     ? 'Prefer a quick call? Let\'s find a time that works for you.'
-    : 'تفضل مكالمة سريعة؟ دعنا نجد وقتًا يناسبك.';
+    : 'تفضل مكالمة سريعة؟ دعنا نجد وقتًا يناسبك.');
     
-  const meetingLink = lang === 'en' ? 'Schedule a meeting' : 'حدد موعداً';
+  const meetingLink = cmsData?.contact?.meetingLink?.[lang] || (lang === 'en' ? 'Schedule a meeting' : 'حدد موعداً');
 
   const socialLinks = {
     WhatsApp: cmsData?.contact?.socials?.whatsapp || 'https://wa.me/1234567890',
