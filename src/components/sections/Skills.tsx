@@ -153,14 +153,14 @@ export function Skills({ isDark }: SkillsProps) {
       });
       const e = 'power2.inOut';
       tl.to({}, { duration: 4 })
-        .fromTo('#ui-intro', { opacity: 1, x: 0 }, { opacity: 0, x: -10, duration: 1, ease: e })
-        .fromTo('#ui-01', { opacity: 0, x: 10 }, { opacity: 1, x: 0, duration: 1, ease: e }, "<")
+        .fromTo('#ui-intro', { autoAlpha: 1, x: 0 }, { autoAlpha: 0, x: -10, duration: 1, ease: e })
+        .fromTo('#ui-01', { autoAlpha: 0, x: 10 }, { autoAlpha: 1, x: 0, duration: 1, ease: e }, "<")
         .to({}, { duration: 4 })
-        .to('#ui-01', { opacity: 0, x: -10, duration: 1, ease: e })
-        .fromTo('#ui-02', { opacity: 0, x: 10 }, { opacity: 1, x: 0, duration: 1, ease: e }, "<")
+        .to('#ui-01', { autoAlpha: 0, x: -10, duration: 1, ease: e })
+        .fromTo('#ui-02', { autoAlpha: 0, x: 10 }, { autoAlpha: 1, x: 0, duration: 1, ease: e }, "<")
         .to({}, { duration: 4 })
-        .to('#ui-02', { opacity: 0, x: -10, duration: 1, ease: e })
-        .fromTo('#ui-03', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 1, ease: e }, "<")
+        .to('#ui-02', { autoAlpha: 0, x: -10, duration: 1, ease: e })
+        .fromTo('#ui-03', { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 1, ease: e }, "<")
         .to({}, { duration: 4 });
     } else {
       // Scroll GSAP Timeline for full 3D experience
@@ -186,33 +186,33 @@ export function Skills({ isDark }: SkillsProps) {
       tl.to({}, { duration: 4 });
 
       // Intro -> State 1 (Research)
-      tl.fromTo('#ui-intro', { opacity: 1, x: 0 }, { opacity: 0, x: -30, duration: 1, ease: e })
+      tl.fromTo('#ui-intro', { autoAlpha: 1, x: 0 }, { autoAlpha: 0, x: -30, duration: 1, ease: e })
         .fromTo(meshSolid.material, { opacity: 0.9 }, { opacity: 0, duration: 1, ease: e }, "<")
-        .fromTo(meshPoints.material, { opacity: 0 }, { opacity: 1, duration: 1, ease: e }, "<")
+        .fromTo(meshPoints.material, { opacity: 0 }, { autoAlpha: 1, duration: 1, ease: e }, "<")
         .to(meshPoints.scale, { x: 1.3, y: 1.3, z: 1.3, duration: 1, ease: e }, "<")
         .to(root.position, { x: isMobile ? 0 : 1.5, duration: 1, ease: e }, "<")
-        .fromTo('#ui-01', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 1, ease: e }, "<")
+        .fromTo('#ui-01', { autoAlpha: 0, x: 30 }, { autoAlpha: 1, x: 0, duration: 1, ease: e }, "<")
 
       // State 1 Hold
       tl.to({}, { duration: 4 })
 
       // State 1 -> State 2 (Design)
-      tl.to('#ui-01', { opacity: 0, x: -30, duration: 1, ease: e })
+      tl.to('#ui-01', { autoAlpha: 0, x: -30, duration: 1, ease: e })
         .to(meshPoints.material, { opacity: 0, duration: 1, ease: e }, "<")
         .to(meshWire.material, { opacity: 0.85, duration: 1, ease: e }, "<")
         .to(meshWire.scale, { x: 1.1, y: 1.1, z: 1.1, duration: 1, ease: e }, "<")
         .to(root.position, { x: isMobile ? 0 : -2, duration: 1, ease: e }, "<") // Move left, text on right
-        .fromTo('#ui-02', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 1, ease: e }, "<")
+        .fromTo('#ui-02', { autoAlpha: 0, x: 30 }, { autoAlpha: 1, x: 0, duration: 1, ease: e }, "<")
 
       // State 2 Hold
       tl.to({}, { duration: 4 })
 
       // State 2 -> State 3 (Proto)
-      tl.to('#ui-02', { opacity: 0, x: -30, duration: 1, ease: e })
+      tl.to('#ui-02', { autoAlpha: 0, x: -30, duration: 1, ease: e })
         .to(meshWire.material, { opacity: 0, duration: 1, ease: e }, "<")
         .to(meshSolid.material, { opacity: 0.9, duration: 1, ease: e }, "<")
         .to(root.position, { x: isMobile ? 0 : 0, duration: 1, ease: e }, "<") // Center
-        .fromTo('#ui-03', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, ease: e }, "<")
+        .fromTo('#ui-03', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 1, ease: e }, "<")
 
       // State 3 Hold
       tl.to({}, { duration: 4 });
@@ -392,13 +392,13 @@ export function Skills({ isDark }: SkillsProps) {
           </div>
 
           {/* State 1: Research */}
-          <div id="ui-01" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-sm opacity-0 pointer-events-auto`}>
+          <div id="ui-01" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-sm opacity-0 invisible pointer-events-auto`}>
             <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >01</h2>
             <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc1?.title).replace(/\n/g, ' ')}</h3>
             <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
               “{getStr(disc1?.tagline)}”
             </p>
-            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-white/10 max-h-[40vh] overflow-y-auto`}>
+            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-white/10 `}>
               {getArr(disc1?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
@@ -408,13 +408,13 @@ export function Skills({ isDark }: SkillsProps) {
           </div>
 
           {/* State 2: Design */}
-          <div id="ui-02" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'left-6 md:left-10 pr-12 md:pr-0' : 'right-6 md:right-10 pl-12 md:pl-0'} max-w-sm opacity-0 pointer-events-auto`}>
+          <div id="ui-02" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'left-6 md:left-10 pr-12 md:pr-0' : 'right-6 md:right-10 pl-12 md:pl-0'} max-w-sm opacity-0 invisible pointer-events-auto`}>
             <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >02</h2>
             <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc2?.title).replace(/\n/g, ' ')}</h3>
             <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
               “{getStr(disc2?.tagline)}”
             </p>
-            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-white/10 max-h-[40vh] overflow-y-auto`}>
+            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-white/10 `}>
               {getArr(disc2?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
@@ -424,7 +424,7 @@ export function Skills({ isDark }: SkillsProps) {
           </div>
 
           {/* State 3: Prototyping */}
-          <div id="ui-03" className={`absolute bottom-10 md:bottom-20 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-3xl opacity-0 pointer-events-auto`}>
+          <div id="ui-03" className={`absolute bottom-10 md:bottom-20 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-3xl opacity-0 invisible pointer-events-auto`}>
             <div className="md:w-1/2">
               <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >03</h2>
               <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc3?.title).replace(/\n/g, ' ')}</h3>
@@ -432,7 +432,7 @@ export function Skills({ isDark }: SkillsProps) {
                 “{getStr(disc3?.tagline)}”
               </p>
             </div>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-white/10 pt-4 md:pt-6 max-h-[30vh] overflow-y-auto">
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-white/10 pt-4 md:pt-6 ">
               {getArr(disc3?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
