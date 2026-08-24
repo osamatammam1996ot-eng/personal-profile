@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, use
 import { DecorativeShape } from '../shared/DecorativeShape';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
-import { ArrowUpRight, Copy, Calendar, ArrowRight } from 'lucide-react';
+import { ArrowUpRight, Copy, CodeXml, ArrowRight } from 'lucide-react';
 
 interface ContactProps {
   isDark: boolean;
@@ -220,12 +220,9 @@ export function Contact({ isDark }: ContactProps) {
             transition={{ delay: 0.3 }}
             className="flex items-start gap-4 p-5 rounded-xl border border-border-default bg-surface/50 max-w-md"
           >
-            <Calendar className="w-5 h-5 text-brand shrink-0 mt-0.5" />
+            <CodeXml className="w-5 h-5 text-brand shrink-0 mt-0.5" />
             <p className="text-base font-normal text-text-secondary leading-relaxed">
-              {meetingAction}{' '}
-              <a href="#" className="text-brand font-medium hover:text-brand-hover hover:underline inline-flex items-center gap-1 transition-colors">
-                {meetingLink} <ArrowRight className="w-3.5 h-3.5" />
-              </a>
+              {meetingAction}
             </p>
           </motion.div>
         </div>
