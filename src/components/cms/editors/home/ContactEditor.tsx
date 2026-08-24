@@ -65,7 +65,7 @@ export function ContactEditor({ draft, updateDraft }: ContactEditorProps) {
         onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, note: { ...prev.contact.note, ar: value } } }))}
       />
       <BilingualField
-        label="Meeting Action"
+        label="Highlight Box Text (with Code icon)"
         multiline
         en={draft.contact.meetingAction?.en || ''}
         ar={draft.contact.meetingAction?.ar || ''}
