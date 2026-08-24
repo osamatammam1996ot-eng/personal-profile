@@ -40,7 +40,7 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
       <div className="absolute inset-y-0 right-0 w-16 md:w-32 z-20 pointer-events-none" style={{ background: isDark ? 'linear-gradient(to left, rgba(8,8,16,1), rgba(8,8,16,0))' : 'linear-gradient(to left, rgba(245,245,250,1), rgba(245,245,250,0))' }} />
       {/* Two identical tracks in one animated flex wrapper.
           Animation translates by -50% (= exactly one track width), then loops. */}
-      <div className="flex items-center animate-logo-marquee">
+      <div className="flex items-center w-max animate-logo-marquee">
         {track.map((logo, idx) => renderLogo(logo, 't1-' + logo.id + '-' + idx))}
         {track.map((logo, idx) => renderLogo(logo, 't2-' + logo.id + '-' + idx))}
       </div>
