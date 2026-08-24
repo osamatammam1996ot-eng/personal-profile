@@ -41,8 +41,8 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
       {/* Two identical tracks in one animated flex wrapper.
           Animation translates by -50% (= exactly one track width), then loops. */}
       <div className="flex items-center animate-logo-marquee">
-        {track.map((logo, idx) => renderLogo(logo, 	1--))}
-        {track.map((logo, idx) => renderLogo(logo, 	2--))}
+        {track.map((logo, idx) => renderLogo(logo, 't1-' + logo.id + '-' + idx))}
+        {track.map((logo, idx) => renderLogo(logo, 't2-' + logo.id + '-' + idx))}
       </div>
     </section>
   );
