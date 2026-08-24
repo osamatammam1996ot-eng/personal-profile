@@ -11,9 +11,10 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
   const logos = (cmsData.logoMarquee || []).filter((l: any) => l.visible);
   if (logos.length === 0) return null;
 
-  // Repeat until we have at least 8 — enough to fill any screen width
+  // Each strip must be wider than any viewport (max ~2560px).
+  // At ~200px per logo, 20 logos = ~4000px — always enough.
   let items = [...logos];
-  while (items.length < 8) items = [...items, ...logos];
+  while (items.length < 20) items = [...items, ...logos];
 
   const fadeL = isDark
     ? 'linear-gradient(to right, rgba(8,8,16,1), rgba(8,8,16,0))'
