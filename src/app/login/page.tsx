@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { CTAButton } from '@/components/ui/cta-button';
 import { loginAction } from '@/app/actions/auth';
 import { Loader2 } from 'lucide-react';
 import Home from '@/app/page';
@@ -53,13 +53,13 @@ export default function LoginPage() {
             </p>
           )}
 
-          <Button
+          <CTAButton
             type="submit"
             disabled={loading}
-            className="w-full bg-brand hover:bg-brand-hover text-white py-2 px-4 rounded-[var(--radius-md)] transition-colors mt-6"
+            className="w-full mt-6"
           >
-            {loading ? <Loader2 className="animate-spin w-5 h-5 mx-auto" /> : 'Sign In'}
-          </Button>
+            {loading ? 'Authenticating...' : 'Enter Dashboard'}
+          </CTAButton>
         </form>
         </div>
       </div>

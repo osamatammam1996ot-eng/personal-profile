@@ -6,6 +6,7 @@ import { DecorativeShape } from '../shared/DecorativeShape';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import { Button } from '../ui/button';
+import { CTAButton } from '../ui/cta-button';
 
 interface PortfolioProps {
   isDark: boolean;
@@ -263,16 +264,14 @@ export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="flex justify-center mt-24"
         >
-          <Button
+          <CTAButton
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-base hover:scale-[1.04] transition-all"
-            style={{
-              background: 'var(--brand-gradient)',
-            }}
           >
-            {lang === 'en' ? 'Request full portfolio' : 'طلب معرض الأعمال الكامل'}
-            <ArrowRight size={15} className={`transition-transform duration-200 ${lang === 'ar' ? '-scale-x-100' : ''}`} />
-          </Button>
+            <span className="flex items-center gap-2">
+              {lang === 'en' ? 'Request full portfolio' : 'طلب معرض الأعمال الكامل'}
+              <ArrowRight size={15} className={`transition-transform duration-200 ${lang === 'ar' ? '-scale-x-100' : ''}`} />
+            </span>
+          </CTAButton>
         </motion.div>
       </div>
     </section>

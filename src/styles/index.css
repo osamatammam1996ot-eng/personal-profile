@@ -402,3 +402,8 @@ body.cyber-glitch-active {
   animation: marqueeInfinite 35s linear infinite;
   will-change: transform;
 }
+
+@keyframes bubbles {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}

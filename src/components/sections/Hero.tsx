@@ -7,6 +7,7 @@ import lightAvatarImg from '../../assets/ef9cb82bf32c8b9e3dfe70e9c1705569056e55e
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import { Button } from '../ui/button';
+import { CTAButton } from '../ui/cta-button';
 import { DecorativeShape } from '../shared/DecorativeShape';
 
 interface HeroProps {
@@ -273,29 +274,23 @@ export function Hero({ isDark }: HeroProps) {
           className="flex flex-wrap items-center justify-center gap-3"
           style={{ marginBottom: '52px' }}
         >
-          <Button
+          <CTAButton
             onClick={() => scrollToSection('work')}
-            className="relative flex items-center gap-2 px-7 py-6 rounded-xl text-white font-body font-semibold text-base hover:scale-[1.04] transition-all"
-            style={{
-              background: 'var(--brand-gradient)',
-            }}
           >
-            {heroCta1}
-            <ArrowRight size={15} className={`transition-transform duration-200 ${isRTL ? '-scale-x-100' : ''}`} />
-          </Button>
+            <span className="flex items-center gap-2">
+              {heroCta1}
+              <ArrowRight size={15} className={`transition-transform duration-200 ${isRTL ? '-scale-x-100' : ''}`} />
+            </span>
+          </CTAButton>
 
-          <Button
+          <CTAButton
+            variant="secondary"
             onClick={() => scrollToSection('contact')}
-            variant="outline"
-            className="flex items-center gap-2 px-7 py-6 rounded-xl font-body font-medium text-base border-[rgba(255,255,255,0.14)] hover:scale-[1.04] transition-transform"
-            style={{
-              background: 'transparent',
-              color: dark ? 'rgba(224,224,255,0.85)' : '#0f0f1e',
-            }}
           >
-            <Mail size={15} />
-            {heroCta2}
-          </Button>
+            <span className="flex items-center gap-2">
+              {heroCta2}
+            </span>
+          </CTAButton>
         </motion.div>
       </div>
 
