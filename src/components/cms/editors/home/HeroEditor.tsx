@@ -1,6 +1,7 @@
 import type { CmsData } from '../../../../types/cms';
 import { BilingualField, cardClasses } from '../../../../components/cms/shared/BilingualField';
 import { Button } from '../../../ui/button';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 
 interface HeroEditorProps {
   draft: CmsData;
@@ -11,6 +12,37 @@ interface HeroEditorProps {
 }
 
 export function HeroEditor({ draft, updateDraft, updateHeroRole, addHeroRole, removeHeroRole }: HeroEditorProps) {
+  const elementOrder = draft.hero.elementOrder || ['avatar', 'label', 'headline', 'roles', 'desc', 'ctas'];
+
+  const moveElement = (index: number, direction: 'up' | 'down') => {
+    const newOrder = [...elementOrder];
+    if (direction === 'up' && index > 0) {
+      [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+    } else if (direction === 'down' && index < newOrder.length - 1) {
+      [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
+    }
+    updateDraft(prev => ({ ...prev, hero: { ...prev.hero, elementOrder: newOrder } }));
+  };
+
+  const labels: Record<string, string> = {
+    avatar: 'Avatar (3D Model)',
+    label: 'Label Text',
+    headline: 'Headline (Title)',
+    roles: 'Roles Pill',
+    desc: 'Description',
+    ctas: 'Buttons (CTAs)'
+  };
+
+  const getVisibilityKey = (id: string): string | null => {
+    switch(id) {
+      case 'avatar': return 'showAvatar';
+      case 'label': return 'showLabel';
+      case 'headline': return 'showHeadline';
+      case 'desc': return 'showDesc';
+      default: return null;
+    }
+  };
+
   return (
     <div className="grid gap-3">
       <h2 className="text-white mt-0">Hero Content</h2>
@@ -106,6 +138,60 @@ export function HeroEditor({ draft, updateDraft, updateHeroRole, addHeroRole, re
               </Button>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className={cardClasses}>
+        <p className="m-0 text-text-primary font-bold text-base tracking-wide mb-3">Layout & Visibility</p>
+        <p className="text-sm text-text-muted mb-4">Reorder elements or hide them completely.</p>
+        <div className="flex flex-col gap-2">
+          {elementOrder.map((id, index) => {
+            const visibilityKey = getVisibilityKey(id);
+            // @ts-ignore - dynamic key access
+            const isVisible = visibilityKey ? (draft.hero[visibilityKey] ?? true) : true;
+            
+            return (
+              <div key={id} className="flex items-center justify-between bg-surface-elevated border border-border-default rounded-lg px-4 py-2">
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col gap-1">
+                    <button 
+                      onClick={() => moveElement(index, 'up')}
+                      disabled={index === 0}
+                      className="text-text-muted hover:text-brand disabled:opacity-30 disabled:hover:text-text-muted transition-colors cursor-pointer"
+                    >
+                      <ChevronUp size={16} />
+                    </button>
+                    <button 
+                      onClick={() => moveElement(index, 'down')}
+                      disabled={index === elementOrder.length - 1}
+                      className="text-text-muted hover:text-brand disabled:opacity-30 disabled:hover:text-text-muted transition-colors cursor-pointer"
+                    >
+                      <ChevronDown size={16} />
+                    </button>
+                  </div>
+                  <span className="font-medium text-text-primary">{labels[id]}</span>
+                </div>
+                
+                {visibilityKey && (
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isVisible}
+                      onChange={(e) => updateDraft(prev => ({
+                        ...prev,
+                        hero: { ...prev.hero, [visibilityKey]: e.target.checked }
+                      }))}
+                      className="cursor-pointer w-4 h-4 accent-brand transition-all"
+                    />
+                    <span className="text-sm text-text-muted">Visible</span>
+                  </label>
+                )}
+                {!visibilityKey && (
+                  <span className="text-xs text-text-muted uppercase tracking-wider bg-surface px-2 py-1 rounded">Always Visible</span>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

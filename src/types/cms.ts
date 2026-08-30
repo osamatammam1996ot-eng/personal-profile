@@ -21,6 +21,11 @@ export interface CmsHero {
   desc: Bilingual;
   cta1: Bilingual;
   cta2: Bilingual;
+  showAvatar?: boolean;
+  showLabel?: boolean;
+  showHeadline?: boolean;
+  showDesc?: boolean;
+  elementOrder?: string[];
 }
 
 export interface CmsWhyHireMe {
@@ -172,11 +177,16 @@ export const DEFAULT_CMS_DATA: any = {
   hero: {
     label: { en: 'Osama Tammam\u00a0\u00b7\u00a0Cairo', ar: '\u0623\u0633\u0627\u0645\u0629 \u062a\u0645\u0627\u0645\u00a0\u00b7\u00a0\u0627\u0644\u0642\u0627\u0647\u0631\u0629' },
     headline1: { en: 'Making hard products', ar: '\u062a\u062d\u0648\u064a\u0644 \u0627\u0644\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0644\u0635\u0639\u0628\u0629' },
-    headline2: { en: 'feel inevitable.', ar: '\u0625\u0644\u0649 \u062a\u062c\u0631\u0628\u0629 \u0644\u0627 \u0645\u0641\u0631 \u0645\u0646\u0647\u0627.' },
+    headline2: { en: 'feel inevitable.', ar: '\u0625\u0644\u0649 \u062a\u062c\u0631\u0628\u0628\u0629 \u0644\u0627 \u0645\u0641\u0631 \u0645\u0646\u0647\u0627.' },
     roles: { en: ['Senior UX Designer', 'Senior UI Designer', 'AI Product Designer'], ar: ['\u0645\u0635\u0645\u0645 UX \u0623\u0648\u0644', '\u0645\u0635\u0645\u0645 UI \u0623\u0648\u0644', '\u0645\u0635\u0645\u0645 \u0645\u0646\u062a\u062c\u0627\u062a AI'] },
     desc: { en: "Seven years building products for teams that couldn't afford to ship the wrong thing.\nI work closest to the problem when the stakes are highest.", ar: '\u0633\u0628\u0639 \u0633\u0646\u0648\u0627\u062a \u0645\u0646 \u0628\u0646\u0627\u0621 \u0627\u0644\u0645\u0646\u062a\u062c\u0627\u062a \u0644\u0641\u0631\u0642 \u0644\u0645 \u062a\u0643\u0646 \u062a\u062a\u062d\u0645\u0644 \u0627\u0644\u062e\u0637\u0623 \u0641\u064a \u0627\u0644\u0642\u0631\u0627\u0631.\n\u0623\u0643\u0648\u0646 \u0623\u0642\u0631\u0628 \u0644\u0644\u0645\u0634\u0643\u0644\u0629 \u062d\u064a\u0646 \u062a\u0643\u0648\u0646 \u0627\u0644\u0645\u062e\u0627\u0637\u0631 \u0641\u064a \u0623\u0639\u0644\u0627\u0647\u0627.' },
     cta1: { en: 'See my work', ar: '\u0634\u0627\u0647\u062f \u0623\u0639\u0645\u0627\u0644\u064a' },
     cta2: { en: "Let's talk", ar: '\u0644\u0646\u062a\u062d\u062f\u062b' },
+    showAvatar: true,
+    showLabel: true,
+    showHeadline: true,
+    showDesc: true,
+    elementOrder: ['avatar', 'label', 'headline', 'roles', 'desc', 'ctas'],
   },
   logoMarquee: [
     { id: '1', visible: true, name: 'ServeBig', url: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg' },
