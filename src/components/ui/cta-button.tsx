@@ -95,7 +95,7 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
 
         {/* Thin Text (on top of everything) */}
         {/* Uses text-brand in light mode, text-white in dark mode so it's invisible on the button but visible on the mask block */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40 text-brand dark:text-white">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40 text-brand dark:text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[50ms]">
            <span className="flex items-center justify-center gap-2 font-medium whitespace-nowrap">
              {children}
            </span>
