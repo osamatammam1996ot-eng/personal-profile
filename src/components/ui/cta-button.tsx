@@ -77,28 +77,22 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
         <div className="absolute top-0 right-[66%] w-full h-full z-20 peer/left"></div>
         <div className="absolute top-0 left-[66%] w-full h-full z-20 peer/right"></div>
         
-        {/* Mask Block (.right::after) */}
-        <div className={cn(
-          "absolute inset-0 flex items-center justify-center pointer-events-none z-30",
-          "transition-transform duration-[400ms] ease-out origin-center",
-          "transform -translate-y-[100%] rotate-0",
-          "group-hover:-translate-y-[47%] group-hover:rotate-0",
-          "peer-hover/right:-translate-y-[50%] peer-hover/right:-rotate-[7deg]",
-          "peer-hover/left:-translate-y-[50%] peer-hover/left:rotate-[7deg]",
-          "bg-surface dark:bg-surface text-transparent"
-        )}>
-          {/* We use large padding to create a large block that can cover the button diagonally */}
-          <span className="px-[60px] py-[60px] whitespace-nowrap">
-            {children}
-          </span>
-        </div>
-
-        {/* Thin Text (on top of everything) */}
-        {/* Uses text-brand in light mode, text-white in dark mode so it's invisible on the button but visible on the mask block */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40 text-brand dark:text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[50ms]">
-           <span className="flex items-center justify-center gap-2 font-medium whitespace-nowrap">
-             {children}
-           </span>
+        {/* Clipped Top Layer (Combines Mask and Top Text) */}
+        <div 
+          className={cn(
+            "absolute inset-0 z-30 pointer-events-none bg-surface dark:bg-surface text-brand dark:text-white",
+            "transition-all duration-[400ms] ease-out",
+            "[clip-path:polygon(0_0,100%_0,100%_0,0_0)]",
+            "group-hover:[clip-path:polygon(0_0,100%_0,100%_53%,0_53%)]",
+            "peer-hover/right:[clip-path:polygon(0_0,100%_0,100%_75%,0_25%)]",
+            "peer-hover/left:[clip-path:polygon(0_0,100%_0,100%_25%,0_75%)]"
+          )}
+        >
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+             <span className="flex items-center justify-center gap-2 font-medium whitespace-nowrap">
+               {children}
+             </span>
+          </div>
         </div>
       </button>
     )
