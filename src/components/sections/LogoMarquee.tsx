@@ -48,8 +48,8 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
 
   if (!cmsData?.sections.logoMarquee || set.length === 0) return null;
 
-  const fadeL = 'linear-gradient(to right, rgba(8,8,16,1), rgba(8,8,16,0))';
-  const fadeR = 'linear-gradient(to left, rgba(8,8,16,1), rgba(8,8,16,0))';
+  const fadeL = 'linear-gradient(to right, rgba(41,27,92,1), rgba(41,27,92,0))';
+  const fadeR = 'linear-gradient(to left, rgba(41,27,92,1), rgba(41,27,92,0))';
 
   const LogoSlot = ({ logo, uid }: { logo: any; uid: string }) => (
     <div
@@ -82,7 +82,7 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
       borderBottom: '1px solid rgba(255,255,255,0.06)',
       padding: '28px 0',
       position: 'relative',
-      background: 'rgba(8,8,16,1)',
+      background: 'rgba(41,27,92,1)',
     }}>
       {/* Fade edges */}
       <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 100, background: fadeL, zIndex: 2, pointerEvents: 'none' }} />
