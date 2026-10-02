@@ -142,7 +142,7 @@ export function Skills({ isDark }: SkillsProps) {
           start: 'top top',
           end: 'bottom bottom',
           scrub: 1.2,
-          onUpdate: (self) => {
+          onUpdate: (self: any) => {
             const p = self.progress;
             if (p < 0.24) setActiveChapter(0);
             else if (p < 0.5) setActiveChapter(1);
@@ -170,7 +170,7 @@ export function Skills({ isDark }: SkillsProps) {
           start: 'top top',
           end: 'bottom bottom',
           scrub: 1.2,
-          onUpdate: (self) => {
+          onUpdate: (self: any) => {
             const p = self.progress;
             if (p < 0.24) setActiveChapter(0);
             else if (p < 0.5) setActiveChapter(1);
@@ -260,7 +260,7 @@ export function Skills({ isDark }: SkillsProps) {
       renderer.dispose();
       tl.kill();
       // clean up any floating scrolltriggers
-      ScrollTrigger.getAll().forEach(t => t.kill());
+      ScrollTrigger.getAll().forEach((t: globalThis.ScrollTrigger | any) => t.kill());
     };
   }, []); // End of main ThreeJS init
 
@@ -320,7 +320,7 @@ export function Skills({ isDark }: SkillsProps) {
     <section
       ref={containerRef}
       id="skills"
-      className="relative w-full h-[400vh] bg-surface transition-colors duration-300"
+      className="relative w-full h-[300vh] bg-surface transition-colors duration-300"
     >
       <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center pointer-events-none" dir={isRTL ? 'rtl' : 'ltr'}>
 
