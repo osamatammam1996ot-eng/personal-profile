@@ -10,6 +10,19 @@ const SLOT_PX = 200;
 // Speed in pixels per second
 const SPEED = 60;
 
+const LogoSlot = ({ logo }: { logo: any }) => (
+  <div className="w-[200px] shrink-0 flex items-center justify-center opacity-65">
+    <Image
+      src={logo.url}
+      alt={logo.name}
+      width={120}
+      height={40}
+      className="object-contain max-h-10 w-[120px] h-10"
+      unoptimized
+    />
+  </div>
+);
+
 export function LogoMarquee({ isDark }: LogoMarqueeProps) {
   const { cmsData } = useCms();
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -32,8 +45,8 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
     const tick = (now: number) => {
       if (last !== null) {
         x -= SPEED * (now - last) / 1000;
-        // Reset when we've scrolled exactly one set — invisible because set2 === set1
-        if (x <= -setWidth) x += setWidth;
+        // Use modulo to safely wrap even after huge tab suspension time jumps
+        x %= setWidth;
       }
       last = now;
       if (wrapRef.current) {
@@ -48,24 +61,8 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
 
   if (!cmsData?.sections.logoMarquee || set.length === 0) return null;
 
-  const LogoSlot = ({ logo, uid }: { logo: any; uid: string }) => (
-    <div
-      key={uid}
-      className="w-[200px] shrink-0 flex items-center justify-center opacity-65"
-    >
-      <Image
-        src={logo.url}
-        alt={logo.name}
-        width={120}
-        height={40}
-        className="object-contain max-h-10 w-[120px] h-10"
-        unoptimized
-      />
-    </div>
-  );
-
   return (
-    <section className="w-full overflow-hidden border-y border-white/6 py-7 relative bg-marquee-bg">
+    <section dir="ltr" className="w-full overflow-hidden border-y border-white/6 py-7 relative bg-marquee-bg">
       {/* Fade edges */}
       <div className="absolute top-0 left-0 bottom-0 w-[100px] fade-edge-l z-[2] pointer-events-none" />
       <div className="absolute top-0 right-0 bottom-0 w-[100px] fade-edge-r z-[2] pointer-events-none" />
@@ -82,8 +79,8 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
         className="flex flex-row will-change-transform"
         style={{ width: setWidth * 2 }}
       >
-        {set.map((logo, i) => <LogoSlot key={'a' + i} logo={logo} uid={'a' + i} />)}
-        {set.map((logo, i) => <LogoSlot key={'b' + i} logo={logo} uid={'b' + i} />)}
+        {set.map((logo, i) => <LogoSlot key={'a' + i} logo={logo} />)}
+        {set.map((logo, i) => <LogoSlot key={'b' + i} logo={logo} />)}
       </div>
     </section>
   );
