@@ -90,14 +90,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{
-        background: scrolled
-          ? isDark ? 'rgba(8,8,16,0.85)' : 'rgba(245,245,250,0.85)'
-          : 'transparent',
-        backdropFilter: scrolled ? 'blur(20px)' : 'none',
-        boxShadow: scrolled ? (isDark ? '0 1px 0 rgba(255,255,255,0.06)' : '0 1px 0 rgba(0,0,0,0.08)') : 'none',
-      }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-nav' : 'bg-transparent'}`}
     >
       <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[72px]">
         {/* Logo */}
@@ -109,9 +102,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
           <div className="relative h-7 flex items-center justify-center">
             <img src="/logo.png" alt="OT Logo" className="h-full w-auto object-contain" />
           </div>
-          <span
-            className={`text-lg font-semibold transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-900'}`}
-          >
+          <span className="text-lg font-semibold transition-colors duration-300 text-foreground">
             {isRTL ? 'أسامة تمام' : 'Osama Tammam'}
           </span>
         </motion.button>
@@ -124,17 +115,13 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
               <button
                 key={link.href}
                 onClick={() => scrollTo(link.href)}
-                className="relative px-4 py-2 rounded-lg transition-colors duration-200 group text-base font-medium"
-                style={{
-                  color: isActive
-                    ? isDark ? '#a5b4fc' : '#6366f1'
-                    : isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.55)',
-                }}
+                className={`relative px-4 py-2 rounded-lg transition-colors duration-200 group text-base font-medium ${
+                  isActive ? 'text-nav-link-active' : 'text-nav-link-inactive hover:text-foreground'
+                }`}
               >
                 {link.label}
                 <motion.span
-                  className="absolute bottom-1 left-4 right-4 h-[2px] rounded-full"
-                  style={{ background: 'linear-gradient(90deg,#6366f1,#8b5cf6)' }}
+                  className="absolute bottom-1 left-4 right-4 h-[2px] rounded-full bg-[image:var(--indigo-gradient)]"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: isActive ? 1 : 0 }}
                   transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
@@ -149,12 +136,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
           {/* Language toggle */}
           <motion.button
             onClick={toggleLang}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-colors duration-200"
-            style={{
-              background: isDark ? 'rgba(99,102,241,0.12)' : 'rgba(99,102,241,0.08)',
-              border: isDark ? '1px solid rgba(99,102,241,0.3)' : '1px solid rgba(99,102,241,0.2)',
-              color: isDark ? '#a5b4fc' : '#6366f1',
-            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-colors duration-200 bg-indigo-glow/10 border border-indigo-glow/25 text-indigo-glow dark:text-indigo-light"
             whileHover={{ scale: 1.06, boxShadow: '0 0 16px rgba(99,102,241,0.3)' }}
             whileTap={{ scale: 0.95 }}
             title={isRTL ? 'Switch to English' : 'التبديل إلى العربية'}
@@ -181,11 +163,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
           {/* Dark mode toggle */}
           <motion.button
             onClick={onToggleDark}
-            className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200"
-            style={{
-              background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
-              color: isDark ? '#a5b4fc' : '#6366f1',
-            }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200 bg-foreground/6 text-indigo-glow dark:text-indigo-light"
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -194,11 +172,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
 
           {/* Mobile menu toggle */}
           <button
-            className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center"
-            style={{
-              background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
-              color: isDark ? '#fff' : '#111',
-            }}
+            className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center bg-foreground/6 text-foreground"
             onClick={() => setMenuOpen(o => !o)}
           >
             {menuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -214,24 +188,13 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden px-6 pb-4 flex flex-col gap-1"
-            style={{
-              background: isDark ? 'rgba(8,8,16,0.95)' : 'rgba(245,245,250,0.95)',
-              backdropFilter: 'blur(20px)',
-            }}
+            className="md:hidden px-6 pb-4 flex flex-col gap-1 glass-nav"
           >
             {NAV_LINKS.map((link) => (
               <button
                 key={link.href}
                 onClick={() => scrollTo(link.href)}
-                className="px-4 py-3 rounded-xl transition-colors duration-200"
-                style={{
-                  
-                  fontWeight: 500,
-                  color: isDark ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)',
-                  background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
-                  textAlign: isRTL ? 'right' : 'left',
-                }}
+                className={`px-4 py-3 rounded-xl transition-colors duration-200 font-medium text-text-dim bg-foreground/4 hover:text-foreground hover:bg-foreground/8 ${isRTL ? 'text-right' : 'text-left'}`}
               >
                 {link.label}
               </button>

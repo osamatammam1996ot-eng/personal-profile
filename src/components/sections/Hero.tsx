@@ -80,22 +80,11 @@ export function Hero({ isDark }: HeroProps) {
   return (
     <section
       id="home"
-      className="relative flex flex-col items-center justify-center min-h-[100vh] overflow-hidden px-6"
-      style={{
-        background: dark ? '#0b0822' : '#f5f5fa',
-        transition: 'background 0.4s ease',
-      }}
+      className="relative flex flex-col items-center justify-center min-h-[100vh] overflow-hidden px-6 bg-hero-bg transition-[background] duration-[0.4s] ease-[ease]"
     >
       <HexGrid isDark={dark} />
 
-      <div
-        className="absolute inset-0 z-10 pointer-events-none"
-        style={{
-          background: dark
-            ? 'radial-gradient(ellipse 72% 85% at 50% 50%, rgba(8,8,16,0.65) 0%, rgba(8,8,16,0.38) 60%, transparent 100%)'
-            : 'radial-gradient(ellipse 72% 85% at 50% 50%, rgba(245,245,250,0.68) 0%, rgba(245,245,250,0.32) 60%, transparent 100%)',
-        }}
-      />
+      <div className="absolute inset-0 z-10 pointer-events-none hero-overlay" />
 
       {/* Overlay layer requested by user */}
       <div className="absolute inset-0 z-[15] pointer-events-none bg-overlay" />
@@ -124,13 +113,12 @@ export function Hero({ isDark }: HeroProps) {
                 initial={{ opacity: 0, scale: 0.88, y: -16 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
-                style={{ marginBottom: 'clamp(28px, 4vh, 44px)', flexShrink: 0 }}
-                className="w-[280px] sm:w-[320px] md:w-[26vw] md:min-w-[240px] md:max-w-[320px]"
+                className="mb-[clamp(28px,4vh,44px)] shrink-0 w-[280px] sm:w-[320px] md:w-[26vw] md:min-w-[240px] md:max-w-[320px]"
               >
                 <img
                   src={dark ? "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnhtMHpidGVkY205d3l3MjVhZ3lxbHo1N3Y0M2tjMW1hNGZiZ3dmbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/xrYXNJcnSJkhB02STp/giphy.gif" : (typeof lightAvatarImg === 'string' ? lightAvatarImg : (lightAvatarImg as any).src)}
                   alt="Osama Tammam"
-                  style={dark ? { width: '100%', height: 'auto', maxWidth: '480px', display: 'block', marginBottom: '-15%', clipPath: 'inset(0 0 20px 0)' } : { width: '100%', height: 'auto', maxWidth: '480px', display: 'block' }}
+                  className={`w-full h-auto max-w-[480px] block ${dark ? '-mb-[15%] [clip-path:inset(0_0_20px_0)]' : ''}`}
                 />
               </motion.div>
             );
@@ -143,8 +131,7 @@ export function Hero({ isDark }: HeroProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay, ease: [0.4, 0, 0.2, 1] }}
-                className="text-sm"
-                style={{ fontFamily: fontBody, fontWeight: 400, letterSpacing: isRTL ? '0.06em' : '0.16em', textTransform: 'none', color: dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)', marginBottom: '18px' }}
+                className={`text-sm font-normal mb-[18px] text-text-faint ${isRTL ? 'tracking-[0.06em]' : 'tracking-[0.16em]'}`}
               >
                 {heroLabel}
               </motion.p>
@@ -177,19 +164,21 @@ export function Hero({ isDark }: HeroProps) {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay, ease: [0.4, 0, 0.2, 1] }}
-                style={{ marginBottom: '24px' }}
+                className="mb-6"
               >
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '10px 24px', borderRadius: '999px', background: dark ? 'rgba(99,102,241,0.18)' : 'rgba(99,102,241,0.10)', border: dark ? '1px solid rgba(165,180,252,0.25)' : '1px solid rgba(99,102,241,0.22)', boxShadow: dark ? '0 0 28px rgba(99,102,241,0.22), inset 0 1px 0 rgba(255,255,255,0.06)' : '0 0 20px rgba(99,102,241,0.12)' }}>
-                  <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ position: 'absolute', width: 10, height: 10, borderRadius: '50%', background: '#6366f1', opacity: 0.35, animation: 'ping 1.4s cubic-bezier(0,0,0.2,1) infinite' }} />
-                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 0 8px rgba(99,102,241,0.8)', display: 'inline-block' }} />
+                <span className={`roles-badge ${dark ? 'roles-badge-dark' : 'roles-badge-light'}`}>
+                  <span className="relative inline-flex items-center justify-center">
+                    <span className="ping-dot-outer" />
+                    <span className="ping-dot-inner" />
                   </span>
-                  <span className="font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)]" style={{ letterSpacing: '-0.01em', direction: isRTL ? 'rtl' : 'ltr', color: dark ? '#ffffff' : '#000000' }}>
+                  <span className={`font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)] tracking-[-0.01em] text-foreground ${isRTL ? 'direction-rtl' : 'direction-ltr'}`}>
                     {displayText}
-                    <span style={{ display: 'inline-block', width: 2.5, height: '0.9em', background: dark ? '#a5b4fc' : '#6366f1', borderRadius: 2, marginLeft: isRTL ? 0 : 4, marginRight: isRTL ? 4 : 0, verticalAlign: 'middle', opacity: showCursor ? 1 : 0, transition: 'opacity 0.1s', boxShadow: '0 0 8px rgba(99,102,241,0.9)' }} />
+                    <span
+                      className={`typing-cursor bg-indigo-light dark:bg-indigo-light ${isRTL ? 'mr-1' : 'ml-1'}`}
+                      style={{ opacity: showCursor ? 1 : 0 }}
+                    />
                   </span>
                 </span>
-                <style>{`@keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }`}</style>
               </motion.div>
             );
           }
@@ -201,8 +190,7 @@ export function Hero({ isDark }: HeroProps) {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay, ease: [0.4, 0, 0.2, 1] }}
-                className="font-body text-lg leading-[1.78] max-w-[540px] mb-6"
-                style={{ color: dark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)', whiteSpace: 'pre-line' }}
+                className="font-body text-lg leading-[1.78] max-w-[540px] mb-6 text-text-muted whitespace-pre-line"
               >
                 {heroDesc}
               </motion.p>
@@ -216,8 +204,7 @@ export function Hero({ isDark }: HeroProps) {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay, ease: [0.4, 0, 0.2, 1] }}
-                className="flex flex-wrap items-center justify-center gap-3"
-                style={{ marginBottom: '52px' }}
+                className="flex flex-wrap items-center justify-center gap-3 mb-[52px]"
               >
                 <CTAButton onClick={() => scrollToSection('work')}>
                   <span className="flex items-center gap-2">
@@ -245,15 +232,11 @@ export function Hero({ isDark }: HeroProps) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4 }}
       >
-        <p className={`font-body text-xs tracking-widest text-text-secondary`} style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)' }}>
+        <p className="font-body text-xs tracking-widest text-text-faint">
           {heroScroll}
         </p>
         <motion.div
-          style={{
-            width: 1,
-            height: 36,
-            background: 'linear-gradient(to bottom, #6366f1, transparent)',
-          }}
+          className="w-px h-9 scroll-indicator-line"
           animate={{ scaleY: [0.3, 1, 0.3], opacity: [0.4, 1, 0.4] }}
           transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
         />

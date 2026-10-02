@@ -459,23 +459,9 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
       className="relative w-full bg-surface transition-colors duration-300 overflow-hidden"
     >
       {/* ── Background grid overlay ── */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: [
-            `linear-gradient(color-mix(in srgb, var(--color-brand) 5%, transparent) 1px, transparent 1px)`,
-            `linear-gradient(90deg, color-mix(in srgb, var(--color-brand) 5%, transparent) 1px, transparent 1px)`,
-          ].join(', '),
-          backgroundSize: '60px 60px',
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none grid-pattern" />
       {/* Fade out edges of grid without expensive CSS masks */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 90% 80% at 50% 35%, transparent 0%, var(--surface) 70%)'
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none grid-pattern-fade" />
 
       {/* ── Ambient glow blobs ── */}
       <div
@@ -511,10 +497,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
       />
 
       {/* ── CONTENT ─ */}
-      <div
-        className="relative w-full flex flex-col items-center"
-        style={{ paddingTop: '10vh', paddingBottom: 0 }}
-      >
+      <div className="relative w-full flex flex-col items-center pt-[10vh] pb-0">
 
         {/* ── BIG TITLE ── */}
         <motion.div
@@ -545,22 +528,14 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
 
         {/* ── PORTRAIT ── */}
         <div
-          className="relative w-full flex justify-center"
-          style={{
-            marginTop: '2vh',
-            maxWidth: 1380,
-            alignSelf: 'center',
-          }}
+          className="relative w-full flex justify-center mt-[2vh] max-w-[1380px] self-center"
         >
           {/* Portrait glow cloud */}
           <div
-            className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none w-[60%] h-[55%] z-[1]"
             style={{
-              width: '60%',
-              height: '55%',
               background: 'radial-gradient(ellipse 70% 70% at 50% 80%, rgba(99,102,241,0.38) 0%, rgba(139,92,246,0.18) 45%, transparent 70%)',
               filter: 'blur(28px)',
-              zIndex: 1,
             }}
           />
 
@@ -570,33 +545,15 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
-            className="relative w-full"
-            style={{ zIndex: 2 }}
+            className="relative w-full z-[2]"
           >
             <div
-              className="relative w-full overflow-hidden"
-              style={{ paddingBottom: '35%' }}
+              className="relative w-full overflow-hidden pb-[35%]"
             >
               <img
                 src={typeof imgPortrait === 'string' ? imgPortrait : (imgPortrait as any).src}
                 alt="Osama Tammam"
-                style={{
-                  position: 'absolute',
-                  width: '101.3%',
-                  left: '-0.64%',
-                  top: '-2%',
-                  height: '140%',
-                  objectFit: 'cover',
-                  objectPosition: 'top center',
-                  display: 'block',
-                  WebkitMaskImage: [
-                    'radial-gradient(ellipse 55% 95% at 50% 10%, black 20%, rgba(0,0,0,0.7) 45%, transparent 70%)',
-                  ].join(', '),
-                  maskImage: [
-                    'radial-gradient(ellipse 55% 95% at 50% 10%, black 20%, rgba(0,0,0,0.7) 45%, transparent 70%)',
-                  ].join(', '),
-                  filter: 'brightness(1.08) contrast(1.04) saturate(1.05)',
-                }}
+                className="portrait-img"
               />
               <EyeOverlay smX={smX} smY={smY} />
             </div>
@@ -606,12 +563,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
 
       {/* ── Bottom fade into next section ── */}
       <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none"
-        style={{
-          height: 200,
-          background: `linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 60%, transparent) 40%, var(--color-surface) 100%)`,
-          zIndex: 10,
-        }}
+        className="absolute bottom-0 left-0 right-0 pointer-events-none h-[200px] section-fade-bottom z-10"
       />
     </section>
   );

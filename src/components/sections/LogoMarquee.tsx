@@ -48,45 +48,27 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
 
   if (!cmsData?.sections.logoMarquee || set.length === 0) return null;
 
-  const fadeL = 'linear-gradient(to right, rgba(41,27,92,1), rgba(41,27,92,0))';
-  const fadeR = 'linear-gradient(to left, rgba(41,27,92,1), rgba(41,27,92,0))';
-
   const LogoSlot = ({ logo, uid }: { logo: any; uid: string }) => (
     <div
       key={uid}
-      style={{
-        width: SLOT_PX,
-        flexShrink: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        opacity: 0.65,
-      }}
+      className="w-[200px] shrink-0 flex items-center justify-center opacity-65"
     >
       <Image
         src={logo.url}
         alt={logo.name}
         width={120}
         height={40}
-        style={{ objectFit: 'contain', maxHeight: 40, width: 120, height: 40 }}
+        className="object-contain max-h-10 w-[120px] h-10"
         unoptimized
       />
     </div>
   );
 
   return (
-    <section style={{
-      width: '100%',
-      overflow: 'hidden',
-      borderTop: '1px solid rgba(255,255,255,0.06)',
-      borderBottom: '1px solid rgba(255,255,255,0.06)',
-      padding: '28px 0',
-      position: 'relative',
-      background: 'rgba(41,27,92,1)',
-    }}>
+    <section className="w-full overflow-hidden border-y border-white/6 py-7 relative bg-marquee-bg">
       {/* Fade edges */}
-      <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 100, background: fadeL, zIndex: 2, pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 100, background: fadeR, zIndex: 2, pointerEvents: 'none' }} />
+      <div className="absolute top-0 left-0 bottom-0 w-[100px] fade-edge-l z-[2] pointer-events-none" />
+      <div className="absolute top-0 right-0 bottom-0 w-[100px] fade-edge-r z-[2] pointer-events-none" />
 
       {/*
         The row is (2 * setWidth) pixels wide.
@@ -97,12 +79,8 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
       */}
       <div
         ref={wrapRef}
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          width: setWidth * 2,   // exact pixel width — no max-content
-          willChange: 'transform',
-        }}
+        className="flex flex-row will-change-transform"
+        style={{ width: setWidth * 2 }}
       >
         {set.map((logo, i) => <LogoSlot key={'a' + i} logo={logo} uid={'a' + i} />)}
         {set.map((logo, i) => <LogoSlot key={'b' + i} logo={logo} uid={'b' + i} />)}

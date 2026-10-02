@@ -71,6 +71,22 @@
   --overlay: rgba(255, 255, 255, 0.05);
   --vignette: radial-gradient(circle, transparent 30%, rgba(255,255,255,0.95) 120%);
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.08);
+
+  /* --- REFACTOR: Component-specific tokens (were inline) --- */
+  --hero-bg: #f5f5fa;
+  --nav-bg-scrolled: rgba(245, 245, 250, 0.85);
+  --nav-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+  --marquee-bg: rgba(41, 27, 92, 1);
+  --indigo-glow: #6366f1;
+  --indigo-light: #a5b4fc;
+  --text-faint: rgba(0, 0, 0, 0.35);
+  --text-dim: rgba(0, 0, 0, 0.55);
+  --nav-link-active: #6366f1;
+  --nav-link-inactive: rgba(0, 0, 0, 0.55);
+  --footer-text: rgba(0, 0, 0, 0.4);
+  --footer-link: rgba(0, 0, 0, 0.45);
+  --hero-overlay: radial-gradient(ellipse 72% 85% at 50% 50%, rgba(245,245,250,0.68) 0%, rgba(245,245,250,0.32) 60%, transparent 100%);
+  --indigo-gradient: linear-gradient(90deg, #6366f1, #8b5cf6);
   --input: transparent;
   --input-background: #f3f3f5;
   --switch-background: #cbced4;
@@ -138,6 +154,22 @@
   --overlay: rgba(0, 0, 0, 0.05);
   --vignette: radial-gradient(circle, transparent 30%, rgba(0,0,0,1) 120%);
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.3);
+
+  /* --- REFACTOR: Component-specific tokens (were inline) --- */
+  --hero-bg: #0b0822;
+  --nav-bg-scrolled: rgba(8, 8, 16, 0.85);
+  --nav-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+  --marquee-bg: rgba(41, 27, 92, 1);
+  --indigo-glow: #6366f1;
+  --indigo-light: #a5b4fc;
+  --text-faint: rgba(255, 255, 255, 0.35);
+  --text-dim: rgba(255, 255, 255, 0.65);
+  --nav-link-active: #a5b4fc;
+  --nav-link-inactive: rgba(255, 255, 255, 0.65);
+  --footer-text: rgba(255, 255, 255, 0.4);
+  --footer-link: rgba(255, 255, 255, 0.45);
+  --hero-overlay: radial-gradient(ellipse 72% 85% at 50% 50%, rgba(8,8,16,0.65) 0%, rgba(8,8,16,0.38) 60%, transparent 100%);
+  --indigo-gradient: linear-gradient(90deg, #6366f1, #8b5cf6);
   --input: oklch(0.269 0 0);
   --input-background: rgba(255, 255, 255, 0.05);
   --switch-background: rgba(255, 255, 255, 0.1);
@@ -213,6 +245,19 @@
   --color-focus-ring: var(--focus-ring);
   --color-overlay: var(--overlay);
   --drop-shadow-card: var(--shadow-card);
+
+  /* --- REFACTOR: New token mappings --- */
+  --color-hero-bg: var(--hero-bg);
+  --color-nav-bg-scrolled: var(--nav-bg-scrolled);
+  --color-marquee-bg: var(--marquee-bg);
+  --color-indigo-glow: var(--indigo-glow);
+  --color-indigo-light: var(--indigo-light);
+  --color-text-faint: var(--text-faint);
+  --color-text-dim: var(--text-dim);
+  --color-nav-link-active: var(--nav-link-active);
+  --color-nav-link-inactive: var(--nav-link-inactive);
+  --color-footer-text: var(--footer-text);
+  --color-footer-link: var(--footer-link);
   --drop-shadow-cursor: 0 0 8px var(--cursor-glow), 0 0 20px var(--cursor-glow);
   
   --color-input: var(--input);
@@ -243,6 +288,117 @@
 @layer utilities {
   .bg-vignette {
     background-image: var(--vignette);
+  }
+
+  /* --- REFACTOR: Reusable pattern utilities --- */
+  .glass-nav {
+    background: var(--nav-bg-scrolled);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--nav-shadow);
+  }
+
+  .hero-overlay {
+    background: var(--hero-overlay);
+  }
+
+  .fade-edge-l {
+    background: linear-gradient(to right, var(--marquee-bg), transparent);
+  }
+
+  .fade-edge-r {
+    background: linear-gradient(to left, var(--marquee-bg), transparent);
+  }
+
+  .grid-pattern {
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--color-brand) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--color-brand) 5%, transparent) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .grid-pattern-fade {
+    background: radial-gradient(ellipse 90% 80% at 50% 35%, transparent 0%, var(--surface) 70%);
+  }
+
+  .section-fade-bottom {
+    background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 60%, transparent) 40%, var(--color-surface) 100%);
+  }
+
+  .portrait-img {
+    position: absolute;
+    width: 101.3%;
+    left: -0.64%;
+    top: -2%;
+    height: 140%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    -webkit-mask-image: radial-gradient(ellipse 55% 95% at 50% 10%, black 20%, rgba(0,0,0,0.7) 45%, transparent 70%);
+    mask-image: radial-gradient(ellipse 55% 95% at 50% 10%, black 20%, rgba(0,0,0,0.7) 45%, transparent 70%);
+    filter: brightness(1.08) contrast(1.04) saturate(1.05);
+  }
+
+  .roles-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    border-radius: 999px;
+  }
+
+  .roles-badge-dark {
+    background: rgba(99, 102, 241, 0.18);
+    border: 1px solid rgba(165, 180, 252, 0.25);
+    box-shadow: 0 0 28px rgba(99, 102, 241, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .roles-badge-light {
+    background: rgba(99, 102, 241, 0.10);
+    border: 1px solid rgba(99, 102, 241, 0.22);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.12);
+  }
+
+  .typing-cursor {
+    display: inline-block;
+    width: 2.5px;
+    height: 0.9em;
+    border-radius: 2px;
+    vertical-align: middle;
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.9);
+    transition: opacity 0.1s;
+  }
+
+  .ping-dot-outer {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #6366f1;
+    opacity: 0.35;
+    animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .ping-dot-inner {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.8);
+    display: inline-block;
+  }
+
+  .glow-brand {
+    background: radial-gradient(circle, var(--brand) 0%, transparent 70%);
+    filter: blur(100px);
+  }
+
+  .glow-info {
+    background: radial-gradient(circle, var(--info) 0%, transparent 70%);
+    filter: blur(80px);
+  }
+
+  .scroll-indicator-line {
+    background: linear-gradient(to bottom, #6366f1, transparent);
   }
 }
 

@@ -206,10 +206,7 @@ export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
       className="relative w-full py-24 md:py-32 bg-surface transition-colors duration-300"
     >
       <div
-        className="absolute inset-0 pointer-events-none opacity-5 dark:opacity-10"
-        style={{
-          backgroundImage: 'radial-gradient(circle at 50% 0%, var(--color-brand) 0%, transparent 60%)'
-        }}
+        className="absolute inset-0 pointer-events-none opacity-5 dark:opacity-10 glow-brand"
       />
 
       {/* Decorative 3D shape — bottom-right */}

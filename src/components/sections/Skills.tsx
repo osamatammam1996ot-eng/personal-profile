@@ -331,29 +331,18 @@ export function Skills({ isDark }: SkillsProps) {
           
           {/* Core radial glow behind the 3D object */}
           <div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[800px] h-[600px] md:h-[800px] rounded-full opacity-10 dark:opacity-15" 
-            style={{
-              background: 'radial-gradient(circle, var(--brand) 0%, transparent 70%)',
-              filter: 'blur(100px)'
-            }} 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[800px] h-[600px] md:h-[800px] rounded-full opacity-10 dark:opacity-15 glow-brand" 
           />
           
           {/* Secondary ambient glow (Cyan/Info) */}
           <div 
-            className="absolute top-[20%] left-[20%] w-[400px] h-[400px] rounded-full opacity-5 dark:opacity-10"
-            style={{
-              background: 'radial-gradient(circle, var(--info) 0%, transparent 70%)',
-              filter: 'blur(80px)'
-            }}
+            className="absolute top-[20%] left-[20%] w-[400px] h-[400px] rounded-full opacity-5 dark:opacity-10 glow-info"
           />
           
           {/* Tertiary ambient glow (Purple/Brand) */}
           <div 
-            className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] rounded-full opacity-5 dark:opacity-[0.10]"
-            style={{
-              background: 'radial-gradient(circle, var(--brand) 0%, transparent 70%)',
-              filter: 'blur(90px)'
-            }}
+            className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] rounded-full opacity-5 dark:opacity-[0.10] glow-brand"
+            style={{ filter: 'blur(90px)' }}
           />
         </div>
 
