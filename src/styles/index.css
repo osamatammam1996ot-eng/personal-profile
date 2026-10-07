@@ -531,8 +531,12 @@
   }
 
   .why-card-halo {
-    background: radial-gradient(ellipse 85% 75% at 50% 65%, color-mix(in srgb, var(--brand) 33%, transparent) 0%, transparent 68%);
+    background: radial-gradient(ellipse 85% 75% at 50% 65%, color-mix(in srgb, var(--brand) 12%, transparent) 0%, transparent 68%);
     filter: blur(14px);
+  }
+
+  .dark .why-card-halo {
+    background: radial-gradient(ellipse 85% 75% at 50% 65%, color-mix(in srgb, var(--brand) 33%, transparent) 0%, transparent 68%);
   }
 
   .why-card-ring {

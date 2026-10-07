@@ -74,7 +74,18 @@ const CARDS_VISUAL = [
 ];
 
 // Lift-and-glow filter for the hovered card (animated by motion, so not a class)
-const HOVER_GLOW = 'drop-shadow(0 0 32px color-mix(in srgb, var(--color-brand) 86%, transparent)) drop-shadow(0 18px 48px color-mix(in srgb, var(--color-brand) 40%, transparent))';
+// Light mode gets a much softer glow, and dims the other cards by fading them
+// rather than darkening (darkening turns white cards grey).
+const HOVER_LOOK = {
+  dark: {
+    glow: 'drop-shadow(0 0 32px color-mix(in srgb, var(--color-brand) 86%, transparent)) drop-shadow(0 18px 48px color-mix(in srgb, var(--color-brand) 40%, transparent))',
+    sibling: { filter: 'brightness(0.55) saturate(0.7)', opacity: 1 },
+  },
+  light: {
+    glow: 'drop-shadow(0 0 10px color-mix(in srgb, var(--color-brand) 20%, transparent)) drop-shadow(0 10px 22px color-mix(in srgb, var(--color-brand) 12%, transparent))',
+    sibling: { filter: 'brightness(1) saturate(0.6)', opacity: 0.6 },
+  },
+};
 
 // ─── Tilt card ───────────────────────────────────────────────────────────────
 type CardWithText = typeof CARDS_VISUAL[0] & { title: string; desc: string };
@@ -156,6 +167,7 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
 // ─── Cards row with hover state ──────────────────────────────────────────────
 function CardsRow({ isDark }: { isDark: boolean }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const look = isDark ? HOVER_LOOK.dark : HOVER_LOOK.light;
   const { lang } = useLanguage();
   const { cmsData } = useCms();
 
@@ -193,10 +205,10 @@ function CardsRow({ isDark }: { isDark: boolean }) {
             onHoverStart={() => setHoveredId(card.id)}
             onHoverEnd={() => setHoveredId(null)}
             animate={isHovered
-              ? { y: -22, scale: 1.07, zIndex: 30, filter: HOVER_GLOW }
+              ? { y: -22, scale: 1.07, zIndex: 30, filter: look.glow, opacity: 1 }
               : isSibling
-              ? { y: [0, -10 - i * 3, 0, -6 - i * 2, 0], scale: 0.94, zIndex: 1, filter: 'brightness(0.55) saturate(0.7)' }
-              : { y: [0, -10 - i * 3, 0, -6 - i * 2, 0], scale: 1, zIndex: 1, filter: 'brightness(1) saturate(1)' }
+              ? { y: [0, -10 - i * 3, 0, -6 - i * 2, 0], scale: 0.94, zIndex: 1, ...look.sibling }
+              : { y: [0, -10 - i * 3, 0, -6 - i * 2, 0], scale: 1, zIndex: 1, filter: 'brightness(1) saturate(1)', opacity: 1 }
             }
             transition={isHovered
               ? { duration: 0.38, ease: [0.34, 1.56, 0.64, 1] }
