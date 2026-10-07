@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useInView } from 'motion/react';
+import { parseColor, readToken } from '../../../lib/theme-tokens';
 
 interface DustCanvasProps {
   isDark: boolean;
@@ -45,8 +46,6 @@ export function DustCanvas({ isDark, className = '' }: DustCanvasProps) {
         return;
       }
       cx!.clearRect(0, 0, W, H);
-      // Use indigo/violet matching site's accent palette
-      const dustColor = isDark ? '99,102,241' : '139,92,246';
       for (const p of pts) {
         p.x += p.vx; p.y += p.vy;
         if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
@@ -58,6 +57,9 @@ export function DustCanvas({ isDark, className = '' }: DustCanvasProps) {
       }
       rafId = requestAnimationFrame(draw);
     }
+
+    // Dust takes the brand-hover color; re-read whenever the theme changes
+    const dustColor = parseColor(readToken('--brand-hover')).slice(0, 3).join(',');
 
     function onResize() { resize(); make(); }
     resize(); make(); 

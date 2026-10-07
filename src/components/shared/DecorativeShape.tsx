@@ -3,7 +3,7 @@
  *
  * Renders a single abstract 3D shape using raw Three.js (no R3F).
  * Matches the visual language of the Tools section's dodecahedron:
- * dark translucent glass material, violet/indigo/cyan lighting, wireframe overlay.
+ * translucent glass material and lighting derived from the --brand token, wireframe overlay.
  *
  * Features:
  * - Mouse-follow tilt with spring-damped lerp
@@ -17,6 +17,7 @@
 
 import { useRef, useEffect, memo } from 'react';
 import * as THREE from 'three';
+import { getDecorPalette } from '../../lib/scene-palette';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
 type ShapeType = 'icosahedron' | 'octahedron' | 'dodecahedron' | 'torusKnot';
@@ -48,20 +49,48 @@ function createGeometry(shape: ShapeType): THREE.BufferGeometry {
   }
 }
 
-/* ─── Position styles ───────────────────────────────────────────────────────── */
+/* ─── Theme colors ──────────────────────────────────────────────────────────── */
+interface DecorMaterials {
+  shellMat: THREE.MeshPhongMaterial;
+  wireMat: THREE.MeshBasicMaterial;
+  ambLight: THREE.AmbientLight;
+  keyLight: THREE.DirectionalLight;
+  rimLight: THREE.DirectionalLight;
+  fillLight: THREE.PointLight;
+}
+
+/* Material/light strengths per theme */
+const DECOR_LOOK = {
+  dark:  { shininess: 80,  shellOpacity: 0.55, wireOpacity: 0.15, amb: 0.45, key: 0.9, rim: 0.5, fill: 0.4 },
+  light: { shininess: 140, shellOpacity: 0.60, wireOpacity: 0.18, amb: 0.5,  key: 1.4, rim: 0.8, fill: 0.4 },
+};
+
+function applyDecorPalette(s: DecorMaterials, isDark: boolean) {
+  const p = getDecorPalette(isDark);
+  const look = isDark ? DECOR_LOOK.dark : DECOR_LOOK.light;
+
+  s.shellMat.color.set(p.shell);
+  s.shellMat.emissive.set(p.emissive);
+  s.shellMat.specular.set(p.specular);
+  s.shellMat.shininess = look.shininess;
+  s.shellMat.opacity = look.shellOpacity;
+  s.wireMat.color.set(p.wire);
+  s.wireMat.opacity = look.wireOpacity;
+  s.ambLight.color.set(p.ambient); s.ambLight.intensity = look.amb;
+  s.keyLight.color.set(p.key);     s.keyLight.intensity = look.key;
+  s.rimLight.color.set(p.rim);     s.rimLight.intensity = look.rim;
+  s.fillLight.color.set(p.fill);   s.fillLight.intensity = look.fill;
+  s.shellMat.needsUpdate = true;
+  s.wireMat.needsUpdate = true;
+}
+
+/* ─── Position styles (size & crop are props, so these stay inline) ────────── */
 function getPositionStyle(
   position: PositionVariant,
   size: number,
   crop: number,
 ): React.CSSProperties {
-  const base: React.CSSProperties = {
-    position: 'absolute',
-    width: size,
-    height: size,
-    pointerEvents: 'none',
-    overflow: 'visible',
-    zIndex: 18,
-  };
+  const base: React.CSSProperties = { width: size, height: size };
 
   switch (position) {
     case 'bottom-left':
@@ -118,39 +147,7 @@ export const DecorativeShape = memo(function DecorativeShape({
   useEffect(() => {
     const s = sceneRef.current;
     if (!s) return;
-
-    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDark ? '#b32d4b' : '#800020');
-    const brandColor = new THREE.Color(rawBrand);
-    const brandHsl = { h: 0, s: 0, l: 0 };
-    brandColor.getHSL(brandHsl);
-
-    if (isDark) {
-      s.shellMat.color.setHSL(brandHsl.h, brandHsl.s * 0.8, brandHsl.l * 0.3);
-      s.shellMat.emissive.setHSL(brandHsl.h, brandHsl.s, brandHsl.l * 0.5);
-      s.shellMat.specular.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.5, 1));
-      s.shellMat.shininess = 80;
-      s.shellMat.opacity = 0.55;
-      s.wireMat.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1));
-      s.wireMat.opacity = 0.15;
-      s.ambLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); s.ambLight.intensity = 0.45;
-      s.keyLight.color.set(0xffffff); s.keyLight.intensity = 0.9;
-      s.rimLight.color.setHSL((brandHsl.h + 0.05) % 1.0, brandHsl.s, Math.min(brandHsl.l * 1.5, 1)); s.rimLight.intensity = 0.5;
-      s.fillLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); s.fillLight.intensity = 0.4;
-    } else {
-      s.shellMat.color.setHSL(brandHsl.h, brandHsl.s * 0.5, Math.min(brandHsl.l * 2.5, 0.95));
-      s.shellMat.emissive.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.5, 0.9));
-      s.shellMat.specular.set(0xffffff);
-      s.shellMat.shininess = 140;
-      s.shellMat.opacity = 0.60;
-      s.wireMat.color.setHSL(brandHsl.h, brandHsl.s, brandHsl.l);
-      s.wireMat.opacity = 0.18;
-      s.ambLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 2.5, 0.9)); s.ambLight.intensity = 0.5;
-      s.keyLight.color.set(0xffffff); s.keyLight.intensity = 1.4;
-      s.rimLight.color.setHSL(brandHsl.h, brandHsl.s, brandHsl.l); s.rimLight.intensity = 0.8;
-      s.fillLight.color.setHSL((brandHsl.h + 0.05) % 1.0, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); s.fillLight.intensity = 0.4;
-    }
-    s.shellMat.needsUpdate = true;
-    s.wireMat.needsUpdate = true;
+    applyDecorPalette(s, isDark);
 
     // If reduced motion, do a single re-render with new colors
     if (reducedMotionRef.current && s.initialized) {
@@ -186,26 +183,26 @@ export const DecorativeShape = memo(function DecorativeShape({
     const dpr = Math.min(window.devicePixelRatio, 1.5);
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(dpr);
-    renderer.setClearColor(0x000000, 0);
+    renderer.setClearAlpha(0);
     renderer.setSize(effectiveSize, effectiveSize, false);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
     camera.position.z = 4.2;
 
-    // Lights
-    const ambLight = new THREE.AmbientLight(0x9988ff, 0.45);
+    // Lights & materials — colored from the theme tokens by applyDecorPalette
+    const ambLight = new THREE.AmbientLight();
     scene.add(ambLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    const keyLight = new THREE.DirectionalLight();
     keyLight.position.set(3, 4, 5);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.5);
+    const rimLight = new THREE.DirectionalLight();
     rimLight.position.set(-4, -1, -3);
     scene.add(rimLight);
 
-    const fillLight = new THREE.PointLight(0xa855f7, 0.4, 14);
+    const fillLight = new THREE.PointLight(undefined, 1, 14);
     fillLight.position.set(-2, 3, 2);
     scene.add(fillLight);
 
@@ -214,57 +211,17 @@ export const DecorativeShape = memo(function DecorativeShape({
     root.rotation.set(rotationOffset[0], rotationOffset[1], rotationOffset[2]);
     scene.add(root);
 
-    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDarkRef.current ? '#b32d4b' : '#800020');
-    const brandColor = new THREE.Color(rawBrand);
-    const brandHsl = { h: 0, s: 0, l: 0 };
-    brandColor.getHSL(brandHsl);
-
     // Shell mesh
     const geom = createGeometry(shape);
-    const shellMat = new THREE.MeshPhongMaterial({
-      color: 0xffffff,
-      emissive: 0xffffff,
-      specular: 0xffffff,
-      transparent: true,
-      side: THREE.DoubleSide,
-    });
+    const shellMat = new THREE.MeshPhongMaterial({ transparent: true, side: THREE.DoubleSide });
     root.add(new THREE.Mesh(geom, shellMat));
 
     // Wireframe overlay
     const wireGeom = createGeometry(shape);
-    const wireMat = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      wireframe: true,
-      transparent: true,
-    });
+    const wireMat = new THREE.MeshBasicMaterial({ wireframe: true, transparent: true });
     root.add(new THREE.Mesh(wireGeom, wireMat));
 
-    // Initial color application
-    if (isDarkRef.current) {
-      shellMat.color.setHSL(brandHsl.h, brandHsl.s * 0.8, brandHsl.l * 0.3);
-      shellMat.emissive.setHSL(brandHsl.h, brandHsl.s, brandHsl.l * 0.5);
-      shellMat.specular.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.5, 1));
-      shellMat.shininess = 80;
-      shellMat.opacity = 0.55;
-      wireMat.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1));
-      wireMat.opacity = 0.15;
-      ambLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); ambLight.intensity = 0.45;
-      keyLight.color.set(0xffffff); keyLight.intensity = 0.9;
-      rimLight.color.setHSL((brandHsl.h + 0.05) % 1.0, brandHsl.s, Math.min(brandHsl.l * 1.5, 1)); rimLight.intensity = 0.5;
-      fillLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); fillLight.intensity = 0.4;
-    } else {
-      shellMat.color.setHSL(brandHsl.h, brandHsl.s * 0.5, Math.min(brandHsl.l * 2.5, 0.95));
-      shellMat.emissive.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.5, 0.9));
-      shellMat.specular.set(0xffffff);
-      shellMat.shininess = 140;
-      shellMat.opacity = 0.60;
-      wireMat.color.setHSL(brandHsl.h, brandHsl.s, brandHsl.l);
-      wireMat.opacity = 0.18;
-      ambLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 2.5, 0.9)); ambLight.intensity = 0.5;
-      keyLight.color.set(0xffffff); keyLight.intensity = 1.4;
-      rimLight.color.setHSL(brandHsl.h, brandHsl.s, brandHsl.l); rimLight.intensity = 0.8;
-      fillLight.color.setHSL((brandHsl.h + 0.05) % 1.0, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); fillLight.intensity = 0.4;
-    }
+    applyDecorPalette({ shellMat, wireMat, ambLight, keyLight, rimLight, fillLight }, isDarkRef.current);
 
     // Store refs
     const sceneState = {
@@ -410,16 +367,10 @@ export const DecorativeShape = memo(function DecorativeShape({
       aria-hidden="true"
       role="presentation"
       tabIndex={-1}
+      className="absolute z-[18] overflow-visible pointer-events-none"
       style={getPositionStyle(position, size, cropAmount)}
     >
-      <canvas
-        ref={canvasRef}
-        style={{
-          display: 'block',
-          width: '100%',
-          height: '100%',
-        }}
-      />
+      <canvas ref={canvasRef} className="block w-full h-full" />
     </div>
   );
 });

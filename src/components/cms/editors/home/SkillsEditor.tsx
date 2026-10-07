@@ -9,7 +9,7 @@ interface SkillsEditorProps {
 export function SkillsEditor({ draft, updateDraft }: SkillsEditorProps) {
   return (
     <div className="grid gap-3">
-      <h2 className="text-white mt-0">Skills Section</h2>
+      <h2 className="text-admin-fg mt-0">Skills Section</h2>
       <BilingualField
         label="Heading 1"
         en={draft.skills.heading1.en}
@@ -41,7 +41,7 @@ export function SkillsEditor({ draft, updateDraft }: SkillsEditorProps) {
         };
         return (
           <div key={index} className={cardClasses}>
-            <p className="m-0 mb-2.5 text-white font-bold text-base">Discipline {index + 1}</p>
+            <p className="m-0 mb-2.5 text-admin-fg font-bold text-base">Discipline {index + 1}</p>
             <div className="grid gap-2.5">
               <BilingualField
                 label="Title"

@@ -5,6 +5,9 @@ import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useCms } from '../../contexts/CmsContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 
+// Prev/next arrows over the media viewer
+const NAV_BUTTON = 'absolute z-[210] flex items-center justify-center rounded-full bg-scrim/50 border border-on-media/10 text-on-media backdrop-blur-md cursor-pointer hover:bg-on-media/10 transition-colors bottom-[110px] md:bottom-auto md:top-1/2 md:-translate-y-1/2 size-12 md:size-14';
+
 interface CaseStudyProps {
   projectId: number;
   projectTitle: string;
@@ -65,10 +68,15 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'var(--background)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        className="fixed inset-0 z-[200] flex items-center justify-center bg-background"
       >
-        <button onClick={onClose} style={{ position: 'fixed', top: 32, right: 32, width: 40, height: 40, borderRadius: 8, background: 'rgba(99,102,241,0.1)', color: 'var(--brand)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
-        <p style={{ color: 'var(--text-primary)' }}>Case study media not found.</p>
+        <button
+          onClick={onClose}
+          className="fixed top-8 right-8 size-10 rounded-lg flex items-center justify-center border-none cursor-pointer bg-brand/10 text-brand"
+        >
+          ✕
+        </button>
+        <p className="text-text-primary">Case study media not found.</p>
       </motion.div>
     );
   }
@@ -87,44 +95,35 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
       className="fixed inset-0 z-[200] flex flex-col bg-overlay"
     >
       {/* Header */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 80, zIndex: 210,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 32px', background: 'linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span className="text-xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+      <div className="absolute top-0 left-0 right-0 h-20 z-[210] flex items-center justify-between px-8 scrim-fade-down">
+        <div className="flex items-center gap-4">
+          <span className="text-xl font-semibold tracking-tight text-text-primary">
             {data.title}
           </span>
-          <span className="text-base" style={{ color: 'var(--text-muted)' }}>
+          <span className="text-base text-text-muted">
             {currentIndex + 1} / {media.length || 1}
           </span>
         </div>
-        
+
         <motion.button
           onClick={onClose}
-          whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+          whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          style={{
-            width: 44, height: 44, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', color: 'var(--color-text-primary)', transition: 'background 0.2s'
-          }}
+          className="size-11 rounded-full flex items-center justify-center cursor-pointer text-text-primary bg-on-media/5 border border-on-media/10 hover:bg-on-media/10 transition-colors duration-200"
         >
           <X size={20} />
         </motion.button>
       </div>
 
       {/* Main Slider Area */}
-      <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        
+      <div className="flex-1 relative flex items-center justify-center">
+
         {media.length > 1 && (
           <motion.button
             onClick={isRTL ? handleNext : handlePrev}
-            whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute z-[210] flex items-center justify-center rounded-full bg-black/50 border border-white/10 text-white backdrop-blur-md cursor-pointer bottom-[110px] left-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-[32px] w-[48px] h-[48px] md:w-[56px] md:h-[56px]"
+            className={`${NAV_BUTTON} left-4 md:left-[32px]`}
           >
             <ChevronLeft size={28} />
           </motion.button>
@@ -139,40 +138,36 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 1.02, x: -20 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}
+                className="relative size-full flex items-center justify-center"
               >
                 {!loaded[currentIndex] && (
-                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Loader2 size={32} color="var(--brand)" className="animate-spin" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Loader2 size={32} className="animate-spin text-brand" />
                   </div>
                 )}
-                
+
                 {currentMedia.type === 'image' && (
-                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                  <div className="relative size-full">
                     <Image
                       src={currentMedia.url}
                       alt={`${data.title} media ${currentIndex + 1}`}
                       fill
                       sizes="100vw"
                       onLoad={() => handleMediaLoad(currentIndex)}
-                      style={{
-                        objectFit: 'contain',
-                        borderRadius: 16, boxShadow: '0 24px 80px rgba(0,0,0,0.5)',
-                        opacity: loaded[currentIndex] ? 1 : 0, transition: 'opacity 0.3s ease'
-                      }}
+                      className={`object-contain rounded-2xl shadow-media transition-opacity duration-300 ${loaded[currentIndex] ? 'opacity-100' : 'opacity-0'}`}
                     />
                   </div>
                 )}
 
                 {currentMedia.type === 'video' && (
-                  <div style={{ width: '100%', height: '100%', maxWidth: 1600, maxHeight: 900, borderRadius: 16, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.5)', background: 'var(--color-surface)' }}>
+                  <div className="size-full max-w-[1600px] max-h-[900px] rounded-2xl overflow-hidden shadow-media bg-surface">
                     {isYouTube ? (
                       <iframe
                         src={currentMedia.url.replace('watch?v=', 'embed/').split('&')[0] + '?autoplay=1&rel=0&modestbranding=1'}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                         onLoad={() => handleMediaLoad(currentIndex)}
-                        style={{ width: '100%', height: '100%', border: 'none', opacity: loaded[currentIndex] ? 1 : 0, transition: 'opacity 0.3s ease' }}
+                        className={`size-full border-none transition-opacity duration-300 ${loaded[currentIndex] ? 'opacity-100' : 'opacity-0'}`}
                       />
                     ) : (
                       <video
@@ -180,14 +175,14 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                         controls
                         autoPlay
                         onLoadedData={() => handleMediaLoad(currentIndex)}
-                        style={{ width: '100%', height: '100%', outline: 'none', opacity: loaded[currentIndex] ? 1 : 0, transition: 'opacity 0.3s ease' }}
+                        className={`size-full outline-none transition-opacity duration-300 ${loaded[currentIndex] ? 'opacity-100' : 'opacity-0'}`}
                       />
                     )}
                   </div>
                 )}
               </motion.div>
             ) : (
-              <div style={{ color: 'var(--text-muted)' }}>No media available for this project.</div>
+              <div className="text-text-muted">No media available for this project.</div>
             )}
           </AnimatePresence>
         </div>
@@ -195,9 +190,9 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
         {media.length > 1 && (
           <motion.button
             onClick={isRTL ? handlePrev : handleNext}
-            whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute z-[210] flex items-center justify-center rounded-full bg-black/50 border border-white/10 text-white backdrop-blur-md cursor-pointer bottom-[110px] right-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:right-[32px] w-[48px] h-[48px] md:w-[56px] md:h-[56px]"
+            className={`${NAV_BUTTON} right-4 md:right-[32px]`}
           >
             <ChevronRight size={28} />
           </motion.button>
@@ -206,30 +201,22 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
 
       {/* Thumbnail Strip */}
       {media.length > 1 && (
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: 100, zIndex: 210,
-          background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, paddingBottom: 24
-        }}>
+        <div className="absolute bottom-0 left-0 right-0 h-[100px] z-[210] flex items-center justify-center gap-3 pb-6 scrim-fade-up">
           {media.map((item, idx) => (
             <button
               key={item.id}
               onClick={() => setCurrentIndex(idx)}
-              style={{
-                width: 60, height: 40, borderRadius: 6, overflow: 'hidden', padding: 0,
-                border: currentIndex === idx ? '2px solid var(--brand)' : '2px solid transparent',
-                background: 'rgba(255,255,255,0.1)', cursor: 'pointer',
-                opacity: currentIndex === idx ? 1 : 0.5, transition: 'all 0.2s',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}
+              className={`w-[60px] h-10 rounded-md overflow-hidden p-0 cursor-pointer flex items-center justify-center bg-on-media/10 border-2 transition-all duration-200 ${
+                currentIndex === idx ? 'border-brand opacity-100' : 'border-transparent opacity-50'
+              }`}
             >
               {item.type === 'image' ? (
-                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                  <Image src={item.url} alt="thumbnail" fill sizes="60px" style={{ objectFit: 'cover' }} />
+                <div className="relative size-full">
+                  <Image src={item.url} alt="thumbnail" fill sizes="60px" className="object-cover" />
                 </div>
               ) : (
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-surface-elevated)' }}>
-                  <span className="text-xs font-semibold text-white">VIDEO</span>
+                <div className="size-full flex items-center justify-center bg-surface-elevated">
+                  <span className="text-xs font-semibold text-on-media">VIDEO</span>
                 </div>
               )}
             </button>

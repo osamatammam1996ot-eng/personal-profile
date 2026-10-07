@@ -141,8 +141,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
 
         {/* Card Stage */}
         <motion.div 
-          className="relative w-full max-w-4xl mx-auto flex max-md:flex-col items-center justify-center mt-4"
-          style={{ perspective: 1000 }}
+          className="relative w-full max-w-4xl mx-auto flex max-md:flex-col items-center justify-center mt-4 perspective-[1000px]"
         >
           <motion.div
             ref={cardRef}
@@ -159,7 +158,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
               y: tiltY,
               transformStyle: 'preserve-3d',
             } : undefined}
-            className="relative z-10 w-full max-w-2xl min-h-[380px] md:min-h-[420px] flex flex-col max-md:bg-surface-elevated/95 md:bg-surface-elevated/80 max-md:backdrop-blur-none md:backdrop-blur-xl border border-border-default rounded-3xl shadow-card transition-colors duration-300 hover:border-border-strong hover:bg-surface-elevated focus-within:border-border-strong focus-within:bg-surface-elevated overflow-hidden outline-none group"
+            className="relative z-10 w-full max-w-2xl min-h-[380px] md:min-h-[420px] flex flex-col max-md:bg-surface-elevated/95 md:bg-surface-elevated/80 max-md:backdrop-blur-none md:backdrop-blur-xl border border-border-default rounded-3xl shadow-raised transition-colors duration-300 hover:border-border-strong hover:bg-surface-elevated focus-within:border-border-strong focus-within:bg-surface-elevated overflow-hidden outline-none group"
           >
             {/* Glow layer */}
             {shouldAnimate && (
@@ -214,7 +213,7 @@ export function Recommendations({ isDark }: RecommendationsProps) {
               {recs.map((_, i) => (
                 <div 
                   key={i} 
-                  className={`h-1 rounded-full transition-all duration-500 ${i === activeIndex ? 'w-6 bg-brand shadow-[0_0_8px_rgba(109,79,184,0.8)]' : 'w-2 bg-text-muted/30'}`} 
+                  className={`h-1 rounded-full transition-all duration-500 ${i === activeIndex ? 'w-6 bg-brand shadow-glow-brand' : 'w-2 bg-text-muted/30'}`} 
                 />
               ))}
             </div>

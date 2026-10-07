@@ -9,7 +9,7 @@ interface ContactEditorProps {
 export function ContactEditor({ draft, updateDraft }: ContactEditorProps) {
   return (
     <div className="grid gap-3">
-      <h2 className="text-white mt-0">Contact Section</h2>
+      <h2 className="text-admin-fg mt-0">Contact Section</h2>
 
       <div className={cardClasses}>
         <label className={labelClasses}>Email</label>
@@ -104,7 +104,7 @@ export function ContactEditor({ draft, updateDraft }: ContactEditorProps) {
       />
 
       <div className={cardClasses}>
-        <p className="m-0 mb-2.5 text-white font-bold text-base">Social Links</p>
+        <p className="m-0 mb-2.5 text-admin-fg font-bold text-base">Social Links</p>
         <div className="grid grid-cols-2 gap-2.5">
           <div>
             <label className={labelClasses}>WhatsApp</label>

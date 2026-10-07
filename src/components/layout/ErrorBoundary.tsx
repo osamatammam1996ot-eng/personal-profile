@@ -27,15 +27,15 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: '32px', background: '#1a1a2e', color: '#fff', fontFamily: 'monospace', fontSize: '12px' }}>
-          <h1 style={{ color: '#ff4444', marginTop: 0 }}>Application Error</h1>
-          <p style={{ color: '#ffaa00' }}>{this.state.error?.message}</p>
-          <pre style={{ background: '#0a0a0f', padding: '16px', borderRadius: '8px', overflow: 'auto', fontSize: '11px' }}>
+        <div className="dark p-8 min-h-screen bg-surface text-text-primary font-mono text-xs">
+          <h1 className="mt-0 text-danger">Application Error</h1>
+          <p className="text-warning">{this.state.error?.message}</p>
+          <pre className="p-4 rounded-lg overflow-auto text-[11px] bg-scrim/40">
             {this.state.error?.stack}
           </pre>
-          <button 
+          <button
             onClick={() => window.location.reload()}
-            style={{ padding: '8px 16px', background: '#6366f1', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            className="px-4 py-2 rounded border-none cursor-pointer bg-brand text-on-brand"
           >
             Reload Page
           </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Navigation } from '../components/layout/Navigation';
 import { Hero } from '../components/sections/Hero';
@@ -33,16 +33,16 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
     setThemeLoaded(true);
   }, []);
 
-  useEffect(() => {
+  // Layout effect so the theme class is on <html> before child effects run —
+  // canvas/WebGL sections read color tokens from it when isDark changes.
+  useLayoutEffect(() => {
     if (themeLoaded) {
       localStorage.setItem('ot_theme', isDark ? 'dark' : 'light');
     }
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', isDark);
+  }, [isDark, themeLoaded]);
 
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'F12') {
         e.preventDefault();
@@ -60,12 +60,6 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isDark]);
-
-  useEffect(() => {
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-    document.body.style.overflowX = 'clip';
   }, []);
 
   useEffect(() => {
@@ -97,7 +91,7 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
       <CustomCursor />
 
       {error && (
-        <div className="p-4 bg-danger text-white text-center font-medium">
+        <div className="p-4 bg-danger text-on-danger text-center font-medium">
           CMS Error: {error.message}
         </div>
       )}

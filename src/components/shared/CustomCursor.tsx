@@ -59,17 +59,15 @@ export function CustomCursor() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed z-[9999] pointer-events-none flex items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-hover opacity-90 backdrop-blur-sm shadow-[0_8px_30px_var(--color-brand)]"
+            className="fixed z-[9999] pointer-events-none flex items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-hover size-20 opacity-90 backdrop-blur-sm shadow-[0_8px_30px_var(--color-brand)]"
             style={{
               x: cursorXSpring,
               y: cursorYSpring,
               translateX: "-50%",
               translateY: "-50%",
-              width: 80,
-              height: 80,
             }}
           >
-            <span className="text-white text-center tracking-wider leading-snug font-semibold text-xs">
+            <span className="text-on-brand text-center tracking-wider leading-snug font-semibold text-xs">
               View<br />Project
             </span>
           </motion.div>

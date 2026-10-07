@@ -12,7 +12,7 @@ export function PortfolioEditor({ draft, updateProject }: PortfolioEditorProps) 
   
   return (
     <div className="grid gap-3">
-      <h2 className="text-white mt-0">Portfolio Projects</h2>
+      <h2 className="text-admin-fg mt-0">Portfolio Projects</h2>
       {items.map((index) => {
         const project = draft.projects[index] ?? {
           id: index + 1,
@@ -21,7 +21,7 @@ export function PortfolioEditor({ draft, updateProject }: PortfolioEditorProps) 
           image: '',
           tags: { en: [], ar: [] },
           desc: { en: '', ar: '' },
-          accent: '#6366f1',
+          accent: 'var(--color-brand)',
         };
 
         return (

@@ -15,7 +15,9 @@ export default async function AdminLayout({
   }
 
   return (
-    <div dir="ltr" className="min-h-screen text-left portfolio-mode text-text-primary">
+    // `dark` pins the dashboard to the dark token set regardless of the site theme;
+    // `admin-root` scopes the page background & scrollbar styles in index.css.
+    <div dir="ltr" className="dark admin-root min-h-screen text-left portfolio-mode text-text-primary">
       <DashboardBackground />
       <CustomCursor />
       {children}

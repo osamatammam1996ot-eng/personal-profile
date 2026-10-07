@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
+import { getScenePalette } from '../../lib/scene-palette';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,19 +44,7 @@ export function Skills({ isDark }: SkillsProps) {
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDark ? '#b32d4b' : '#800020');
-    const baseColor = new THREE.Color(rawBrand);
-    const hsl = { h: 0, s: 0, l: 0 };
-    baseColor.getHSL(hsl);
-    const colorHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.05, hsl.l - 0.2) : Math.min(0.95, hsl.l + 0.3)).getHex();
-    const emissiveHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.1, hsl.l - 0.1) : hsl.l).getHex();
-    const specularHex = isDark ? new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + 0.2), Math.min(0.9, hsl.l + 0.3)).getHex() : 0xffffff;
-    const wireHex = baseColor.getHex();
-    const pointHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.min(1, hsl.l + 0.2) : Math.max(0, hsl.l - 0.2)).getHex();
-    const rimHex = pointHex;
-    const fillHex = baseColor.getHex();
-    const ambHex = new THREE.Color().setHSL(hsl.h, Math.max(0, hsl.s - 0.2), isDark ? Math.min(0.8, hsl.l + 0.2) : Math.max(0.2, hsl.l - 0.2)).getHex();
-
+    const p = getScenePalette(isDark);
 
     // Check prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -63,7 +52,7 @@ export function Skills({ isDark }: SkillsProps) {
     const dpr = Math.min(window.devicePixelRatio, 1.5);
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(dpr);
-    renderer.setClearColor(0x000000, 0);
+    renderer.setClearAlpha(0);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -78,18 +67,18 @@ export function Skills({ isDark }: SkillsProps) {
     resize();
 
     // Lights
-    const ambLight = new THREE.AmbientLight(ambHex, 0.45);
+    const ambLight = new THREE.AmbientLight(p.ambient, 0.45);
     scene.add(ambLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    const keyLight = new THREE.DirectionalLight(p.key, 0.9);
     keyLight.position.set(3, 4, 5);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(rimHex, 0.5);
+    const rimLight = new THREE.DirectionalLight(p.rim, 0.5);
     rimLight.position.set(-4, -1, -3);
     scene.add(rimLight);
 
-    const fillLight = new THREE.PointLight(fillHex, 0.4, 14);
+    const fillLight = new THREE.PointLight(p.fill, 0.4, 14);
     fillLight.position.set(-2, 3, 2);
     scene.add(fillLight);
 
@@ -105,20 +94,20 @@ export function Skills({ isDark }: SkillsProps) {
     const wireGeom = new THREE.WireframeGeometry(new THREE.DodecahedronGeometry(1.4, 0)); // 12-sided wireframe
 
     // 1. Points (Research)
-    const pointsMat = new THREE.PointsMaterial({ color: pointHex, size: 0.04, transparent: true, opacity: 0 });
+    const pointsMat = new THREE.PointsMaterial({ color: p.point, size: 0.04, transparent: true, opacity: 0 });
     const meshPoints = new THREE.Points(pointsGeom, pointsMat);
     root.add(meshPoints);
 
     // 2. Wireframe (Design)
-    const wireMat = new THREE.LineBasicMaterial({ color: wireHex, transparent: true, opacity: 0 });
+    const wireMat = new THREE.LineBasicMaterial({ color: p.wire, transparent: true, opacity: 0 });
     const meshWire = new THREE.LineSegments(wireGeom, wireMat);
     root.add(meshWire);
 
     // 3. Solid (Prototyping / Intro)
     const shellMat = new THREE.MeshPhongMaterial({
-      color: colorHex,
-      emissive: emissiveHex,
-      specular: specularHex,
+      color: p.shell,
+      emissive: p.emissive,
+      specular: p.specular,
       shininess: isDark ? 80 : 140,
       transparent: true,
       opacity: 0.9,
@@ -129,12 +118,9 @@ export function Skills({ isDark }: SkillsProps) {
 
     // Initial Light setup based on isDark
     if (!isDark) {
-      ambLight.color.setHex(ambHex); ambLight.intensity = 0.5;
+      ambLight.intensity = 0.5;
       keyLight.intensity = 1.4;
-      rimLight.color.setHex(rimHex); rimLight.intensity = 0.8;
-      fillLight.color.setHex(fillHex);
-      wireMat.color.setHex(wireHex);
-      pointsMat.color.setHex(pointHex);
+      rimLight.intensity = 0.8;
     }
 
     stateRef.current = {
@@ -286,54 +272,22 @@ export function Skills({ isDark }: SkillsProps) {
     const s = stateRef.current;
     if (!s) return;
 
-    
+    const p = getScenePalette(isDark);
+    s.shellMat.color.setHex(p.shell);
+    s.shellMat.emissive.setHex(p.emissive);
+    s.shellMat.specular.setHex(p.specular);
+    s.shellMat.shininess = isDark ? 80 : 140;
 
+    s.wireMat.color.setHex(p.wire);
+    s.pointsMat.color.setHex(p.point);
 
-    
-    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDark ? '#b32d4b' : '#800020');
-    const baseColor = new THREE.Color(rawBrand);
-    const hsl = { h: 0, s: 0, l: 0 };
-    baseColor.getHSL(hsl);
-    const colorHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.05, hsl.l - 0.2) : Math.min(0.95, hsl.l + 0.3)).getHex();
-    const emissiveHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.1, hsl.l - 0.1) : hsl.l).getHex();
-    const specularHex = isDark ? new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + 0.2), Math.min(0.9, hsl.l + 0.3)).getHex() : 0xffffff;
-    const wireHex = baseColor.getHex();
-    const pointHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.min(1, hsl.l + 0.2) : Math.max(0, hsl.l - 0.2)).getHex();
-    const rimHex = pointHex;
-    const fillHex = baseColor.getHex();
-    const ambHex = new THREE.Color().setHSL(hsl.h, Math.max(0, hsl.s - 0.2), isDark ? Math.min(0.8, hsl.l + 0.2) : Math.max(0.2, hsl.l - 0.2)).getHex();
-
-    if (isDark) {
-      s.shellMat.color.setHex(colorHex);
-      s.shellMat.emissive.setHex(emissiveHex);
-      s.shellMat.specular.setHex(specularHex);
-      s.shellMat.shininess = 80;
-
-      s.wireMat.color.setHex(wireHex);
-      s.pointsMat.color.setHex(pointHex);
-
-      s.ambLight.color.setHex(ambHex);
-      s.ambLight.intensity = 0.45;
-      s.keyLight.intensity = 0.9;
-      s.rimLight.color.setHex(rimHex);
-      s.rimLight.intensity = 0.5;
-      s.fillLight.color.setHex(fillHex);
-    } else {
-      s.shellMat.color.setHex(colorHex);
-      s.shellMat.emissive.setHex(emissiveHex);
-      s.shellMat.specular.setHex(specularHex);
-      s.shellMat.shininess = 140;
-
-      s.wireMat.color.setHex(wireHex);
-      s.pointsMat.color.setHex(pointHex);
-
-      s.ambLight.color.setHex(ambHex);
-      s.ambLight.intensity = 0.5;
-      s.keyLight.intensity = 1.4;
-      s.rimLight.color.setHex(rimHex);
-      s.rimLight.intensity = 0.8;
-      s.fillLight.color.setHex(fillHex);
-    }
+    s.ambLight.color.setHex(p.ambient);
+    s.ambLight.intensity = isDark ? 0.45 : 0.5;
+    s.keyLight.color.setHex(p.key);
+    s.keyLight.intensity = isDark ? 0.9 : 1.4;
+    s.rimLight.color.setHex(p.rim);
+    s.rimLight.intensity = isDark ? 0.5 : 0.8;
+    s.fillLight.color.setHex(p.fill);
   }, [isDark]);
 
   const { cmsData } = useCms();
@@ -376,7 +330,6 @@ export function Skills({ isDark }: SkillsProps) {
           {/* Tertiary ambient glow (Purple/Brand) */}
           <div 
             className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] rounded-full opacity-5 dark:opacity-[0.10] glow-brand"
-            style={{ filter: 'blur(90px)' }}
           />
         </div>
 
@@ -389,7 +342,7 @@ export function Skills({ isDark }: SkillsProps) {
             <button
               key={num}
               onClick={() => scrollToChapter(num)}
-              className={`text-xs lg:text-sm font-bold transition-colors duration-300 tracking-widest ${activeChapter === num ? 'text-brand' : 'text-white/30 hover:text-white/80'}`}
+              className={`text-xs lg:text-sm font-bold transition-colors duration-300 tracking-widest ${activeChapter === num ? 'text-brand' : 'text-text-faint hover:text-text-secondary'}`}
               
             >
               {num === 0 ? 'Intro' : `0${num}`}
@@ -421,7 +374,7 @@ export function Skills({ isDark }: SkillsProps) {
             <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
               “{getStr(disc1?.tagline)}”
             </p>
-            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-white/10 `}>
+            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-border-default `}>
               {getArr(disc1?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
@@ -437,7 +390,7 @@ export function Skills({ isDark }: SkillsProps) {
             <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
               “{getStr(disc2?.tagline)}”
             </p>
-            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-white/10 `}>
+            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-border-default `}>
               {getArr(disc2?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}
@@ -455,7 +408,7 @@ export function Skills({ isDark }: SkillsProps) {
                 “{getStr(disc3?.tagline)}”
               </p>
             </div>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-white/10 pt-4 md:pt-6 ">
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-border-default pt-4 md:pt-6 ">
               {getArr(disc3?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
                   {cap}

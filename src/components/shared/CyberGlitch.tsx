@@ -61,7 +61,7 @@ export function CyberGlitch() {
   return (
     <>
       {/* SVG Filter for RGB Split */}
-      <svg style={{ width: 0, height: 0, position: 'absolute', pointerEvents: 'none' }}>
+      <svg className="absolute w-0 h-0 pointer-events-none">
         <filter id="cyber-glitch-filter">
           <feOffset dx="8" dy="-2" in="SourceGraphic" result="red-shift"/>
           <feOffset dx="-8" dy="2" in="SourceGraphic" result="blue-shift"/>
@@ -91,27 +91,12 @@ export function CyberGlitch() {
       </svg>
 
       {/* Screen Overlay (Scanlines + CRT Flicker) */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-[9999]"
-        style={{
-          background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px)',
-          animation: 'crt-flicker 0.15s infinite',
-        }}
-      />
+      <div className="fixed inset-0 pointer-events-none z-[9999] glitch-scanlines" />
       
       {/* Localized Glow at click point */}
       <div
-        className="fixed pointer-events-none z-[9999]"
-        style={{
-          left: glitchPosition.x,
-          top: glitchPosition.y,
-          transform: 'translate(-50%, -50%)',
-          width: 300,
-          height: 300,
-          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%)',
-          mixBlendMode: 'screen',
-          animation: 'click-burst 0.4s ease-out forwards',
-        }}
+        className="fixed pointer-events-none z-[9999] size-[300px] glitch-burst"
+        style={{ left: glitchPosition.x, top: glitchPosition.y }}
       />
     </>
   );

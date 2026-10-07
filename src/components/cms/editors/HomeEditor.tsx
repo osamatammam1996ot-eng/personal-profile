@@ -25,7 +25,7 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
         image: '',
         tags: { en: [], ar: [] },
         desc: { en: '', ar: '' },
-        accent: '#6366f1',
+        accent: 'var(--color-brand)',
       };
       projects[index] = updater(base);
       return { ...prev, projects };

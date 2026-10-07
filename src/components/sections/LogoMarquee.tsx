@@ -62,7 +62,7 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
   if (!cmsData?.sections.logoMarquee || set.length === 0) return null;
 
   return (
-    <section dir="ltr" className="w-full overflow-hidden border-y border-white/6 py-7 relative bg-marquee-bg">
+    <section dir="ltr" className="w-full overflow-hidden border-y border-marquee-border py-7 relative bg-marquee-bg">
       {/* Fade edges */}
       <div className="absolute top-0 left-0 bottom-0 w-[100px] fade-edge-l z-[2] pointer-events-none" />
       <div className="absolute top-0 right-0 bottom-0 w-[100px] fade-edge-r z-[2] pointer-events-none" />

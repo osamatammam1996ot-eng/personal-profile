@@ -75,7 +75,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
 
   return (
     <div className="grid gap-3">
-      <h2 className="text-white mt-0 mb-4">Case Study {activeCsId} — Media Gallery</h2>
+      <h2 className="text-admin-fg mt-0 mb-4">Case Study {activeCsId} — Media Gallery</h2>
 
       <div className={cardClasses}>
         <div className="grid grid-cols-2 gap-3 mb-4">
@@ -106,7 +106,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
         </div>
 
         {caseStudy.media.length === 0 && (
-          <div className="p-8 text-center border border-dashed border-border-strong rounded-2xl text-text-muted text-base bg-black/10 hover:bg-black/20 hover:border-brand/50 transition-all">
+          <div className="p-8 text-center border border-dashed border-border-strong rounded-2xl text-text-muted text-base bg-admin-scrim/10 hover:bg-admin-scrim/20 hover:border-brand/50 transition-all">
             No media added yet. Click "Add Media" to start.
           </div>
         )}
@@ -116,10 +116,10 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
             <div key={item.id} className="bg-admin-glass-card p-7 rounded-[24px] border border-admin-border-subtle flex gap-5 items-start shadow-2xl backdrop-blur-2xl hover:border-admin-border-strong hover:bg-admin-glass-card-hover transition-all duration-300 group">
               
               <div className="flex flex-col gap-1 mt-6">
-                <button onClick={() => handleMoveMedia(idx, 'up')} disabled={idx === 0} className={`p-1 bg-transparent border-none ${idx === 0 ? "text-white/10 cursor-default" : "text-text-muted cursor-pointer hover:text-text-primary"}`}>
+                <button onClick={() => handleMoveMedia(idx, 'up')} disabled={idx === 0} className={`p-1 bg-transparent border-none ${idx === 0 ? "text-admin-fg/10 cursor-default" : "text-text-muted cursor-pointer hover:text-text-primary"}`}>
                   <ChevronUp size={16} />
                 </button>
-                <button onClick={() => handleMoveMedia(idx, 'down')} disabled={idx === caseStudy.media.length - 1} className={`p-1 bg-transparent border-none ${idx === caseStudy.media.length - 1 ? "text-white/10 cursor-default" : "text-text-muted cursor-pointer hover:text-text-primary"}`}>
+                <button onClick={() => handleMoveMedia(idx, 'down')} disabled={idx === caseStudy.media.length - 1} className={`p-1 bg-transparent border-none ${idx === caseStudy.media.length - 1 ? "text-admin-fg/10 cursor-default" : "text-text-muted cursor-pointer hover:text-text-primary"}`}>
                   <ChevronDown size={16} />
                 </button>
               </div>
@@ -127,14 +127,17 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
               <div className="flex-1 grid grid-cols-[120px_1fr] gap-4">
                 <div>
                   <label className={labelClasses}>Type</label>
-                  <select
-                    className={`${inputClasses} h-[50px] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M1.5%201.75L6%206.25L10.5%201.75%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.5)%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_8px] bg-[position:right_20px_center] bg-no-repeat pr-11 cursor-pointer`}
-                    value={item.type}
-                    onChange={(e) => handleUpdateMedia(idx, 'type', e.target.value)}
-                  >
-                    <option value="image" className="bg-[#1a1a24]">Image</option>
-                    <option value="video" className="bg-[#1a1a24]">Video (MP4/YouTube)</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      className={`${inputClasses} h-[50px] appearance-none pr-11 cursor-pointer`}
+                      value={item.type}
+                      onChange={(e) => handleUpdateMedia(idx, 'type', e.target.value)}
+                    >
+                      <option value="image" className="bg-admin-option-bg">Image</option>
+                      <option value="video" className="bg-admin-option-bg">Video (MP4/YouTube)</option>
+                    </select>
+                    <ChevronDown size={14} className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-admin-fg/50" />
+                  </div>
                 </div>
                 <div>
                   {item.type === 'image' ? (
@@ -172,7 +175,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
         <div className="flex justify-end mt-6">
           <button
             onClick={handleAddMedia}
-            className="flex items-center gap-2 bg-brand/20 hover:bg-brand-gradient text-white border border-brand/50 px-3 py-1.5 rounded-lg text-sm font-bold cursor-pointer transition-all hover:shadow-[0_0_15px_rgba(109,79,184,0.4)]"
+            className="flex items-center gap-2 bg-brand/20 hover:bg-brand-gradient text-admin-fg border border-brand/50 px-3 py-1.5 rounded-lg text-sm font-bold cursor-pointer transition-all hover:shadow-[0_0_15px_color-mix(in_srgb,var(--brand)_40%,transparent)]"
           >
             <Plus size={14} /> Add Media
           </button>

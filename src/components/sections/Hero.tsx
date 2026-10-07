@@ -174,8 +174,7 @@ export function Hero({ isDark }: HeroProps) {
                   <span className={`font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)] tracking-[-0.01em] text-foreground ${isRTL ? 'direction-rtl' : 'direction-ltr'}`}>
                     {displayText}
                     <span
-                      className={`typing-cursor bg-indigo-light dark:bg-indigo-light ${isRTL ? 'mr-1' : 'ml-1'}`}
-                      style={{ opacity: showCursor ? 1 : 0 }}
+                      className={`typing-cursor bg-brand-light ${showCursor ? 'opacity-100' : 'opacity-0'} ${isRTL ? 'mr-1' : 'ml-1'}`}
                     />
                   </span>
                 </span>

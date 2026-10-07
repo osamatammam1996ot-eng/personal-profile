@@ -57,37 +57,37 @@ export function ImageUploader({ label, value, onChange, helpText, placeholder = 
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <label className={labelClasses}>{label}</label>
-        {helpText && <span className="text-sm text-white/50">{helpText}</span>}
+        {helpText && <span className="text-sm text-admin-fg/50">{helpText}</span>}
       </div>
 
       {error && (
-        <div className="text-red-400 text-sm px-2 py-1 bg-red-400/10 rounded border border-red-400/20">
+        <div className="text-danger text-sm px-2 py-1 bg-danger/10 rounded border border-danger/20">
           {error}
         </div>
       )}
 
       {value ? (
-        <div className="relative group rounded-lg overflow-hidden border border-white/10 bg-black/20 aspect-video flex items-center justify-center">
+        <div className="relative group rounded-lg overflow-hidden border border-admin-fg/10 bg-admin-scrim/20 aspect-video flex items-center justify-center">
           <img src={value} alt="Preview" className="max-w-full max-h-full object-contain" />
           
-          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+          <div className="absolute inset-0 bg-admin-scrim/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-2 rounded-full bg-white/10 hover:bg-brand text-white transition-colors cursor-pointer border-none"
+              className="p-2 rounded-full bg-admin-fg/10 hover:bg-brand text-admin-fg transition-colors cursor-pointer border-none"
               title="Replace image"
             >
               <Upload size={18} />
             </button>
             <button
               onClick={handleClear}
-              className="p-2 rounded-full bg-white/10 hover:bg-red-500 text-white transition-colors cursor-pointer border-none"
+              className="p-2 rounded-full bg-admin-fg/10 hover:bg-danger text-admin-fg transition-colors cursor-pointer border-none"
               title="Remove image"
             >
               <X size={18} />
             </button>
           </div>
           {isUploading && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-admin-scrim/50 flex items-center justify-center">
               <Loader2 className="animate-spin text-brand" size={24} />
             </div>
           )}
@@ -95,17 +95,17 @@ export function ImageUploader({ label, value, onChange, helpText, placeholder = 
       ) : (
         <div 
           onClick={() => !isUploading && fileInputRef.current?.click()}
-          className={`border-2 border-dashed border-white/10 rounded-lg p-6 flex flex-col items-center justify-center gap-3 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer text-center ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`border-2 border-dashed border-admin-fg/10 rounded-lg p-6 flex flex-col items-center justify-center gap-3 bg-admin-fg/5 hover:bg-admin-fg/10 transition-colors cursor-pointer text-center ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {isUploading ? (
             <Loader2 className="animate-spin text-brand" size={32} />
           ) : (
-            <ImageIcon size={32} className="text-white/20" />
+            <ImageIcon size={32} className="text-admin-fg/20" />
           )}
           
           <div>
             <span className="text-base text-brand font-medium">Click to upload</span>
-            <span className="text-base text-white/50"> or drag and drop</span>
+            <span className="text-base text-admin-fg/50"> or drag and drop</span>
           </div>
         </div>
       )}
