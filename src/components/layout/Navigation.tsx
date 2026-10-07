@@ -100,7 +100,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
           whileHover={{ scale: 1.02 }}
         >
           <div className="relative h-7 flex items-center justify-center">
-            <img src="/logo.png" alt="OT Logo" className="h-full w-auto object-contain" />
+            <img src="/logo-burgundy.png" alt="OT Logo" className="h-full w-auto object-contain" />
           </div>
           <span className="text-lg font-semibold transition-colors duration-300 text-foreground">
             {isRTL ? 'أسامة تمام' : 'Osama Tammam'}

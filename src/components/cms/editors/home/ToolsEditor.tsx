@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import type { CmsData } from '../../../../types/cms';
+import { parseColor, resolveColor } from '../../../../lib/theme-tokens';
 import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma, TagInput } from '../../../../components/cms/shared/BilingualField';
 
 interface ToolsEditorProps {
@@ -41,7 +43,7 @@ export function ToolsEditor({ draft, updateDraft }: ToolsEditorProps) {
       />
       
       <h3 className="text-admin-fg mt-4 text-base">Tools List</h3>
-      <p className="text-admin-fg/60 text-sm m-0 mb-2">Edit text content for the 12 tools (colors and order are fixed to maintain 3D harmony).</p>
+      <p className="text-admin-fg/60 text-sm m-0 mb-2">Edit the 12 tools. The order is fixed to fit the 3D shape; each tool's label color can be changed below.</p>
       
       {draft.tools.toolsList.map((tool, index) => (
         <div key={index} className={cardClasses}>
@@ -73,6 +75,15 @@ export function ToolsEditor({ draft, updateDraft }: ToolsEditorProps) {
                 />
               </div>
             </div>
+            <ColorField
+              label="Label color"
+              value={tool.glow}
+              onChange={(value) => updateDraft((prev) => {
+                const t = [...prev.tools.toolsList];
+                t[index] = { ...t[index], glow: value };
+                return { ...prev, tools: { ...prev.tools, toolsList: t } };
+              })}
+            />
             <BilingualField
               label="Category"
               en={tool.cat.en}
@@ -143,6 +154,37 @@ export function ToolsEditor({ draft, updateDraft }: ToolsEditorProps) {
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+/** Color picker + text field. Accepts any CSS color or a token like var(--color-brand). */
+function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  // The picker needs a #rrggbb value; resolve token references in the browser.
+  const [pickerValue, setPickerValue] = useState<string>();
+  useEffect(() => {
+    const [r, g, b] = parseColor(resolveColor(value));
+    setPickerValue('#' + [r, g, b].map((c) => Math.round(c).toString(16).padStart(2, '0')).join(''));
+  }, [value]);
+
+  return (
+    <div>
+      <label className={labelClasses}>{label}</label>
+      <div className="flex items-center gap-3">
+        {pickerValue && (
+          <input
+            type="color"
+            aria-label={label}
+            className="h-[50px] w-16 shrink-0 cursor-pointer rounded-[14px] border border-admin-border-subtle bg-admin-scrim/20 p-1.5"
+            value={pickerValue}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        )}
+        <input className={inputClasses} value={value} onChange={(e) => onChange(e.target.value)} />
+      </div>
+      <p className="text-admin-fg/50 text-sm mt-1.5 mb-0 ml-1">
+        Used for the tool's initials and ring on the 3D shape. Very light or very dark colors are adjusted automatically so the label stays readable.
+      </p>
     </div>
   );
 }

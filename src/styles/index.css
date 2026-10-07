@@ -24,6 +24,7 @@
 :root {
   /* Brand — burgundy scale */
   --burgundy-50: #fcf7f8;
+  --burgundy-100: #f4e8eb;
   --burgundy-300: #e0607e;
   --burgundy-400: #cc3a5a;
   --burgundy-500: #b32d4b;
@@ -33,7 +34,7 @@
   --burgundy-800: #5b0f1e;
   --burgundy-850: #4a0c18;
   --burgundy-900: #1a050a;
-  --burgundy-925: #140508;
+  --burgundy-940: #1f0b11;
   --burgundy-950: #100508;
   --burgundy-975: #0f0305;
 
@@ -94,14 +95,14 @@
   --input-background: var(--gray-100);
   --ring: var(--focus-ring);
 
-  /* Surfaces */
+  /* Surfaces — sections alternate between --surface (base) and --surface-raised */
   --surface: var(--burgundy-50);
+  --surface-raised: var(--burgundy-100);
   --surface-elevated: var(--white);
   --surface-glass: rgba(255, 255, 255, 0.6);
   --surface-card: rgba(255, 255, 255, 0.95);
-  --hero-bg: var(--burgundy-50);
-  --marquee-bg: var(--burgundy-850);
-  --marquee-border: rgba(255, 255, 255, 0.06);
+  --marquee-bg: var(--white);              /* light: clean white strip, logos shown in one dark tone */
+  --marquee-border: rgba(0, 0, 0, 0.06);
   --overlay: rgba(255, 255, 255, 0.05);
   --scrim: var(--black);              /* dark layer behind media / modals; use with /alpha */
 
@@ -204,10 +205,12 @@
   --input-background: rgba(255, 255, 255, 0.05);
 
   --surface: var(--burgundy-950);
+  --surface-raised: var(--burgundy-940);
+  --marquee-bg: var(--burgundy-850);
+  --marquee-border: rgba(255, 255, 255, 0.06);
   --surface-elevated: rgba(255, 255, 255, 0.04);
   --surface-glass: rgba(16, 5, 8, 0.65);
   --surface-card: rgba(16, 5, 8, 0.95);
-  --hero-bg: var(--burgundy-925);
   --overlay: rgba(0, 0, 0, 0.05);
 
   --brand: var(--burgundy-500);       /* lighter burgundy for dark-mode contrast */
@@ -279,10 +282,10 @@
 
   /* Surfaces */
   --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-surface-elevated: var(--surface-elevated);
   --color-surface-glass: var(--surface-glass);
   --color-surface-card: var(--surface-card);
-  --color-hero-bg: var(--hero-bg);
   --color-marquee-bg: var(--marquee-bg);
   --color-marquee-border: var(--marquee-border);
   --color-overlay: var(--overlay);
@@ -391,6 +394,25 @@
     background: var(--hero-overlay);
   }
 
+  /* Client logos: one dark tone in light mode (many logos are white), original colors in dark mode */
+  .logo-mono {
+    /* invert keeps the logo's own detail (emblems, thin text) instead of a flat silhouette */
+    filter: grayscale(1) invert(1);
+    opacity: 0.7;
+  }
+
+  /* Mostly-solid logos (e.g. a filled square badge) can't be inverted cleanly: grey them instead */
+  .logo-solid {
+    filter: grayscale(1);
+    opacity: 0.7;
+  }
+
+  .dark .logo-mono,
+  .dark .logo-solid {
+    filter: none;
+    opacity: 1;
+  }
+
   .fade-edge-l {
     background: linear-gradient(to right, var(--marquee-bg), transparent);
   }
@@ -399,19 +421,8 @@
     background: linear-gradient(to left, var(--marquee-bg), transparent);
   }
 
-  .grid-pattern {
-    background-image:
-      linear-gradient(color-mix(in srgb, var(--color-brand) 5%, transparent) 1px, transparent 1px),
-      linear-gradient(90deg, color-mix(in srgb, var(--color-brand) 5%, transparent) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
-
-  .grid-pattern-fade {
-    background: radial-gradient(ellipse 90% 80% at 50% 35%, transparent 0%, var(--surface) 70%);
-  }
-
   .section-fade-bottom {
-    background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--color-surface) 60%, transparent) 40%, var(--color-surface) 100%);
+    background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--surface-raised) 60%, transparent) 40%, var(--surface-raised) 100%);
   }
 
   .portrait-img {
@@ -477,16 +488,6 @@
     display: inline-block;
   }
 
-  .glow-brand {
-    background: radial-gradient(circle, var(--brand) 0%, transparent 70%);
-    filter: blur(100px);
-  }
-
-  .glow-info {
-    background: radial-gradient(circle, var(--info) 0%, transparent 70%);
-    filter: blur(80px);
-  }
-
   .scroll-indicator-line {
     background: linear-gradient(to bottom, var(--color-brand), transparent);
   }
@@ -508,19 +509,6 @@
   }
 
   /* Tools section */
-  .tools-ambient {
-    background-image:
-      radial-gradient(circle at 80% 50%, color-mix(in srgb, var(--brand-hover) 7%, transparent) 0%, transparent 50%),
-      radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--brand) 5%, transparent) 0%, transparent 50%);
-  }
-
-  .dark .tools-ambient {
-    background-image:
-      radial-gradient(circle at 80% 50%, color-mix(in srgb, var(--brand-hover) 10%, transparent) 0%, transparent 50%),
-      radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--brand) 8%, transparent) 0%, transparent 50%),
-      radial-gradient(circle at 60% 80%, color-mix(in srgb, var(--info) 5%, transparent) 0%, transparent 45%);
-  }
-
   .tool-ring {
     border: 2px solid transparent;
     transition: border-color 0.4s ease, box-shadow 0.4s ease;
@@ -542,20 +530,6 @@
   }
 
   /* Why Hire Me section */
-  .why-ambient {
-    background:
-      radial-gradient(ellipse 70% 50% at 50% 30%, color-mix(in srgb, var(--brand) 8%, transparent) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 40% at 18% 22%, color-mix(in srgb, var(--brand-hover) 5%, transparent) 0%, transparent 55%),
-      radial-gradient(ellipse 40% 30% at 82% 22%, color-mix(in srgb, var(--info) 4%, transparent) 0%, transparent 55%);
-  }
-
-  .dark .why-ambient {
-    background:
-      radial-gradient(ellipse 70% 50% at 50% 30%, color-mix(in srgb, var(--brand) 12%, transparent) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 40% at 18% 22%, color-mix(in srgb, var(--brand-hover) 8%, transparent) 0%, transparent 55%),
-      radial-gradient(ellipse 40% 30% at 82% 22%, color-mix(in srgb, var(--info) 6%, transparent) 0%, transparent 55%);
-  }
-
   .why-portrait-glow {
     background: radial-gradient(ellipse 70% 70% at 50% 80%,
       color-mix(in srgb, var(--brand) 38%, transparent) 0%,
@@ -578,8 +552,12 @@
   }
 
   .why-card-halo {
-    background: radial-gradient(ellipse 85% 75% at 50% 65%, color-mix(in srgb, var(--brand) 33%, transparent) 0%, transparent 68%);
+    background: radial-gradient(ellipse 85% 75% at 50% 65%, color-mix(in srgb, var(--brand) 12%, transparent) 0%, transparent 68%);
     filter: blur(14px);
+  }
+
+  .dark .why-card-halo {
+    background: radial-gradient(ellipse 85% 75% at 50% 65%, color-mix(in srgb, var(--brand) 33%, transparent) 0%, transparent 68%);
   }
 
   .why-card-ring {

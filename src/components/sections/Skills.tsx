@@ -308,30 +308,9 @@ export function Skills({ isDark }: SkillsProps) {
     <section
       ref={containerRef}
       id="skills"
-      className="relative w-full h-[300vh] bg-surface transition-colors duration-300"
+      className="relative w-full h-[300vh] bg-surface-raised transition-colors duration-300"
     >
       <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center pointer-events-none" dir={isRTL ? 'rtl' : 'ltr'}>
-
-        {/* Ambient Atmospheric Background */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          {/* Subtle gradient overlay to blend top and bottom edges with adjacent sections */}
-          <div className="absolute inset-0 bg-gradient-to-b from-surface via-transparent to-surface opacity-90" />
-          
-          {/* Core radial glow behind the 3D object */}
-          <div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[800px] h-[600px] md:h-[800px] rounded-full opacity-10 dark:opacity-15 glow-brand" 
-          />
-          
-          {/* Secondary ambient glow (Cyan/Info) */}
-          <div 
-            className="absolute top-[20%] left-[20%] w-[400px] h-[400px] rounded-full opacity-5 dark:opacity-10 glow-info"
-          />
-          
-          {/* Tertiary ambient glow (Purple/Brand) */}
-          <div 
-            className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] rounded-full opacity-5 dark:opacity-[0.10] glow-brand"
-          />
-        </div>
 
         {/* WebGL Canvas */}
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-0" />
