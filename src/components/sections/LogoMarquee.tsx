@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCms } from '../../contexts/CmsContext';
 import Image from 'next/image';
 
@@ -10,18 +10,60 @@ const SLOT_PX = 200;
 // Speed in pixels per second
 const SPEED = 60;
 
-const LogoSlot = ({ logo }: { logo: any }) => (
-  <div className="w-[200px] shrink-0 flex items-center justify-center opacity-65">
-    <Image
-      src={logo.url}
-      alt={logo.name}
-      width={120}
-      height={40}
-      className="object-contain max-h-10 w-[120px] h-10"
-      unoptimized
-    />
-  </div>
-);
+// In light mode logos are shown in one dark tone (.logo-mono). Logos that are
+// mostly a solid block (e.g. a filled square badge) would turn into a grey box,
+// so those keep their original colours. Measured once per image URL.
+const SOLID_COVERAGE = 0.6;
+const solidCache = new Map<string, Promise<boolean>>();
+
+function isSolidLogo(url: string): Promise<boolean> {
+  if (!solidCache.has(url)) {
+    solidCache.set(url, new Promise((resolve) => {
+      const img = new window.Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext('2d')!;
+          ctx.drawImage(img, 0, 0);
+          const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          let opaque = 0;
+          for (let i = 3; i < data.length; i += 4) if (data[i] > 200) opaque++;
+          resolve(opaque / (data.length / 4) > SOLID_COVERAGE);
+        } catch {
+          resolve(false); // pixels not readable (CORS): assume a normal transparent logo
+        }
+      };
+      img.onerror = () => resolve(false);
+      img.src = url;
+    }));
+  }
+  return solidCache.get(url)!;
+}
+
+const LogoSlot = ({ logo }: { logo: any }) => {
+  const [solid, setSolid] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    isSolidLogo(logo.url).then((s) => { if (alive) setSolid(s); });
+    return () => { alive = false; };
+  }, [logo.url]);
+
+  return (
+    <div className="w-[200px] shrink-0 flex items-center justify-center opacity-65">
+      <Image
+        src={logo.url}
+        alt={logo.name}
+        width={120}
+        height={40}
+        className={`object-contain max-h-10 w-[120px] h-10 ${solid ? '' : 'logo-mono'}`}
+        unoptimized
+      />
+    </div>
+  );
+};
 
 export function LogoMarquee({ isDark }: LogoMarqueeProps) {
   const { cmsData } = useCms();

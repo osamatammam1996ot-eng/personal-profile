@@ -101,8 +101,8 @@
   --surface-elevated: var(--white);
   --surface-glass: rgba(255, 255, 255, 0.6);
   --surface-card: rgba(255, 255, 255, 0.95);
-  --marquee-bg: var(--burgundy-850);
-  --marquee-border: rgba(255, 255, 255, 0.06);
+  --marquee-bg: var(--white);              /* light: clean white strip, logos shown in one dark tone */
+  --marquee-border: rgba(0, 0, 0, 0.06);
   --overlay: rgba(255, 255, 255, 0.05);
   --scrim: var(--black);              /* dark layer behind media / modals; use with /alpha */
 
@@ -206,6 +206,8 @@
 
   --surface: var(--burgundy-950);
   --surface-raised: var(--burgundy-940);
+  --marquee-bg: var(--burgundy-850);
+  --marquee-border: rgba(255, 255, 255, 0.06);
   --surface-elevated: rgba(255, 255, 255, 0.04);
   --surface-glass: rgba(16, 5, 8, 0.65);
   --surface-card: rgba(16, 5, 8, 0.95);
@@ -390,6 +392,17 @@
 
   .hero-overlay {
     background: var(--hero-overlay);
+  }
+
+  /* Client logos: one dark tone in light mode (many logos are white), original colors in dark mode */
+  .logo-mono {
+    filter: brightness(0);
+    opacity: 0.55;
+  }
+
+  .dark .logo-mono {
+    filter: none;
+    opacity: 1;
   }
 
   .fade-edge-l {
