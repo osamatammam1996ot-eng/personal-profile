@@ -18,21 +18,21 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
+  --primary: #1a050a;
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
+  --secondary-foreground: #1a050a;
   --muted: #ececf0;
   --muted-foreground: #717182;
   --accent: #e9ebef;
-  --accent-foreground: #030213;
+  --accent-foreground: #1a050a;
   --destructive: #d4183d;
   --destructive-foreground: #ffffff;
   --border: rgba(0, 0, 0, 0.1);
   
   
   /* --- ADMIN DASHBOARD V2 TOKENS --- */
-  --admin-base: #03020c;
+  --admin-base: #0f0305;
   --admin-glass-nav: rgba(10, 10, 20, 0.45);
   --admin-glass-content: rgba(15, 15, 30, 0.35);
   --admin-glass-card: rgba(255, 255, 255, 0.02);
@@ -46,7 +46,7 @@
   --admin-blob-3: rgba(128, 0, 32, 0.2);  /* Burgundy */
 
   /* --- NEW SEMANTIC TOKENS --- */
-  --surface: #f5f5fa;
+  --surface: #fcf7f8;
   --surface-elevated: #ffffff;
   --surface-glass: rgba(255, 255, 255, 0.6);
   --brand: #800020; /* custom deep burgundy */
@@ -73,7 +73,7 @@
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.08);
 
   /* --- REFACTOR: Component-specific tokens (were inline) --- */
-  --hero-bg: #f5f5fa;
+  --hero-bg: #fcf7f8;
   --nav-bg-scrolled: rgba(245, 245, 250, 0.85);
   --nav-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
   --marquee-bg: rgba(74, 12, 24, 1);
@@ -85,7 +85,7 @@
   --nav-link-inactive: rgba(0, 0, 0, 0.55);
   --footer-text: rgba(0, 0, 0, 0.4);
   --footer-link: rgba(0, 0, 0, 0.45);
-  --hero-overlay: radial-gradient(ellipse 72% 85% at 50% 50%, rgba(245,245,250,0.68) 0%, rgba(245,245,250,0.32) 60%, transparent 100%);
+  --hero-overlay: radial-gradient(ellipse 72% 85% at 50% 50%, rgba(252,247,248,0.68) 0%, rgba(252,247,248,0.32) 60%, transparent 100%);
   --indigo-gradient: linear-gradient(90deg, #9e1b34, #731224);
   --input: transparent;
   --input-background: #f3f3f5;
@@ -101,7 +101,7 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
+  --sidebar-primary: #1a050a;
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
@@ -129,9 +129,9 @@
   --border: oklch(0.269 0 0);
 
   /* --- NEW SEMANTIC TOKENS --- */
-  --surface: #080810;
+  --surface: #100508;
   --surface-elevated: rgba(255, 255, 255, 0.04);
-  --surface-glass: rgba(8, 8, 16, 0.65);
+  --surface-glass: rgba(16, 5, 8, 0.65);
   --brand: #b32d4b; /* adjusted custom burgundy for dark mode contrast */
   --brand-hover: #cc3a5a;
   --brand-gradient: linear-gradient(135deg, #cc3a5a 0%, #b32d4b 100%);
@@ -156,7 +156,7 @@
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.3);
 
   /* --- REFACTOR: Component-specific tokens (were inline) --- */
-  --hero-bg: #0b0822;
+  --hero-bg: #140508;
   --nav-bg-scrolled: rgba(8, 8, 16, 0.85);
   --nav-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
   --marquee-bg: rgba(74, 12, 24, 1);
@@ -168,7 +168,7 @@
   --nav-link-inactive: rgba(255, 255, 255, 0.65);
   --footer-text: rgba(255, 255, 255, 0.4);
   --footer-link: rgba(255, 255, 255, 0.45);
-  --hero-overlay: radial-gradient(ellipse 72% 85% at 50% 50%, rgba(8,8,16,0.65) 0%, rgba(8,8,16,0.38) 60%, transparent 100%);
+  --hero-overlay: radial-gradient(ellipse 72% 85% at 50% 50%, rgba(16,5,8,0.65) 0%, rgba(16,5,8,0.38) 60%, transparent 100%);
   --indigo-gradient: linear-gradient(90deg, #cc3a5a, #9e1b34);
   --input: oklch(0.269 0 0);
   --input-background: rgba(255, 255, 255, 0.05);
@@ -347,15 +347,15 @@
   }
 
   .roles-badge-dark {
-    background: rgba(99, 102, 241, 0.18);
-    border: 1px solid rgba(165, 180, 252, 0.25);
-    box-shadow: 0 0 28px rgba(99, 102, 241, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    background: color-mix(in srgb, var(--color-brand) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-brand-hover) 25%, transparent);
+    box-shadow: 0 0 28px color-mix(in srgb, var(--color-brand) 22%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   .roles-badge-light {
-    background: rgba(99, 102, 241, 0.10);
-    border: 1px solid rgba(99, 102, 241, 0.22);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.12);
+    background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-brand) 22%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-brand) 12%, transparent);
   }
 
   .typing-cursor {
@@ -364,7 +364,7 @@
     height: 0.9em;
     border-radius: 2px;
     vertical-align: middle;
-    box-shadow: 0 0 8px rgba(99, 102, 241, 0.9);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-brand) 90%, transparent);
     transition: opacity 0.1s;
   }
 
@@ -373,7 +373,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #6366f1;
+    background: var(--color-brand);
     opacity: 0.35;
     animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
@@ -382,8 +382,8 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    box-shadow: 0 0 8px rgba(99, 102, 241, 0.8);
+    background: var(--brand-gradient);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-brand) 80%, transparent);
     display: inline-block;
   }
 
@@ -398,7 +398,7 @@
   }
 
   .scroll-indicator-line {
-    background: linear-gradient(to bottom, #6366f1, transparent);
+    background: linear-gradient(to bottom, var(--color-brand), transparent);
   }
 }
 

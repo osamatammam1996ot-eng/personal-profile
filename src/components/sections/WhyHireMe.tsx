@@ -100,13 +100,13 @@ function AnchorPointSvg() {
   return (
     <svg width="62" height="62" viewBox="0 0 62 62" fill="none">
       {/* dashed lines */}
-      <line x1="4" y1="31" x2="28" y2="31" stroke="#6366F1" strokeOpacity="0.38" strokeWidth="1" strokeDasharray="3 3" />
-      <line x1="34" y1="31" x2="58" y2="31" stroke="#6366F1" strokeOpacity="0.38" strokeWidth="1" strokeDasharray="3 3" />
+      <line x1="4" y1="31" x2="28" y2="31" stroke="var(--color-brand)" strokeOpacity="0.38" strokeWidth="1" strokeDasharray="3 3" />
+      <line x1="34" y1="31" x2="58" y2="31" stroke="var(--color-brand)" strokeOpacity="0.38" strokeWidth="1" strokeDasharray="3 3" />
       {/* centre diamond */}
-      <rect x="27.5" y="27.5" width="7" height="7" rx="0" fill="#6366F1" fillOpacity="0.1" stroke="#6366F1" strokeOpacity="0.65" strokeWidth="1.5" transform="rotate(45 31 31)" />
+      <rect x="27.5" y="27.5" width="7" height="7" rx="0" fill="var(--color-brand)" fillOpacity="0.1" stroke="var(--color-brand)" strokeOpacity="0.65" strokeWidth="1.5" transform="rotate(45 31 31)" />
       {/* end circles */}
-      <path d={svgPaths.p3a962880} fill="#6366F1" fillOpacity="0.1" stroke="#6366F1" strokeOpacity="0.65" strokeWidth="1.5" transform="translate(0.25 23.5)" />
-      <path d={svgPaths.p3a962880} fill="#6366F1" fillOpacity="0.1" stroke="#6366F1" strokeOpacity="0.65" strokeWidth="1.5" transform="translate(53.25 23.5)" />
+      <path d={svgPaths.p3a962880} fill="var(--color-brand)" fillOpacity="0.1" stroke="var(--color-brand)" strokeOpacity="0.65" strokeWidth="1.5" transform="translate(0.25 23.5)" />
+      <path d={svgPaths.p3a962880} fill="var(--color-brand)" fillOpacity="0.1" stroke="var(--color-brand)" strokeOpacity="0.65" strokeWidth="1.5" transform="translate(53.25 23.5)" />
     </svg>
   );
 }
@@ -114,16 +114,16 @@ function AnchorPointSvg() {
 function BezierSvg() {
   return (
     <svg width="108" height="68" viewBox="0 0 108 68" fill="none">
-      <path d={svgPaths.p3b7cfe96} stroke="#8B5CF6" strokeOpacity="0.52" strokeWidth="1.5" transform="scale(1.156) translate(-0.3 14.8)" />
+      <path d={svgPaths.p3b7cfe96} stroke="var(--color-brand-hover)" strokeOpacity="0.52" strokeWidth="1.5" transform="scale(1.156) translate(-0.3 14.8)" />
       {/* anchor circles */}
-      <path d={svgPaths.p1f8c1310} fill="#8B5CF6" fillOpacity="0.08" stroke="#8B5CF6" strokeOpacity="0.7" strokeWidth="1.5" transform="translate(3.5 48.5)" />
-      <path d={svgPaths.p1f8c1310} fill="#8B5CF6" fillOpacity="0.08" stroke="#8B5CF6" strokeOpacity="0.7" strokeWidth="1.5" transform="translate(95 48.5)" />
+      <path d={svgPaths.p1f8c1310} fill="var(--color-brand-hover)" fillOpacity="0.08" stroke="var(--color-brand-hover)" strokeOpacity="0.7" strokeWidth="1.5" transform="translate(3.5 48.5)" />
+      <path d={svgPaths.p1f8c1310} fill="var(--color-brand-hover)" fillOpacity="0.08" stroke="var(--color-brand-hover)" strokeOpacity="0.7" strokeWidth="1.5" transform="translate(95 48.5)" />
       {/* control point lines */}
-      <path d={svgPaths.p4ae0400} stroke="#8B5CF6" strokeDasharray="3 3" strokeOpacity="0.3" transform="scale(0.42) translate(20 8)" />
-      <path d={svgPaths.p38601780} stroke="#8B5CF6" strokeDasharray="3 3" strokeOpacity="0.3" transform="scale(0.42) translate(195 8)" />
+      <path d={svgPaths.p4ae0400} stroke="var(--color-brand-hover)" strokeDasharray="3 3" strokeOpacity="0.3" transform="scale(0.42) translate(20 8)" />
+      <path d={svgPaths.p38601780} stroke="var(--color-brand-hover)" strokeDasharray="3 3" strokeOpacity="0.3" transform="scale(0.42) translate(195 8)" />
       {/* control point dots */}
-      <path d={svgPaths.p969ae00} fill="#8B5CF6" fillOpacity="0.75" transform="translate(23 5)" />
-      <path d={svgPaths.p969ae00} fill="#8B5CF6" fillOpacity="0.75" transform="translate(79 5)" />
+      <path d={svgPaths.p969ae00} fill="var(--color-brand-hover)" fillOpacity="0.75" transform="translate(23 5)" />
+      <path d={svgPaths.p969ae00} fill="var(--color-brand-hover)" fillOpacity="0.75" transform="translate(79 5)" />
     </svg>
   );
 }
@@ -131,7 +131,7 @@ function BezierSvg() {
 function FigmaCursorSvg() {
   return (
     <svg width="28" height="36" viewBox="0 0 28 36" fill="none">
-      <path d={svgPaths.p16b8ea00} fill="#06B6D4" fillOpacity="0.1" stroke="#06B6D4" strokeLinejoin="round" strokeOpacity="0.78" strokeWidth="1.5" />
+      <path d={svgPaths.p16b8ea00} fill="var(--color-info)" fillOpacity="0.1" stroke="var(--color-info)" strokeLinejoin="round" strokeOpacity="0.78" strokeWidth="1.5" />
     </svg>
   );
 }
@@ -140,12 +140,12 @@ function GridSvg() {
   return (
     <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
       {[0, 13.5, 27, 40.5, 54].map(y => (
-        <line key={`h${y}`} x1="0" y1={y} x2="54" y2={y} stroke="#6366F1" strokeOpacity="0.32" strokeWidth="0.8" />
+        <line key={`h${y}`} x1="0" y1={y} x2="54" y2={y} stroke="var(--color-brand)" strokeOpacity="0.32" strokeWidth="0.8" />
       ))}
       {[0, 13.5, 27, 40.5, 54].map(x => (
-        <line key={`v${x}`} x1={x} y1="0" x2={x} y2="54" stroke="#6366F1" strokeOpacity="0.32" strokeWidth="0.8" />
+        <line key={`v${x}`} x1={x} y1="0" x2={x} y2="54" stroke="var(--color-brand)" strokeOpacity="0.32" strokeWidth="0.8" />
       ))}
-      <rect x="20.5" y="20.5" width="13" height="13" fill="#6366F1" fillOpacity="0.1" stroke="#6366F1" strokeOpacity="0.52" />
+      <rect x="20.5" y="20.5" width="13" height="13" fill="var(--color-brand)" fillOpacity="0.1" stroke="var(--color-brand)" strokeOpacity="0.52" />
     </svg>
   );
 }
@@ -153,7 +153,7 @@ function GridSvg() {
 function DiamondSvg() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <rect x="4" y="4" width="12" height="12" fill="#A78BFA" fillOpacity="0.12" stroke="#A78BFA" strokeOpacity="0.78" strokeWidth="1.5" transform="rotate(45 10 10)" />
+      <rect x="4" y="4" width="12" height="12" fill="var(--color-brand-hover)" fillOpacity="0.12" stroke="var(--color-brand-hover)" strokeOpacity="0.78" strokeWidth="1.5" transform="rotate(45 10 10)" />
     </svg>
   );
 }
@@ -161,9 +161,9 @@ function DiamondSvg() {
 function SmallDotsSvg() {
   return (
     <svg width="36" height="8" viewBox="0 0 36 8" fill="none">
-      <circle cx="4" cy="4" r="2.5" fill="#6366F1" fillOpacity="0.45" />
-      <circle cx="18" cy="4" r="2.5" fill="#6366F1" fillOpacity="0.28" />
-      <circle cx="32" cy="4" r="2.5" fill="#6366F1" fillOpacity="0.15" />
+      <circle cx="4" cy="4" r="2.5" fill="var(--color-brand)" fillOpacity="0.45" />
+      <circle cx="18" cy="4" r="2.5" fill="var(--color-brand)" fillOpacity="0.28" />
+      <circle cx="32" cy="4" r="2.5" fill="var(--color-brand)" fillOpacity="0.15" />
     </svg>
   );
 }
@@ -469,14 +469,14 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
         style={{
           background: isDark
             ? [
-                'radial-gradient(ellipse 70% 50% at 50% 30%, rgba(99,102,241,0.12) 0%, transparent 60%)',
-                'radial-gradient(ellipse 40% 40% at 18% 22%, rgba(139,92,246,0.08) 0%, transparent 55%)',
-                'radial-gradient(ellipse 40% 30% at 82% 22%, rgba(6,182,212,0.06) 0%, transparent 55%)',
+                'radial-gradient(ellipse 70% 50% at 50% 30%, color-mix(in srgb, var(--color-brand) 12%, transparent) 0%, transparent 60%)',
+                'radial-gradient(ellipse 40% 40% at 18% 22%, color-mix(in srgb, var(--color-brand-hover) 8%, transparent) 0%, transparent 55%)',
+                'radial-gradient(ellipse 40% 30% at 82% 22%, color-mix(in srgb, var(--color-info) 6%, transparent) 0%, transparent 55%)',
               ].join(', ')
             : [
-                'radial-gradient(ellipse 70% 50% at 50% 30%, rgba(99,102,241,0.08) 0%, transparent 60%)',
-                'radial-gradient(ellipse 40% 40% at 18% 22%, rgba(139,92,246,0.05) 0%, transparent 55%)',
-                'radial-gradient(ellipse 40% 30% at 82% 22%, rgba(6,182,212,0.04) 0%, transparent 55%)',
+                'radial-gradient(ellipse 70% 50% at 50% 30%, color-mix(in srgb, var(--color-brand) 8%, transparent) 0%, transparent 60%)',
+                'radial-gradient(ellipse 40% 40% at 18% 22%, color-mix(in srgb, var(--color-brand-hover) 5%, transparent) 0%, transparent 55%)',
+                'radial-gradient(ellipse 40% 30% at 82% 22%, color-mix(in srgb, var(--color-info) 4%, transparent) 0%, transparent 55%)',
               ].join(', '),
         }}
       />
@@ -534,7 +534,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
           <div
             className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none w-[60%] h-[55%] z-[1]"
             style={{
-              background: 'radial-gradient(ellipse 70% 70% at 50% 80%, rgba(99,102,241,0.38) 0%, rgba(139,92,246,0.18) 45%, transparent 70%)',
+              background: 'radial-gradient(ellipse 70% 70% at 50% 80%, color-mix(in srgb, var(--color-brand) 38%, transparent) 0%, color-mix(in srgb, var(--color-brand-hover) 18%, transparent) 45%, transparent 70%)',
               filter: 'blur(28px)',
             }}
           />

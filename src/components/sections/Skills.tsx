@@ -43,6 +43,20 @@ export function Skills({ isDark }: SkillsProps) {
     const container = containerRef.current;
     if (!canvas || !container) return;
 
+    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDark ? '#b32d4b' : '#800020');
+    const baseColor = new THREE.Color(rawBrand);
+    const hsl = { h: 0, s: 0, l: 0 };
+    baseColor.getHSL(hsl);
+    const colorHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.05, hsl.l - 0.2) : Math.min(0.95, hsl.l + 0.3)).getHex();
+    const emissiveHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.1, hsl.l - 0.1) : hsl.l).getHex();
+    const specularHex = isDark ? new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + 0.2), Math.min(0.9, hsl.l + 0.3)).getHex() : 0xffffff;
+    const wireHex = baseColor.getHex();
+    const pointHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.min(1, hsl.l + 0.2) : Math.max(0, hsl.l - 0.2)).getHex();
+    const rimHex = pointHex;
+    const fillHex = baseColor.getHex();
+    const ambHex = new THREE.Color().setHSL(hsl.h, Math.max(0, hsl.s - 0.2), isDark ? Math.min(0.8, hsl.l + 0.2) : Math.max(0.2, hsl.l - 0.2)).getHex();
+
+
     // Check prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -64,18 +78,18 @@ export function Skills({ isDark }: SkillsProps) {
     resize();
 
     // Lights
-    const ambLight = new THREE.AmbientLight(0x9988ff, 0.45);
+    const ambLight = new THREE.AmbientLight(ambHex, 0.45);
     scene.add(ambLight);
 
     const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
     keyLight.position.set(3, 4, 5);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.5);
+    const rimLight = new THREE.DirectionalLight(rimHex, 0.5);
     rimLight.position.set(-4, -1, -3);
     scene.add(rimLight);
 
-    const fillLight = new THREE.PointLight(0xa855f7, 0.4, 14);
+    const fillLight = new THREE.PointLight(fillHex, 0.4, 14);
     fillLight.position.set(-2, 3, 2);
     scene.add(fillLight);
 
@@ -83,25 +97,28 @@ export function Skills({ isDark }: SkillsProps) {
     scene.add(root);
 
     // Geometries
+    
+    
+
     const geom = new THREE.DodecahedronGeometry(1.4, 0); // 12-sided solid
     const pointsGeom = new THREE.DodecahedronGeometry(1.4, 1); // slightly more dense for points
     const wireGeom = new THREE.WireframeGeometry(new THREE.DodecahedronGeometry(1.4, 0)); // 12-sided wireframe
 
     // 1. Points (Research)
-    const pointsMat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.04, transparent: true, opacity: 0 });
+    const pointsMat = new THREE.PointsMaterial({ color: pointHex, size: 0.04, transparent: true, opacity: 0 });
     const meshPoints = new THREE.Points(pointsGeom, pointsMat);
     root.add(meshPoints);
 
     // 2. Wireframe (Design)
-    const wireMat = new THREE.LineBasicMaterial({ color: 0x6366f1, transparent: true, opacity: 0 });
+    const wireMat = new THREE.LineBasicMaterial({ color: wireHex, transparent: true, opacity: 0 });
     const meshWire = new THREE.LineSegments(wireGeom, wireMat);
     root.add(meshWire);
 
     // 3. Solid (Prototyping / Intro)
     const shellMat = new THREE.MeshPhongMaterial({
-      color: isDark ? 0x15113d : 0xe0d8fa,
-      emissive: isDark ? 0x241573 : 0x6357e6,
-      specular: isDark ? 0x9966ff : 0xffffff,
+      color: colorHex,
+      emissive: emissiveHex,
+      specular: specularHex,
       shininess: isDark ? 80 : 140,
       transparent: true,
       opacity: 0.9,
@@ -112,12 +129,12 @@ export function Skills({ isDark }: SkillsProps) {
 
     // Initial Light setup based on isDark
     if (!isDark) {
-      ambLight.color.setHex(0xa5b4fc); ambLight.intensity = 0.5;
+      ambLight.color.setHex(ambHex); ambLight.intensity = 0.5;
       keyLight.intensity = 1.4;
-      rimLight.color.setHex(0x6366f1); rimLight.intensity = 0.8;
-      fillLight.color.setHex(0x8b5cf6);
-      wireMat.color.setHex(0x6366f1);
-      pointsMat.color.setHex(0x0284c7);
+      rimLight.color.setHex(rimHex); rimLight.intensity = 0.8;
+      fillLight.color.setHex(fillHex);
+      wireMat.color.setHex(wireHex);
+      pointsMat.color.setHex(pointHex);
     }
 
     stateRef.current = {
@@ -269,36 +286,53 @@ export function Skills({ isDark }: SkillsProps) {
     const s = stateRef.current;
     if (!s) return;
 
+    
+
+
+    
+    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDark ? '#b32d4b' : '#800020');
+    const baseColor = new THREE.Color(rawBrand);
+    const hsl = { h: 0, s: 0, l: 0 };
+    baseColor.getHSL(hsl);
+    const colorHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.05, hsl.l - 0.2) : Math.min(0.95, hsl.l + 0.3)).getHex();
+    const emissiveHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.1, hsl.l - 0.1) : hsl.l).getHex();
+    const specularHex = isDark ? new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + 0.2), Math.min(0.9, hsl.l + 0.3)).getHex() : 0xffffff;
+    const wireHex = baseColor.getHex();
+    const pointHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.min(1, hsl.l + 0.2) : Math.max(0, hsl.l - 0.2)).getHex();
+    const rimHex = pointHex;
+    const fillHex = baseColor.getHex();
+    const ambHex = new THREE.Color().setHSL(hsl.h, Math.max(0, hsl.s - 0.2), isDark ? Math.min(0.8, hsl.l + 0.2) : Math.max(0.2, hsl.l - 0.2)).getHex();
+
     if (isDark) {
-      s.shellMat.color.setHex(0x15113d);
-      s.shellMat.emissive.setHex(0x241573);
-      s.shellMat.specular.setHex(0x9966ff);
+      s.shellMat.color.setHex(colorHex);
+      s.shellMat.emissive.setHex(emissiveHex);
+      s.shellMat.specular.setHex(specularHex);
       s.shellMat.shininess = 80;
 
-      s.wireMat.color.setHex(0x6366f1);
-      s.pointsMat.color.setHex(0x38bdf8);
+      s.wireMat.color.setHex(wireHex);
+      s.pointsMat.color.setHex(pointHex);
 
-      s.ambLight.color.setHex(0x9988ff);
+      s.ambLight.color.setHex(ambHex);
       s.ambLight.intensity = 0.45;
       s.keyLight.intensity = 0.9;
-      s.rimLight.color.setHex(0x38bdf8);
+      s.rimLight.color.setHex(rimHex);
       s.rimLight.intensity = 0.5;
-      s.fillLight.color.setHex(0xa855f7);
+      s.fillLight.color.setHex(fillHex);
     } else {
-      s.shellMat.color.setHex(0xe0d8fa);
-      s.shellMat.emissive.setHex(0x6357e6);
-      s.shellMat.specular.setHex(0xffffff);
+      s.shellMat.color.setHex(colorHex);
+      s.shellMat.emissive.setHex(emissiveHex);
+      s.shellMat.specular.setHex(specularHex);
       s.shellMat.shininess = 140;
 
-      s.wireMat.color.setHex(0x6366f1);
-      s.pointsMat.color.setHex(0x0284c7);
+      s.wireMat.color.setHex(wireHex);
+      s.pointsMat.color.setHex(pointHex);
 
-      s.ambLight.color.setHex(0xa5b4fc);
+      s.ambLight.color.setHex(ambHex);
       s.ambLight.intensity = 0.5;
       s.keyLight.intensity = 1.4;
-      s.rimLight.color.setHex(0x6366f1);
+      s.rimLight.color.setHex(rimHex);
       s.rimLight.intensity = 0.8;
-      s.fillLight.color.setHex(0x8b5cf6);
+      s.fillLight.color.setHex(fillHex);
     }
   }, [isDark]);
 

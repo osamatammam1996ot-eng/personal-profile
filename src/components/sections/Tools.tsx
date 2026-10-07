@@ -21,12 +21,12 @@ import { ActiveToolCard } from './tools/ActiveToolCard';
 import { FACE_NORMALS_NORMALIZED, rotForFace } from './tools/constants';
 
 /* ─── Face sprite builder ───────────────────────────────────────────────────── */
-function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boolean): THREE.Sprite {
+function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boolean, brandStr: string, brandRGB: [number, number, number]): THREE.Sprite {
   const SZ = 256;
   const cv = document.createElement('canvas');
   cv.width = SZ; cv.height = SZ;
   const cx = cv.getContext('2d')!;
-  const [rv, gv, bv] = tool.rgb;
+  const [rv, gv, bv] = brandRGB;
   const rr = Math.round(rv * 255), gg = Math.round(gv * 255), bb = Math.round(bv * 255);
 
   const grd = cx.createRadialGradient(128,128,40,128,128,120);
@@ -40,7 +40,7 @@ function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boole
   cx.fillStyle = `rgba(${rr},${gg},${bb},.13)`; cx.fill();
 
   cx.beginPath(); cx.arc(128,128,88,0,Math.PI*2);
-  cx.shadowColor = tool.glow; cx.shadowBlur = 14;
+  cx.shadowColor = brandStr; cx.shadowBlur = 14;
   cx.strokeStyle = `rgba(${rr},${gg},${bb},.85)`;
   cx.lineWidth = 3.5; cx.stroke();
   cx.shadowBlur = 0;
@@ -50,9 +50,9 @@ function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boole
   cx.textAlign = 'center'; cx.textBaseline = 'middle';
   
   if (isDarkTheme) {
-    cx.shadowColor = tool.glow; 
+    cx.shadowColor = brandStr; 
     cx.shadowBlur = 20;
-    cx.fillStyle = tool.glow;
+    cx.fillStyle = brandStr;
   } else {
     // Darker variant for light mode
     const darkR = Math.floor(rr * 0.5);
@@ -142,7 +142,21 @@ export function Tools({ isDark = false }: ToolsProps) {
     window.addEventListener('resize', onResize);
 
     /* ── Lights — stored in refs so isDark effect can update them ── */
-    const amb = new THREE.AmbientLight(0x9988ff, 0.55);
+    
+    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDark ? '#b32d4b' : '#800020');
+    const baseColor = new THREE.Color(rawBrand);
+    const hsl = { h: 0, s: 0, l: 0 };
+    baseColor.getHSL(hsl);
+    const colorHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.05, hsl.l - 0.2) : Math.min(0.95, hsl.l + 0.3)).getHex();
+    const emissiveHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.1, hsl.l - 0.1) : hsl.l).getHex();
+    const specularHex = isDark ? new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + 0.2), Math.min(0.9, hsl.l + 0.3)).getHex() : 0xffffff;
+    const wireHex = baseColor.getHex();
+    const pointHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.min(1, hsl.l + 0.2) : Math.max(0, hsl.l - 0.2)).getHex();
+    const rimHex = pointHex;
+    const fillHex = baseColor.getHex();
+    const ambHex = new THREE.Color().setHSL(hsl.h, Math.max(0, hsl.s - 0.2), isDark ? Math.min(0.8, hsl.l + 0.2) : Math.max(0.2, hsl.l - 0.2)).getHex();
+
+    const amb = new THREE.AmbientLight(ambHex, 0.55);
     scene.add(amb);
     ambLightRef.current = amb;
 
@@ -150,11 +164,11 @@ export function Tools({ isDark = false }: ToolsProps) {
     key.position.set(3, 4, 5); scene.add(key);
     keyLightRef.current = key;
 
-    const rim = new THREE.DirectionalLight(0x38bdf8, 0.75);
+    const rim = new THREE.DirectionalLight(rimHex, 0.75);
     rim.position.set(-4, -1, -3); scene.add(rim);
     rimLightRef.current = rim;
 
-    const fill = new THREE.PointLight(0xa855f7, 0.6, 14);
+    const fill = new THREE.PointLight(fillHex, 0.6, 14);
     fill.position.set(-2, 3, 2); scene.add(fill);
     fillLightRef.current = fill;
 
@@ -163,7 +177,7 @@ export function Tools({ isDark = false }: ToolsProps) {
 
     /* ── Shell — stored in ref ── */
     const shellMat = new THREE.MeshPhongMaterial({
-      color: 0x0b0822, emissive: 0x120940, specular: 0x9966ff,
+      color: colorHex, emissive: emissiveHex, specular: specularHex,
       shininess: 80, transparent: true, opacity: 0.65, side: THREE.DoubleSide,
     });
     shellMatRef.current = shellMat;
@@ -171,7 +185,7 @@ export function Tools({ isDark = false }: ToolsProps) {
 
     /* ── Wireframe — stored in ref ── */
     const wireMat = new THREE.MeshBasicMaterial({
-      color: 0x5533bb, wireframe: true, transparent: true, opacity: 0.11,
+      color: wireHex, wireframe: true, transparent: true, opacity: 0.11,
     });
     wireMatRef.current = wireMat;
     ROOT.add(new THREE.Mesh(new THREE.DodecahedronGeometry(1.565, 0), wireMat));
@@ -190,7 +204,10 @@ export function Tools({ isDark = false }: ToolsProps) {
         new THREE.Vector3(nx, ny, nz),
       );
       grp.quaternion.copy(quat);
-      const sp = makeFaceSprite(TOOLS[fi], lang, isDark);
+      const computedBrandStr = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDark ? '#b32d4b' : '#800020');
+      const baseCol = new THREE.Color(computedBrandStr);
+      const brandRGB: [number, number, number] = [baseCol.r, baseCol.g, baseCol.b];
+      const sp = makeFaceSprite(TOOLS[fi], lang, isDark, computedBrandStr, brandRGB);
       sp.position.set(0, 0, 0.018);
       grp.add(sp);
       PANELS.push({ sprite: sp, grp, idx: fi });
@@ -204,7 +221,10 @@ export function Tools({ isDark = false }: ToolsProps) {
         old.material.map?.dispose();
         old.material.dispose();
         PANELS[fi].grp.remove(old);
-        const sp = makeFaceSprite(TOOLS[fi], lang, currentDark);
+        const computedBrandStr = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (currentDark ? '#b32d4b' : '#800020');
+        const baseCol = new THREE.Color(computedBrandStr);
+        const brandRGB: [number, number, number] = [baseCol.r, baseCol.g, baseCol.b];
+        const sp = makeFaceSprite(TOOLS[fi], lang, currentDark, computedBrandStr, brandRGB);
         sp.position.set(0, 0, 0.018);
         PANELS[fi].grp.add(sp);
         PANELS[fi].sprite = sp;
@@ -333,36 +353,50 @@ export function Tools({ isDark = false }: ToolsProps) {
     const fill  = fillLightRef.current;
     if (!shell || !wire || !amb || !key || !rim || !fill) return;
 
+    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDark ? '#b32d4b' : '#800020');
+    const baseColor = new THREE.Color(rawBrand);
+    const hsl = { h: 0, s: 0, l: 0 };
+    baseColor.getHSL(hsl);
+    const colorHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.05, hsl.l - 0.2) : Math.min(0.95, hsl.l + 0.3)).getHex();
+    const emissiveHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.max(0.1, hsl.l - 0.1) : hsl.l).getHex();
+    const specularHex = isDark ? new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + 0.2), Math.min(0.9, hsl.l + 0.3)).getHex() : 0xffffff;
+    const wireHex = baseColor.getHex();
+    const pointHex = new THREE.Color().setHSL(hsl.h, hsl.s, isDark ? Math.min(1, hsl.l + 0.2) : Math.max(0, hsl.l - 0.2)).getHex();
+    const rimHex = pointHex;
+    const fillHex = baseColor.getHex();
+    const ambHex = new THREE.Color().setHSL(hsl.h, Math.max(0, hsl.s - 0.2), isDark ? Math.min(0.8, hsl.l + 0.2) : Math.max(0.2, hsl.l - 0.2)).getHex();
+
+
     if (isDark) {
       /* ── dark palette (original) ── */
-      shell.color.set(0x15113d);
-      shell.emissive.set(0x241573);
-      shell.specular.set(0x9966ff);
+      shell.color.set(colorHex);
+      shell.emissive.set(emissiveHex);
+      shell.specular.set(specularHex);
       shell.shininess = 80;
       shell.opacity   = 0.65;
 
-      wire.color.set(0x5533bb);
+      wire.color.set(wireHex);
       wire.opacity = 0.11;
 
-      amb.color.set(0x9988ff);  amb.intensity  = 0.55;
+      amb.color.set(ambHex);  amb.intensity  = 0.55;
       key.color.set(0xffffff);  key.intensity  = 1.2;
-      rim.color.set(0x38bdf8);  rim.intensity  = 0.75;
-      fill.color.set(0xa855f7); fill.intensity = 0.6;
+      rim.color.set(rimHex);  rim.intensity  = 0.75;
+      fill.color.set(fillHex); fill.intensity = 0.6;
     } else {
       /* ── light palette — frosted indigo gem ── */
-      shell.color.set(0xe0d8fa);    // softer, lighter lavender body
-      shell.emissive.set(0x6357e6); // lighter indigo emissive
-      shell.specular.set(0xffffff); // pure white highlights = clear 3D facets
+      shell.color.set(colorHex);
+      shell.emissive.set(emissiveHex);
+      shell.specular.set(specularHex); // pure white highlights = clear 3D facets
       shell.shininess = 140;        // higher shininess = sharper, glassier specular
       shell.opacity   = 0.78;       // slightly more opaque so it reads on light bg
 
-      wire.color.set(0x6366f1);     // site accent indigo
+      wire.color.set(wireHex);     // site accent indigo
       wire.opacity = 0.28;          // bolder wireframe so edges pop on light bg
 
-      amb.color.set(0xa5b4fc);  amb.intensity  = 0.6;  // cool violet fill
-      key.color.set(0xffffff);  key.intensity  = 1.8;  // strong white key = clear shading
-      rim.color.set(0x6366f1);  rim.intensity  = 1.1;  // indigo rim = depth on light side
-      fill.color.set(0x8b5cf6); fill.intensity = 0.5;  // violet fill
+      amb.color.set(ambHex);  amb.intensity  = 0.6;
+      key.color.set(0xffffff);  key.intensity  = 1.8;
+      rim.color.set(rimHex);  rim.intensity  = 1.1;
+      fill.color.set(fillHex); fill.intensity = 0.5;  // violet fill
     }
 
     shell.needsUpdate = true;
@@ -393,7 +427,7 @@ export function Tools({ isDark = false }: ToolsProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, [prev, next]);
 
-  const tool = TOOLS[activeIdx] || { name: 'Figma', abbr: 'Fi', cat: { en: 'Design', ar: 'تصميم' }, desc: { en: '', ar: '' }, tags: { en: [], ar: [] }, rgb: [0.62,0.28,1], glow: '#a855f7', proficiency: 98 };
+  const tool = TOOLS[activeIdx] || { name: 'Figma', abbr: 'Fi', cat: { en: 'Design', ar: 'تصميم' }, desc: { en: '', ar: '' }, tags: { en: [], ar: [] }, rgb: [0.62,0.28,1], glow: 'var(--color-brand)', proficiency: 98 };
   const pct  = tool.proficiency ?? 50;
 
   /* ─── Theme tokens (matching Skills.tsx and rest of site) ────────────────── */
@@ -410,11 +444,11 @@ export function Tools({ isDark = false }: ToolsProps) {
   const toolsDesc = cmsData.tools.desc[lang] || (lang === 'en' ? 'Twelve tools. One cohesive workflow.' : 'اثنا عشر أداة. سير عمل متماسك واحد.');
   const clickHint = cmsData.tools.clickHint[lang] || (lang === 'en' ? 'Click any card to explore' : 'انقر على أي بطاقة للاستكشاف');
   const proficiencyLabel = cmsData.tools.proficiency[lang] || (lang === 'en' ? 'Proficiency' : 'الكفاءة');
-  const bg        = isDark ? '#080810'                    : '#f5f5fa';
-  const headingC  = isDark ? '#f0f0ff'                    : '#0f0f1e';
+  const bg        = isDark ? 'var(--color-surface)' : 'var(--color-surface)';
+  const headingC  = isDark ? 'var(--color-text-primary)' : 'var(--color-text-primary)';
   const bodyC     = isDark ? 'rgba(255,255,255,0.50)'     : 'rgba(0,0,0,0.50)';
   const mutedC    = isDark ? 'rgba(255,255,255,0.38)'     : 'rgba(0,0,0,0.38)';
-  const eyebrowC  = isDark ? '#a5b4fc'                    : '#6366f1';
+  const eyebrowC  = isDark ? 'var(--color-brand)' : 'var(--color-brand)';
   const eyebrowBg = isDark ? 'rgba(99,102,241,0.15)'      : 'rgba(99,102,241,0.10)';
   const eyebrowBd = isDark ? 'rgba(99,102,241,0.30)'      : 'rgba(99,102,241,0.25)';
   const cardBg    = isDark ? 'rgba(15,15,30,0.95)'        : 'rgba(255,255,255,0.95)';
@@ -422,10 +456,10 @@ export function Tools({ isDark = false }: ToolsProps) {
   const cardShadow= isDark ? '0 8px 30px rgba(0,0,0,0.5)': '0 8px 24px rgba(0,0,0,0.12)';
   const tagBg     = isDark ? 'rgba(99,102,241,0.10)'      : 'rgba(99,102,241,0.08)';
   const tagBd     = isDark ? 'rgba(99,102,241,0.22)'      : 'rgba(99,102,241,0.18)';
-  const tagC      = isDark ? '#a5b4fc'                    : '#6366f1';
+  const tagC      = isDark ? 'var(--color-brand)' : 'var(--color-brand)';
   const navBd     = isDark ? 'rgba(99,102,241,0.25)'      : 'rgba(99,102,241,0.20)';
   const navBg     = isDark ? 'rgba(99,102,241,0.08)'      : 'rgba(99,102,241,0.06)';
-  const navHovBd  = isDark ? '#6366f1'                    : '#6366f1';
+  const navHovBd  = isDark ? 'var(--color-brand)' : 'var(--color-brand)';
   const navHovBg  = isDark ? 'rgba(99,102,241,0.25)'      : 'rgba(99,102,241,0.15)';
   const ringC     = isDark ? 'rgba(255,255,255,0.55)'     : 'rgba(0,0,0,0.25)';
   const hintC     = isDark ? 'rgba(255,255,255,0.30)'     : 'rgba(0,0,0,0.28)';
@@ -533,12 +567,12 @@ export function Tools({ isDark = false }: ToolsProps) {
             border: cardVisible
               ? isDark
                 ? `2px solid ${ringC}`
-                : `2.5px solid ${tool.glow}`
+                : `2.5px solid var(--color-brand)`
               : '2px solid rgba(0,0,0,0)',
             boxShadow: cardVisible
               ? isDark
-                ? `0 0 22px 4px ${tool.glow}88, inset 0 0 22px 2px ${tool.glow}44`
-                : `0 0 28px 6px ${tool.glow}99, inset 0 0 18px 3px ${tool.glow}55, 0 0 0 4px ${tool.glow}22`
+                ? `0 0 22px 4px color-mix(in srgb, var(--color-brand) 53%, transparent), inset 0 0 22px 2px color-mix(in srgb, var(--color-brand) 26%, transparent)`
+                : `0 0 28px 6px color-mix(in srgb, var(--color-brand) 60%, transparent), inset 0 0 18px 3px color-mix(in srgb, var(--color-brand) 33%, transparent), 0 0 0 4px color-mix(in srgb, var(--color-brand) 13%, transparent)`
               : 'none',
             transition: 'border-color .4s ease, box-shadow .4s ease',
           }} />

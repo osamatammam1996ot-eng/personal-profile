@@ -126,7 +126,7 @@ export function ActiveToolCard({
                 width: i === activeIdx ? 18 : 6,
                 height: 6, borderRadius: i === activeIdx ? 3 : '50%',
                 border: 'none', cursor: 'pointer', padding: 0,
-                background: i === activeIdx ? '#6366f1' : dotInact,
+                background: i === activeIdx ? 'var(--color-brand)' : dotInact,
                 boxShadow: i === activeIdx ? '0 0 10px rgba(99,102,241,0.7)' : 'none',
                 transition: 'all .28s ease',
               }}

@@ -109,7 +109,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
             width: 44, height: 44, borderRadius: '50%',
             background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', color: '#fff', transition: 'background 0.2s'
+            cursor: 'pointer', color: 'var(--color-text-primary)', transition: 'background 0.2s'
           }}
         >
           <X size={20} />
@@ -165,7 +165,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                 )}
 
                 {currentMedia.type === 'video' && (
-                  <div style={{ width: '100%', height: '100%', maxWidth: 1600, maxHeight: 900, borderRadius: 16, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.5)', background: '#000' }}>
+                  <div style={{ width: '100%', height: '100%', maxWidth: 1600, maxHeight: 900, borderRadius: 16, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.5)', background: 'var(--color-surface)' }}>
                     {isYouTube ? (
                       <iframe
                         src={currentMedia.url.replace('watch?v=', 'embed/').split('&')[0] + '?autoplay=1&rel=0&modestbranding=1'}
@@ -228,7 +228,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                   <Image src={item.url} alt="thumbnail" fill sizes="60px" style={{ objectFit: 'cover' }} />
                 </div>
               ) : (
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#222' }}>
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-surface-elevated)' }}>
                   <span className="text-xs font-semibold text-white">VIDEO</span>
                 </div>
               )}
