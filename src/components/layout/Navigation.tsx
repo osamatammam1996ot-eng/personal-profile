@@ -121,7 +121,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
               >
                 {link.label}
                 <motion.span
-                  className="absolute bottom-1 left-4 right-4 h-[2px] rounded-full bg-[image:var(--indigo-gradient)]"
+                  className="absolute bottom-1 left-4 right-4 h-[2px] rounded-full bg-brand-line"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: isActive ? 1 : 0 }}
                   transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
@@ -136,8 +136,8 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
           {/* Language toggle */}
           <motion.button
             onClick={toggleLang}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-colors duration-200 bg-indigo-glow/10 border border-indigo-glow/25 text-indigo-glow dark:text-indigo-light"
-            whileHover={{ scale: 1.06, boxShadow: '0 0 16px rgba(99,102,241,0.3)' }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-[color,background-color,box-shadow] duration-200 bg-brand-accent/10 border border-brand-accent/25 text-brand-accent dark:text-brand-light hover:shadow-glow-soft"
+            whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.95 }}
             title={isRTL ? 'Switch to English' : 'التبديل إلى العربية'}
           >
@@ -149,11 +149,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.18 }}
-                className="text-sm font-bold"
-                style={{
-                  fontFamily: isRTL ? 'Inter, sans-serif' : 'Cairo, sans-serif',
-                  letterSpacing: isRTL ? '0.04em' : 0,
-                }}
+                className={`text-sm font-bold ${isRTL ? 'font-[Inter,sans-serif] tracking-[0.04em]' : 'font-[Cairo,sans-serif] tracking-normal'}`}
               >
                 {isRTL ? 'عربي' : 'EN'}
               </motion.span>
@@ -163,7 +159,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
           {/* Dark mode toggle */}
           <motion.button
             onClick={onToggleDark}
-            className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200 bg-foreground/6 text-indigo-glow dark:text-indigo-light"
+            className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200 bg-foreground/6 text-brand-accent dark:text-brand-light"
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >

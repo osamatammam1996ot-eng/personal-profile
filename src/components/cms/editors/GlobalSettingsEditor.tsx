@@ -10,10 +10,10 @@ export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEdito
 
   return (
     <div className="grid gap-3">
-      <h2 className="text-white mt-0">Global Content Settings</h2>
+      <h2 className="text-admin-fg mt-0">Global Content Settings</h2>
 
       <div className={cardClasses}>
-        <p className="m-0 mb-2.5 text-white font-bold text-base">SEO / Owner</p>
+        <p className="m-0 mb-2.5 text-admin-fg font-bold text-base">SEO / Owner</p>
         <div className="grid gap-2.5">
           <div>
             <label className={labelClasses}>SEO Title</label>
@@ -72,7 +72,7 @@ export function GlobalSettingsEditor({ draft, updateDraft }: GlobalSettingsEdito
       />
 
       <div className={cardClasses}>
-        <p className="m-0 mb-2.5 text-white font-bold text-base">Footer Links</p>
+        <p className="m-0 mb-2.5 text-admin-fg font-bold text-base">Footer Links</p>
         <div className="grid grid-cols-2 gap-2.5">
           <div>
             <label className={labelClasses}>English links (comma-separated)</label>

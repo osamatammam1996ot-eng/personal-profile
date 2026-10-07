@@ -1,4 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react';
+import { parseColor, readToken, tokenRgba } from '../../lib/theme-tokens';
 
 const HEX_SIZE = 24;
 const SQRT3 = Math.sqrt(3);
@@ -60,9 +61,16 @@ export function HexGrid({ isDark }: HexGridProps) {
   const animFrameRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
   const cssSize = useRef({ w: 0, h: 0 });
-  const isDarkRef = useRef(isDark);
+  // Colors come from the theme tokens; refreshed whenever the theme flips
+  const colorsRef = useRef({ line: '', glow: '', edge: '' });
 
-  useEffect(() => { isDarkRef.current = isDark; }, [isDark]);
+  useEffect(() => {
+    colorsRef.current = {
+      line: tokenRgba('--border-default', 0.8),
+      glow: parseColor(readToken('--brand')).slice(0, 3).join(','),
+      edge: parseColor(readToken('--brand-hover')).slice(0, 3).join(','),
+    };
+  }, [isDark]);
 
   const setHoverTargets = useCallback((q: number | null, r: number | null) => {
     // Decay all existing
@@ -103,10 +111,7 @@ export function HexGrid({ isDark }: HexGridProps) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
-    const dark = isDarkRef.current;
-    const defaultStroke = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
-    const accentColor1 = dark ? [179, 45, 75] : [128, 0, 32];
-    const accentColor2 = dark ? [204, 58, 90] : [91, 15, 30];
+    const { line: defaultStroke, glow: accentColor1, edge: accentColor2 } = colorsRef.current;
 
     const qMin = Math.floor(-w / 2 / (HEX_SIZE * 1.5)) - 2;
     const qMax = Math.ceil(w / 2 / (HEX_SIZE * 1.5)) + 2;
@@ -130,16 +135,16 @@ export function HexGrid({ isDark }: HexGridProps) {
 
         if (intensity > 0) {
           const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, HEX_SIZE * 1.2);
-          grad.addColorStop(0, `rgba(${accentColor1.join(',')},${intensity})`);
-          grad.addColorStop(1, `rgba(${accentColor2.join(',')},${intensity * 0.6})`);
+          grad.addColorStop(0, `rgba(${accentColor1},${intensity})`);
+          grad.addColorStop(1, `rgba(${accentColor2},${intensity * 0.6})`);
           ctx.fillStyle = grad;
           ctx.fill();
 
           if (intensity > 0.3) {
             ctx.shadowBlur = 18 * intensity;
-            ctx.shadowColor = `rgba(${accentColor1.join(',')},${intensity * 0.9})`;
+            ctx.shadowColor = `rgba(${accentColor1},${intensity * 0.9})`;
           }
-          ctx.strokeStyle = `rgba(${accentColor2.join(',')},${intensity * 0.9})`;
+          ctx.strokeStyle = `rgba(${accentColor2},${intensity * 0.9})`;
           ctx.lineWidth = 1;
           ctx.stroke();
         } else {
@@ -227,7 +232,7 @@ export function HexGrid({ isDark }: HexGridProps) {
 
   return (
     <div ref={wrapperRef} className="absolute inset-0 overflow-hidden pointer-events-none">
-      <canvas ref={canvasRef} className="absolute inset-0" style={{ filter: 'blur(4px)' }} />
+      <canvas ref={canvasRef} className="absolute inset-0 blur-[4px]" />
     </div>
   );
 }

@@ -45,7 +45,7 @@ export function HeroEditor({ draft, updateDraft, updateHeroRole, addHeroRole, re
 
   return (
     <div className="grid gap-3">
-      <h2 className="text-white mt-0">Hero Content</h2>
+      <h2 className="text-admin-fg mt-0">Hero Content</h2>
       <BilingualField
         label="Label"
         en={draft.hero.label.en}

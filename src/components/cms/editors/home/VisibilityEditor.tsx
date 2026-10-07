@@ -51,7 +51,7 @@ export function VisibilityEditor({ draft, updateDraft }: VisibilityEditorProps) 
 
   return (
     <div>
-      <h2 className="text-white mt-0">Section Visibility & Order</h2>
+      <h2 className="text-admin-fg mt-0">Section Visibility & Order</h2>
       <p className="text-text-muted mt-0">Toggle any section on/off, and drag them to reorder your homepage.</p>
       <div className="flex flex-col gap-2 max-w-[400px]">
         {currentOrder.map((key, index) => {

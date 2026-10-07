@@ -15,82 +15,62 @@ interface WhyHireMeProps {
 const CARDS_VISUAL = [
   {
     id: 'systems',
-    iconGrad: 'var(--brand-gradient)',
-    iconShadow: 'color-mix(in srgb, var(--color-brand) 26%, transparent)',
-    ambientStop: 'color-mix(in srgb, var(--color-brand) 8%, transparent)',
-    accentLine: 'color-mix(in srgb, var(--color-brand) 40%, transparent)',
     rotate: -1,
     renderIcon: () => (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <g clipPath="url(#c1)">
-          <path d={svgPaths.p1a3b4700} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p3c552480} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p174f7d00} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p310deb70} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d="M10 10V6.66667" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p1a3b4700} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p3c552480} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p174f7d00} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p310deb70} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d="M10 10V6.66667" stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
         </g>
-        <defs><clipPath id="c1"><rect width="20" height="20" fill="white" /></clipPath></defs>
+        <defs><clipPath id="c1"><rect width="20" height="20" /></clipPath></defs>
       </svg>
     ),
     delay: 0,
-    glow: 'var(--color-brand)',
   },
   {
     id: 'ai',
-    iconGrad: 'var(--brand-gradient)',
-    iconShadow: 'color-mix(in srgb, var(--color-brand) 26%, transparent)',
-    ambientStop: 'color-mix(in srgb, var(--color-brand) 8%, transparent)',
-    accentLine: 'color-mix(in srgb, var(--color-brand) 40%, transparent)',
     rotate: -2,
     renderIcon: () => (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <g clipPath="url(#c2)">
-          <path d={svgPaths.p17e613c0} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p3d61d240} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p20534e00} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p392fc080} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p3fbca400} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p1c1c7100} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p240a1800} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p162c4500} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.pc0a4800} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p17e613c0} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p3d61d240} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p20534e00} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p392fc080} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p3fbca400} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p1c1c7100} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p240a1800} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.p162c4500} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+          <path d={svgPaths.pc0a4800} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
         </g>
-        <defs><clipPath id="c2"><rect width="20" height="20" fill="white" /></clipPath></defs>
+        <defs><clipPath id="c2"><rect width="20" height="20" /></clipPath></defs>
       </svg>
     ),
     delay: 0.08,
-    glow: 'var(--color-brand)',
   },
   {
     id: 'enterprise',
-    iconGrad: 'var(--brand-gradient)',
-    iconShadow: 'color-mix(in srgb, var(--color-brand) 26%, transparent)',
-    ambientStop: 'color-mix(in srgb, var(--color-brand) 8%, transparent)',
-    accentLine: 'color-mix(in srgb, var(--color-brand) 40%, transparent)',
     rotate: 2,
     renderIcon: () => (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d={svgPaths.p25fc4100} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+        <path d={svgPaths.p25fc4100} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
       </svg>
     ),
     delay: 0.16,
-    glow: 'var(--color-brand)',
   },
   {
     id: 'conversion',
-    iconGrad: 'var(--brand-gradient)',
-    iconShadow: 'color-mix(in srgb, var(--color-brand) 26%, transparent)',
-    ambientStop: 'color-mix(in srgb, var(--color-brand) 8%, transparent)',
-    accentLine: 'color-mix(in srgb, var(--color-brand) 40%, transparent)',
     rotate: 1.5,
     renderIcon: () => (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d={svgPaths.p3c797180} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-        <path d={svgPaths.p3ac0b600} stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+        <path d={svgPaths.p3c797180} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+        <path d={svgPaths.p3ac0b600} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
       </svg>
     ),
     delay: 0.24,
-    glow: 'var(--color-brand)',
   },
 ];
 
@@ -178,6 +158,9 @@ const FLOATS = [
   { id: 'cursor2',  SVG: FigmaCursorSvg, left: '6.8%',  top: '87%',   depth: 1,    dur: 6.5, del: 1.5  },
 ];
 
+// Lift-and-glow filter for the hovered card (animated by motion, so not a class)
+const HOVER_GLOW = 'drop-shadow(0 0 32px color-mix(in srgb, var(--color-brand) 86%, transparent)) drop-shadow(0 18px 48px color-mix(in srgb, var(--color-brand) 40%, transparent))';
+
 // ─── Floating element ────────────────────────────────────────────────────────
 interface FloatProps {
   SVG: React.ComponentType;
@@ -195,8 +178,8 @@ function FloatEl({ SVG, left, top, depth, dur, del, smX, smY }: FloatProps) {
   const py = useTransform(smY, v => v * depth * 0.4);
   return (
     <motion.div
-      className="absolute pointer-events-none select-none"
-      style={{ left, top, x: px, y: py, opacity: 0.68 }}
+      className="absolute pointer-events-none select-none opacity-[0.68]"
+      style={{ left, top, x: px, y: py }}
     >
       <motion.div
         animate={{ y: [0, -10, 0] }}
@@ -252,27 +235,13 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
     >
       {/* Card surface */}
       <div
-        className="relative rounded-2xl overflow-hidden px-[21px] pt-[20px] pb-[24px] min-h-[200px] bg-surface-elevated border border-brand/15 dark:border-white/10 shadow-[0_8px_32px_rgba(99,102,241,0.1),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.04)]"
+        className="relative rounded-2xl overflow-hidden px-[21px] pt-[20px] pb-[24px] min-h-[200px] bg-surface-elevated border border-brand/15 dark:border-border-default/70 shadow-tilt"
       >
         {/* Ambient radial glow */}
-        <div
-          className="absolute inset-0 pointer-events-none rounded-2xl"
-          style={{
-            background: `radial-gradient(circle at 28% 22%, ${card.ambientStop} 0%, transparent 62%)`,
-          }}
-        />
+        <div className="absolute inset-0 pointer-events-none rounded-2xl why-card-ambient" />
 
         {/* Icon badge */}
-        <div
-          className="relative flex items-center justify-center rounded-[14px] mb-[18px]"
-          style={{
-            width: 45,
-            height: 45,
-            background: card.iconGrad,
-            boxShadow: `0 4px 18px ${card.iconShadow}`,
-            flexShrink: 0,
-          }}
-        >
+        <div className="relative flex items-center justify-center shrink-0 size-[45px] rounded-[14px] mb-[18px] why-card-icon">
           <Icon />
         </div>
 
@@ -293,13 +262,7 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
         </p>
 
         {/* Bottom shimmer line */}
-        <div
-          className="absolute bottom-0 left-0 right-0 pointer-events-none"
-          style={{
-            height: 6,
-            background: `linear-gradient(90deg, transparent 0%, ${card.accentLine} 50%, transparent 100%)`,
-          }}
-        />
+        <div className="absolute bottom-0 left-0 right-0 h-1.5 pointer-events-none why-card-shimmer" />
       </div>
     </motion.div>
   );
@@ -345,7 +308,7 @@ function CardsRow({ isDark }: { isDark: boolean }) {
             onHoverStart={() => setHoveredId(card.id)}
             onHoverEnd={() => setHoveredId(null)}
             animate={isHovered
-              ? { y: -22, scale: 1.07, zIndex: 30, filter: `drop-shadow(0 0 32px color-mix(in srgb, ${card.glow} 86%, transparent)) drop-shadow(0 18px 48px color-mix(in srgb, ${card.glow} 40%, transparent))` }
+              ? { y: -22, scale: 1.07, zIndex: 30, filter: HOVER_GLOW }
               : isSibling
               ? { y: [0, -10 - i * 3, 0, -6 - i * 2, 0], scale: 0.94, zIndex: 1, filter: 'brightness(0.55) saturate(0.7)' }
               : { y: [0, -10 - i * 3, 0, -6 - i * 2, 0], scale: 1, zIndex: 1, filter: 'brightness(1) saturate(1)' }
@@ -358,18 +321,14 @@ function CardsRow({ isDark }: { isDark: boolean }) {
                   y: { duration: 5 + i * 1.2, repeat: Infinity, ease: 'easeInOut', delay: i * 0.7 },
                 }
             }
-            style={{ display: 'flex', flex: 1, position: 'relative' }}
+            className="relative flex flex-1"
           >
             {/* Glow halo */}
             <motion.div
               aria-hidden
               animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.65 }}
               transition={{ duration: 0.45, ease: 'easeOut' }}
-              style={{
-                position: 'absolute', inset: -22, borderRadius: 32, zIndex: 0, pointerEvents: 'none',
-                background: `radial-gradient(ellipse 85% 75% at 50% 65%, color-mix(in srgb, ${card.glow} 33%, transparent) 0%, transparent 68%)`,
-                filter: 'blur(14px)',
-              }}
+              className="absolute -inset-[22px] rounded-[32px] z-0 pointer-events-none why-card-halo"
             />
             {/* Spinning conic ring */}
             <motion.div
@@ -384,16 +343,9 @@ function CardsRow({ isDark }: { isDark: boolean }) {
                 scale: { duration: 0.38, ease: [0.34, 1.56, 0.64, 1] },
                 rotate: { duration: 7, repeat: Infinity, ease: 'linear' },
               }}
-              style={{
-                position: 'absolute', inset: -5, borderRadius: 24, zIndex: 0, pointerEvents: 'none',
-                backgroundImage: `conic-gradient(from 0deg, transparent 60%, color-mix(in srgb, ${card.glow} 73%, transparent) 80%, ${card.glow} 90%, transparent 100%)`,
-                padding: 1.5,
-                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                WebkitMaskComposite: 'xor',
-                maskComposite: 'exclude',
-              }}
+              className="absolute -inset-[5px] rounded-3xl z-0 pointer-events-none why-card-ring"
             />
-            <div style={{ position: 'relative', zIndex: 2, display: 'flex', flex: 1 }}>
+            <div className="relative z-[2] flex flex-1">
               <TiltCard card={card} isDark={isDark} />
             </div>
           </motion.div>
@@ -421,7 +373,7 @@ function EyeOverlay({ smX, smY }: { smX: MotionValue<number>; smY: MotionValue<n
   ];
 
   return (
-    <div className="absolute inset-0 pointer-events-none select-none" style={{ zIndex: 4 }}>
+    <div className="absolute inset-0 pointer-events-none select-none z-[4]">
       {eyes.map((eye, i) => (
         null
       ))}
@@ -464,22 +416,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
       <div className="absolute inset-0 pointer-events-none grid-pattern-fade" />
 
       {/* ── Ambient glow blobs ── */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: isDark
-            ? [
-                'radial-gradient(ellipse 70% 50% at 50% 30%, color-mix(in srgb, var(--color-brand) 12%, transparent) 0%, transparent 60%)',
-                'radial-gradient(ellipse 40% 40% at 18% 22%, color-mix(in srgb, var(--color-brand-hover) 8%, transparent) 0%, transparent 55%)',
-                'radial-gradient(ellipse 40% 30% at 82% 22%, color-mix(in srgb, var(--color-info) 6%, transparent) 0%, transparent 55%)',
-              ].join(', ')
-            : [
-                'radial-gradient(ellipse 70% 50% at 50% 30%, color-mix(in srgb, var(--color-brand) 8%, transparent) 0%, transparent 60%)',
-                'radial-gradient(ellipse 40% 40% at 18% 22%, color-mix(in srgb, var(--color-brand-hover) 5%, transparent) 0%, transparent 55%)',
-                'radial-gradient(ellipse 40% 30% at 82% 22%, color-mix(in srgb, var(--color-info) 4%, transparent) 0%, transparent 55%)',
-              ].join(', '),
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none why-ambient" />
 
       {/* ── Floating decorations ── */}
       {FLOATS.map(f => (
@@ -531,13 +468,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
           className="relative w-full flex justify-center mt-[2vh] max-w-[1380px] self-center"
         >
           {/* Portrait glow cloud */}
-          <div
-            className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none w-[60%] h-[55%] z-[1]"
-            style={{
-              background: 'radial-gradient(ellipse 70% 70% at 50% 80%, color-mix(in srgb, var(--color-brand) 38%, transparent) 0%, color-mix(in srgb, var(--color-brand-hover) 18%, transparent) 45%, transparent 70%)',
-              filter: 'blur(28px)',
-            }}
-          />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none w-[60%] h-[55%] z-[1] why-portrait-glow" />
 
           {/* Portrait image container — aspect matches Figma 1380:450 */}
           <motion.div

@@ -22,7 +22,7 @@ export function Footer({ isDark }: FooterProps) {
         {/* Left */}
         <div className="flex items-center gap-2">
           <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold bg-[image:var(--brand-gradient)]"
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-on-brand text-xs font-bold bg-brand-gradient"
           >
             OT
           </div>

@@ -19,7 +19,7 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
             "relative inline-flex items-center justify-center cursor-pointer outline-none",
             "font-medium text-base",
             "px-8 py-4 rounded-xl",
-            "border border-brand/30 dark:border-brand/40 text-brand dark:text-white/90",
+            "border border-brand/30 dark:border-brand/40 text-brand dark:text-text-primary",
             "bg-brand/5 dark:bg-brand/10",
             "hover:bg-brand/15 dark:hover:bg-brand/20 hover:border-brand dark:hover:border-brand",
             "transition-all duration-300",
@@ -40,9 +40,9 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
           "group relative inline-flex items-center justify-center cursor-pointer outline-none",
           "font-medium text-base",
           "px-8 py-4 rounded-xl",
-          "bg-[var(--brand-gradient)] text-white",
-          "border border-white/5 shadow-[0_0_15px_rgba(109,79,184,0.2),inset_0_1px_1px_rgba(255,255,255,0.15)]",
-          "transition-all duration-300 hover:shadow-[0_0_20px_rgba(109,79,184,0.3)]",
+          "bg-brand-gradient text-on-brand",
+          "border border-on-brand/5 shadow-cta",
+          "transition-all duration-300 hover:shadow-cta-hover",
           "focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "z-0 overflow-hidden",
           className
@@ -52,18 +52,18 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
         {/* Floating Hexagons Background */}
         <div className="absolute inset-0 w-full h-[200%] top-0 left-0 pointer-events-none opacity-40 animate-[bubbles_5s_linear_infinite_both]">
            {/* First Half (0% to 50%) */}
-           <Hexagon className="absolute left-[20%] top-[10%] w-4 h-4 text-white fill-transparent opacity-20" />
-           <Hexagon className="absolute left-[75%] top-[20%] w-6 h-6 text-white fill-transparent opacity-10" />
-           <Hexagon className="absolute left-[46%] top-[30%] w-5 h-5 text-white fill-white opacity-10" />
-           <Hexagon className="absolute left-[15%] top-[45%] w-4 h-4 text-white fill-transparent opacity-20" />
-           <Hexagon className="absolute left-[80%] top-[40%] w-5 h-5 text-white fill-white opacity-10" />
+           <Hexagon className="absolute left-[20%] top-[10%] w-4 h-4 text-on-brand fill-transparent opacity-20" />
+           <Hexagon className="absolute left-[75%] top-[20%] w-6 h-6 text-on-brand fill-transparent opacity-10" />
+           <Hexagon className="absolute left-[46%] top-[30%] w-5 h-5 text-on-brand fill-on-brand opacity-10" />
+           <Hexagon className="absolute left-[15%] top-[45%] w-4 h-4 text-on-brand fill-transparent opacity-20" />
+           <Hexagon className="absolute left-[80%] top-[40%] w-5 h-5 text-on-brand fill-on-brand opacity-10" />
            
            {/* Second Half (50% to 100%) - Exact copy of first half with top + 50% */}
-           <Hexagon className="absolute left-[20%] top-[60%] w-4 h-4 text-white fill-transparent opacity-20" />
-           <Hexagon className="absolute left-[75%] top-[70%] w-6 h-6 text-white fill-transparent opacity-10" />
-           <Hexagon className="absolute left-[46%] top-[80%] w-5 h-5 text-white fill-white opacity-10" />
-           <Hexagon className="absolute left-[15%] top-[95%] w-4 h-4 text-white fill-transparent opacity-20" />
-           <Hexagon className="absolute left-[80%] top-[90%] w-5 h-5 text-white fill-white opacity-10" />
+           <Hexagon className="absolute left-[20%] top-[60%] w-4 h-4 text-on-brand fill-transparent opacity-20" />
+           <Hexagon className="absolute left-[75%] top-[70%] w-6 h-6 text-on-brand fill-transparent opacity-10" />
+           <Hexagon className="absolute left-[46%] top-[80%] w-5 h-5 text-on-brand fill-on-brand opacity-10" />
+           <Hexagon className="absolute left-[15%] top-[95%] w-4 h-4 text-on-brand fill-transparent opacity-20" />
+           <Hexagon className="absolute left-[80%] top-[90%] w-5 h-5 text-on-brand fill-on-brand opacity-10" />
         </div>
 
         {/* Bold Text (Main button text, at the bottom of the stack) */}
@@ -80,7 +80,7 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
         {/* Clipped Top Layer (Combines Mask and Top Text) */}
         <div 
           className={cn(
-            "absolute inset-0 z-30 pointer-events-none bg-surface dark:bg-surface text-brand dark:text-white",
+            "absolute inset-0 z-30 pointer-events-none bg-surface text-brand dark:text-text-primary",
             "transition-all duration-[400ms] ease-out",
             "[clip-path:polygon(0_0,100%_0,100%_0,0_0)]",
             "group-hover:[clip-path:polygon(0_0,100%_0,100%_53%,0_53%)]",

@@ -30,8 +30,8 @@ export default function LoginPage() {
       </div>
 
       {/* Overlay & Login Form */}
-      <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/85 text-gray-100">
-        <div className="max-w-md w-full bg-surface-glass backdrop-blur-md p-8 rounded-[var(--radius-xl)] shadow-[var(--shadow-card)] border border-border-default">
+      <div className="absolute inset-0 z-50 flex items-center justify-center bg-scrim/85">
+        <div className="max-w-md w-full bg-surface-glass backdrop-blur-md p-8 rounded-xl shadow-raised border border-border-default">
           <h2 className="text-center mb-6 text-text-primary font-heading tracking-wide">Admin Login</h2>
         
         <form action={handleSubmit} className="space-y-4">

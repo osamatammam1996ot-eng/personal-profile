@@ -258,14 +258,14 @@ export default function AdminDashboard() {
       >
         {/* Sidebar header */}
         <div className="p-6 border-b border-admin-border-subtle flex items-center gap-4 bg-admin-highlight/20 shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand to-brand-hover flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(109,79,184,0.4)]">
-            <span className="text-base text-white">✦</span>
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand to-brand-hover flex items-center justify-center shrink-0 shadow-[0_4px_12px_color-mix(in_srgb,var(--brand)_40%,transparent)]">
+            <span className="text-base text-admin-fg">✦</span>
           </div>
           <div>
-            <p className="font-bold text-base text-white m-0 tracking-tight">
+            <p className="font-bold text-base text-admin-fg m-0 tracking-tight">
               CMS Dashboard
             </p>
-            <p className="text-xs text-white/50 m-0 mt-0.5">
+            <p className="text-xs text-admin-fg/50 m-0 mt-0.5">
               Osama Tammam Portfolio
             </p>
           </div>
@@ -278,7 +278,7 @@ export default function AdminDashboard() {
               {/* Group header */}
               <button
                 onClick={() => toggleGroup(group.id)}
-                className="flex items-center justify-between w-[calc(100%-32px)] mx-4 mt-4 mb-2 px-4 py-2 rounded-xl border border-transparent bg-transparent text-white/50 cursor-pointer text-left text-xs font-bold uppercase tracking-[0.15em] hover:text-white hover:bg-white/5 hover:border-white/10 transition-all duration-300"
+                className="flex items-center justify-between w-[calc(100%-32px)] mx-4 mt-4 mb-2 px-4 py-2 rounded-xl border border-transparent bg-transparent text-admin-fg/50 cursor-pointer text-left text-xs font-bold uppercase tracking-[0.15em] hover:text-admin-fg hover:bg-admin-fg/5 hover:border-admin-fg/10 transition-all duration-300"
               >
                 <div className="flex items-center gap-2">
                   <span>{group.icon}</span>
@@ -300,14 +300,14 @@ export default function AdminDashboard() {
                       <button
                         key={item.id}
                         onClick={() => setActiveSection(item.id)}
-                        className={`group flex items-center gap-3 w-[calc(100%-32px)] mx-4 my-1 px-4 py-2.5 rounded-xl border cursor-pointer transition-all duration-300 text-left text-base ${isActive ? "bg-white/10 text-white font-semibold border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)]" : "bg-transparent text-white/60 hover:text-white hover:bg-white/5 hover:border-white/10 border-transparent font-medium"}`}
+                        className={`group flex items-center gap-3 w-[calc(100%-32px)] mx-4 my-1 px-4 py-2.5 rounded-xl border cursor-pointer transition-all duration-300 text-left text-base ${isActive ? "bg-admin-fg/10 text-admin-fg font-semibold border-admin-fg/20 shadow-[0_0_20px_color-mix(in_srgb,var(--admin-fg)_5%,transparent)]" : "bg-transparent text-admin-fg/60 hover:text-admin-fg hover:bg-admin-fg/5 hover:border-admin-fg/10 border-transparent font-medium"}`}
                       >
-                        <span className={`transition-colors duration-300 ${isActive ? 'text-brand' : 'text-white/40 group-hover:text-white/70'}`}>{item.icon}</span>
+                        <span className={`transition-colors duration-300 ${isActive ? 'text-brand' : 'text-admin-fg/40 group-hover:text-admin-fg/70'}`}>{item.icon}</span>
                         <span className="flex-1">
                           {item.label}
                         </span>
                         {vis === false && (
-                          <EyeOff size={12} className="text-white/40" />
+                          <EyeOff size={12} className="text-admin-fg/40" />
                         )}
                       </button>
                     );
@@ -322,7 +322,7 @@ export default function AdminDashboard() {
         <div className="p-6 border-t border-admin-border-subtle bg-admin-highlight/10 mt-auto shrink-0">
           <Button
             variant="outline"
-            className="w-full justify-start gap-2 h-10 rounded-xl border-admin-border-subtle hover:border-admin-border-strong hover:bg-white/5 bg-transparent text-white/70 transition-all duration-300"
+            className="w-full justify-start gap-2 h-10 rounded-xl border-admin-border-subtle hover:border-admin-border-strong hover:bg-admin-fg/5 bg-transparent text-admin-fg/70 transition-all duration-300"
             onClick={() => router.push('/')}
           >
             <ArrowLeft size={14} />
@@ -333,7 +333,7 @@ export default function AdminDashboard() {
 
           <Button
             variant="outline"
-            className="w-full justify-start gap-2 h-10 mt-3 rounded-xl border-red-500/20 text-red-400 hover:text-red-300 hover:bg-red-500/10 hover:border-red-500/30 bg-transparent transition-all duration-300"
+            className="w-full justify-start gap-2 h-10 mt-3 rounded-xl border-danger/20 text-danger hover:text-danger/80 hover:bg-danger/10 hover:border-danger/30 bg-transparent transition-all duration-300"
             onClick={async () => {
               const { logoutAction } = await import('@/app/actions/auth');
               await logoutAction();
@@ -343,7 +343,7 @@ export default function AdminDashboard() {
           </Button>
 
           {draft?.updatedAt && (
-            <p className="text-xs text-white/40 mt-4 text-center">
+            <p className="text-xs text-admin-fg/40 mt-4 text-center">
               Last saved {new Date(draft.updatedAt).toLocaleString()}
             </p>
           )}
@@ -356,16 +356,16 @@ export default function AdminDashboard() {
         <header className="h-[76px] border-b border-admin-border-subtle bg-admin-highlight/5 flex items-center justify-between px-8 z-10 shrink-0 relative">
           <button
             onClick={() => setSidebarOpen(o => !o)}
-            className="bg-white/5 border border-white/10 text-white/70 cursor-pointer w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10 hover:text-white hover:border-white/20 transition-all shadow-sm backdrop-blur-md"
+            className="bg-admin-fg/5 border border-admin-fg/10 text-admin-fg/70 cursor-pointer w-10 h-10 flex items-center justify-center rounded-xl hover:bg-admin-fg/10 hover:text-admin-fg hover:border-admin-fg/20 transition-all shadow-sm backdrop-blur-md"
           >
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
 
           {/* Breadcrumb */}
           <div className="flex-1 flex items-center gap-3 px-6">
-            <span className="text-base text-white/50 tracking-wide">CMS</span>
-            <ChevronRight size={14} className="text-white/30" />
-            <span className="text-base font-bold text-white tracking-wide">
+            <span className="text-base text-admin-fg/50 tracking-wide">CMS</span>
+            <ChevronRight size={14} className="text-admin-fg/30" />
+            <span className="text-base font-bold text-admin-fg tracking-wide">
               {getActiveSectionLabel(activeSection)}
             </span>
           </div>
@@ -375,24 +375,24 @@ export default function AdminDashboard() {
             {/* Unsaved indicator */}
             {hasChanges && saveStatus === 'idle' && (
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
-                <span className="text-sm text-amber-500 font-medium tracking-wide">
+                <span className="w-2 h-2 rounded-full bg-warning shadow-[0_0_10px_color-mix(in_srgb,var(--warning)_50%,transparent)]" />
+                <span className="text-sm text-warning font-medium tracking-wide">
                   Unsaved changes
                 </span>
               </div>
             )}
             {saveStatus === 'saved' && (
               <div className="flex items-center gap-2">
-                <CheckCircle size={14} className="text-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)] rounded-full" />
-                <span className="text-sm text-green-500 font-medium tracking-wide">
+                <CheckCircle size={14} className="text-success shadow-[0_0_10px_color-mix(in_srgb,var(--success)_30%,transparent)] rounded-full" />
+                <span className="text-sm text-success font-medium tracking-wide">
                   Changes saved
                 </span>
               </div>
             )}
             {saveStatus === 'error' && (
               <div className="flex items-center gap-2">
-                <AlertCircle size={14} className="text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] rounded-full" />
-                <span className="text-sm text-red-500 font-medium tracking-wide">
+                <AlertCircle size={14} className="text-danger shadow-[0_0_10px_color-mix(in_srgb,var(--danger)_30%,transparent)] rounded-full" />
+                <span className="text-sm text-danger font-medium tracking-wide">
                   Save failed
                 </span>
               </div>
@@ -403,7 +403,7 @@ export default function AdminDashboard() {
               onClick={fetchData}
               disabled={loading}
               title="Reload from server"
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-wait ml-2"
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-admin-fg/5 border border-admin-fg/10 text-admin-fg/50 hover:text-admin-fg hover:bg-admin-fg/10 hover:border-admin-fg/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-wait ml-2"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             </button>
@@ -414,8 +414,8 @@ export default function AdminDashboard() {
               disabled={!hasChanges || saveStatus === 'saving' || loading}
               className={`gap-2.5 h-10 px-6 rounded-xl text-base font-semibold flex items-center transition-all duration-300 backdrop-blur-md ml-2 ${
                 (!hasChanges || saveStatus === 'saving') 
-                  ? 'bg-white/5 border border-white/10 text-white/40 shadow-none'
-                  : 'bg-white/10 hover:bg-white/20 text-white border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-white/40'
+                  ? 'bg-admin-fg/5 border border-admin-fg/10 text-admin-fg/40 shadow-none'
+                  : 'bg-admin-fg/10 hover:bg-admin-fg/20 text-admin-fg border border-admin-fg/20 shadow-[0_0_20px_color-mix(in_srgb,var(--admin-fg)_5%,transparent)] hover:shadow-[0_0_30px_color-mix(in_srgb,var(--admin-fg)_10%,transparent)] hover:border-admin-fg/40'
               }`}
             >
               {saveStatus === 'saving' ? (
@@ -433,9 +433,9 @@ export default function AdminDashboard() {
           <div className="max-w-[1100px] mx-auto flex flex-col gap-8">
             {/* Fetch error banner */}
             {fetchError && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 flex gap-3 items-center backdrop-blur-sm">
-                <AlertCircle size={18} className="text-red-400" />
-                <span className="text-base text-red-400 font-medium">
+              <div className="bg-danger/10 border border-danger/20 rounded-2xl p-4 flex gap-3 items-center backdrop-blur-sm">
+                <AlertCircle size={18} className="text-danger" />
+                <span className="text-base text-danger font-medium">
                   Could not load data from server — showing defaults. {fetchError}
                 </span>
               </div>
@@ -445,7 +445,7 @@ export default function AdminDashboard() {
             {loading && (
               <div className="flex flex-col items-center justify-center gap-4 pt-32">
                 <div className="w-10 h-10 border-4 border-brand/20 border-t-brand rounded-full animate-spin shadow-[0_0_15px_var(--cursor-glow)]" />
-                <span className="text-white/50 text-base font-medium tracking-wide">Loading CMS Data…</span>
+                <span className="text-admin-fg/50 text-base font-medium tracking-wide">Loading CMS Data…</span>
               </div>
             )}
 
@@ -489,15 +489,6 @@ export default function AdminDashboard() {
           </div>
         </main>
       </div>
-      <style>{`
-        @keyframes spin { to { transform: rotate(360deg); } }
-        * { box-sizing: border-box; }
-        body { margin: 0; padding: 0; background: ${'#0f0f12'}; }
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
-      `}</style>
     </div>
   );
 }

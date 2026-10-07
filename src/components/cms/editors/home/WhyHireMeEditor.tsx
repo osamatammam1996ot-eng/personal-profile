@@ -10,7 +10,7 @@ interface WhyHireMeEditorProps {
 export function WhyHireMeEditor({ draft, updateDraft, updateWhyCard }: WhyHireMeEditorProps) {
   return (
     <div className="grid gap-3">
-      <h2 className="text-white mt-0">Why Hire Me</h2>
+      <h2 className="text-admin-fg mt-0">Why Hire Me</h2>
       <BilingualField
         label="Word 1"
         en={draft.whyHireMe.word1.en}
@@ -40,7 +40,7 @@ export function WhyHireMeEditor({ draft, updateDraft, updateWhyCard }: WhyHireMe
         };
         return (
           <div key={index} className={cardClasses}>
-            <p className="m-0 mb-2.5 text-white font-bold text-base">
+            <p className="m-0 mb-2.5 text-admin-fg font-bold text-base">
               Card {index + 1}
             </p>
             <div className="grid gap-2.5">
