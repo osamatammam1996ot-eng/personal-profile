@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { HexGrid } from '../shared/HexGrid';
 import { ArrowRight, Mail } from 'lucide-react';
-import avatarImg from '../../assets/2d14d34cc2c291f0d8b60d9b13506b1995d59f5f.png';
-import lightAvatarImg from '../../assets/avatar-light-burgundy.png';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import { Button } from '../ui/button';
@@ -116,9 +114,9 @@ export function Hero({ isDark }: HeroProps) {
                 className="mb-[clamp(28px,4vh,44px)] shrink-0 w-[280px] sm:w-[320px] md:w-[26vw] md:min-w-[240px] md:max-w-[320px]"
               >
                 <img
-                  src={dark ? "/avatar-burgundy.webp" : (typeof lightAvatarImg === 'string' ? lightAvatarImg : (lightAvatarImg as any).src)}
+                  src="/avatar-burgundy.webp"
                   alt="Osama Tammam"
-                  className={`w-full h-auto max-w-[480px] block ${dark ? '-mb-[15%] [clip-path:inset(0_0_20px_0)]' : ''}`}
+                  className="w-full h-auto max-w-[480px] block -mb-[15%] [clip-path:inset(0_0_20px_0)]"
                 />
               </motion.div>
             );
