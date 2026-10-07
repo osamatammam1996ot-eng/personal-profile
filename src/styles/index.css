@@ -347,15 +347,15 @@
   }
 
   .roles-badge-dark {
-    background: rgba(99, 102, 241, 0.18);
-    border: 1px solid rgba(165, 180, 252, 0.25);
-    box-shadow: 0 0 28px rgba(99, 102, 241, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    background: color-mix(in srgb, var(--color-brand) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-brand-hover) 25%, transparent);
+    box-shadow: 0 0 28px color-mix(in srgb, var(--color-brand) 22%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   .roles-badge-light {
-    background: rgba(99, 102, 241, 0.10);
-    border: 1px solid rgba(99, 102, 241, 0.22);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.12);
+    background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-brand) 22%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-brand) 12%, transparent);
   }
 
   .typing-cursor {
@@ -364,7 +364,7 @@
     height: 0.9em;
     border-radius: 2px;
     vertical-align: middle;
-    box-shadow: 0 0 8px rgba(99, 102, 241, 0.9);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-brand) 90%, transparent);
     transition: opacity 0.1s;
   }
 
@@ -373,7 +373,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #6366f1;
+    background: var(--color-brand);
     opacity: 0.35;
     animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
@@ -382,8 +382,8 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    box-shadow: 0 0 8px rgba(99, 102, 241, 0.8);
+    background: var(--brand-gradient);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-brand) 80%, transparent);
     display: inline-block;
   }
 
@@ -398,7 +398,7 @@
   }
 
   .scroll-indicator-line {
-    background: linear-gradient(to bottom, #6366f1, transparent);
+    background: linear-gradient(to bottom, var(--color-brand), transparent);
   }
 }
 

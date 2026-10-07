@@ -19,7 +19,7 @@ const PROJECTS_STATIC = [
     title: 'Nexus Analytics Platform',
     tags: ['SaaS', 'AI', 'Data Viz', 'B2B'],
     image: 'https://images.unsplash.com/photo-1575388902449-6bca946ad549?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTYWFTJTIwZGFzaGJvYXJkJTIwVUklMjBkZXNpZ24lMjBkYXJrJTIwYXBwfGVufDF8fHx8MTc3NDEwMzQxOHww&ixlib=rb-4.1.0&q=80&w=1080',
-    accent: '#6366f1',
+    accent: 'var(--color-brand)',
     grad: 'linear-gradient(135deg,rgba(99,102,241,0.8),rgba(139,92,246,0.5))',
   },
   {
@@ -27,7 +27,7 @@ const PROJECTS_STATIC = [
     title: 'Orion Enterprise Suite',
     tags: ['Enterprise', 'Design System', 'SaaS', 'Scale'],
     image: 'https://images.unsplash.com/photo-1763568258367-1c52beb60be7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbnRlcnByaXNlJTIwc29mdHdhcmUlMjBpbnRlcmZhY2UlMjBwcm9kdWN0aXZpdHl8ZW58MXx8fHwxNzc0MTAzNDE5fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    accent: '#8b5cf6',
+    accent: 'var(--color-brand)',
     grad: 'linear-gradient(135deg,rgba(139,92,246,0.8),rgba(167,139,250,0.5))',
   },
   {
@@ -35,7 +35,7 @@ const PROJECTS_STATIC = [
     title: 'Lumina AI Product',
     tags: ['AI Product', 'Startup', 'Product Strategy'],
     image: 'https://images.unsplash.com/photo-1591381287254-b3349c60bf9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBSSUyMG1hY2hpbmUlMjBsZWFybmluZyUyMHByb2R1Y3QlMjBpbnRlcmZhY2UlMjBmdXR1cmlzdGljfGVufDF8fHx8MTc3NDEwMzQxOXww&ixlib=rb-4.1.0&q=80&w=1080',
-    accent: '#06b6d4',
+    accent: 'var(--color-brand)',
     grad: 'linear-gradient(135deg,rgba(6,182,212,0.8),rgba(99,102,241,0.5))',
   },
   {
@@ -43,7 +43,7 @@ const PROJECTS_STATIC = [
     title: 'HealthBridge Mobile App',
     tags: ['Mobile', 'Healthcare', 'Accessibility', 'UX Research'],
     image: 'https://images.unsplash.com/photo-1767449441925-737379bc2c4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBVWCUyMGRlc2lnbiUyMGhlYWx0aGNhcmV8ZW58MXx8fHwxNzc0MTAzNDIwfDA&ixlib=rb-4.1.0&q=80&w=1080',
-    accent: '#a78bfa',
+    accent: 'var(--color-brand)',
     grad: 'linear-gradient(135deg,rgba(167,139,250,0.8),rgba(139,92,246,0.5))',
   },
 ];
@@ -123,7 +123,7 @@ function ProjectCard({
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="px-3 py-1 rounded-full text-sm font-medium bg-brand/10 border border-brand/20 text-brand dark:text-[#a5b4fc]"
+              className="px-3 py-1 rounded-full text-sm font-medium bg-brand/10 border border-brand/20 text-brand dark:text-brand"
             >
               {tag}
             </span>
@@ -188,8 +188,8 @@ export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
       title: project.title?.[lang] || project.title?.en || '',
       tags: project.tags?.[lang] || project.tags?.en || [],
       image: project.image || PROJECTS_STATIC[idx % PROJECTS_STATIC.length].image,
-      accent: project.accent || ['#6366f1', '#8b5cf6', '#06b6d4', '#a78bfa'][idx % 4],
-      grad: `linear-gradient(135deg,${project.accent || ['#6366f1', '#8b5cf6', '#06b6d4', '#a78bfa'][idx % 4]}cc,${project.accent || ['#6366f1', '#8b5cf6', '#06b6d4', '#a78bfa'][idx % 4]}80)`,
+      accent: project.accent || 'var(--color-brand)',
+      grad: `linear-gradient(135deg,color-mix(in srgb, ${project.accent || 'var(--color-brand)'} 80%, transparent),color-mix(in srgb, ${project.accent || 'var(--color-brand)'} 50%, transparent))`,
       desc: project.desc?.[lang] || project.desc?.en || '',
     }));
 

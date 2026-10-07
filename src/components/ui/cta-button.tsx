@@ -40,7 +40,7 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
           "group relative inline-flex items-center justify-center cursor-pointer outline-none",
           "font-medium text-base",
           "px-8 py-4 rounded-xl",
-          "bg-gradient-to-b from-[#40208a] to-[#2b1263] text-white",
+          "bg-[var(--brand-gradient)] text-white",
           "border border-white/5 shadow-[0_0_15px_rgba(109,79,184,0.2),inset_0_1px_1px_rgba(255,255,255,0.15)]",
           "transition-all duration-300 hover:shadow-[0_0_20px_rgba(109,79,184,0.3)]",
           "focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background",

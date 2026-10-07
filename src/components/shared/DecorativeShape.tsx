@@ -114,35 +114,40 @@ export const DecorativeShape = memo(function DecorativeShape({
     isDarkRef.current = isDark;
   }, [isDark]);
 
-  /* ─── Recolor on theme change ─────────────────────────────────────────────── */
+  /* --- Recolor on theme change --- */
   useEffect(() => {
     const s = sceneRef.current;
     if (!s) return;
 
+    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDark ? '#b32d4b' : '#800020');
+    const brandColor = new THREE.Color(rawBrand);
+    const brandHsl = { h: 0, s: 0, l: 0 };
+    brandColor.getHSL(brandHsl);
+
     if (isDark) {
-      s.shellMat.color.set(0x15113d);
-      s.shellMat.emissive.set(0x241573);
-      s.shellMat.specular.set(0x9966ff);
+      s.shellMat.color.setHSL(brandHsl.h, brandHsl.s * 0.8, brandHsl.l * 0.3);
+      s.shellMat.emissive.setHSL(brandHsl.h, brandHsl.s, brandHsl.l * 0.5);
+      s.shellMat.specular.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.5, 1));
       s.shellMat.shininess = 80;
       s.shellMat.opacity = 0.55;
-      s.wireMat.color.set(0x5533bb);
-      s.wireMat.opacity = 0.08;
-      s.ambLight.color.set(0x9988ff); s.ambLight.intensity = 0.45;
+      s.wireMat.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1));
+      s.wireMat.opacity = 0.15;
+      s.ambLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); s.ambLight.intensity = 0.45;
       s.keyLight.color.set(0xffffff); s.keyLight.intensity = 0.9;
-      s.rimLight.color.set(0x38bdf8); s.rimLight.intensity = 0.5;
-      s.fillLight.color.set(0xa855f7); s.fillLight.intensity = 0.4;
+      s.rimLight.color.setHSL((brandHsl.h + 0.05) % 1.0, brandHsl.s, Math.min(brandHsl.l * 1.5, 1)); s.rimLight.intensity = 0.5;
+      s.fillLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); s.fillLight.intensity = 0.4;
     } else {
-      s.shellMat.color.set(0xe0d8fa);
-      s.shellMat.emissive.set(0x6357e6);
+      s.shellMat.color.setHSL(brandHsl.h, brandHsl.s * 0.5, Math.min(brandHsl.l * 2.5, 0.95));
+      s.shellMat.emissive.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.5, 0.9));
       s.shellMat.specular.set(0xffffff);
       s.shellMat.shininess = 140;
       s.shellMat.opacity = 0.60;
-      s.wireMat.color.set(0x6366f1);
+      s.wireMat.color.setHSL(brandHsl.h, brandHsl.s, brandHsl.l);
       s.wireMat.opacity = 0.18;
-      s.ambLight.color.set(0xa5b4fc); s.ambLight.intensity = 0.5;
+      s.ambLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 2.5, 0.9)); s.ambLight.intensity = 0.5;
       s.keyLight.color.set(0xffffff); s.keyLight.intensity = 1.4;
-      s.rimLight.color.set(0x6366f1); s.rimLight.intensity = 0.8;
-      s.fillLight.color.set(0x8b5cf6); s.fillLight.intensity = 0.4;
+      s.rimLight.color.setHSL(brandHsl.h, brandHsl.s, brandHsl.l); s.rimLight.intensity = 0.8;
+      s.fillLight.color.setHSL((brandHsl.h + 0.05) % 1.0, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); s.fillLight.intensity = 0.4;
     }
     s.shellMat.needsUpdate = true;
     s.wireMat.needsUpdate = true;
@@ -209,15 +214,18 @@ export const DecorativeShape = memo(function DecorativeShape({
     root.rotation.set(rotationOffset[0], rotationOffset[1], rotationOffset[2]);
     scene.add(root);
 
+    const rawBrand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || (isDarkRef.current ? '#b32d4b' : '#800020');
+    const brandColor = new THREE.Color(rawBrand);
+    const brandHsl = { h: 0, s: 0, l: 0 };
+    brandColor.getHSL(brandHsl);
+
     // Shell mesh
     const geom = createGeometry(shape);
     const shellMat = new THREE.MeshPhongMaterial({
-      color: isDarkRef.current ? 0x15113d : 0xe0d8fa,
-      emissive: isDarkRef.current ? 0x241573 : 0x6357e6,
-      specular: isDarkRef.current ? 0x9966ff : 0xffffff,
-      shininess: isDarkRef.current ? 80 : 140,
+      color: 0xffffff,
+      emissive: 0xffffff,
+      specular: 0xffffff,
       transparent: true,
-      opacity: isDarkRef.current ? 0.55 : 0.60,
       side: THREE.DoubleSide,
     });
     root.add(new THREE.Mesh(geom, shellMat));
@@ -225,19 +233,37 @@ export const DecorativeShape = memo(function DecorativeShape({
     // Wireframe overlay
     const wireGeom = createGeometry(shape);
     const wireMat = new THREE.MeshBasicMaterial({
-      color: isDarkRef.current ? 0x5533bb : 0x6366f1,
+      color: 0xffffff,
       wireframe: true,
       transparent: true,
-      opacity: isDarkRef.current ? 0.08 : 0.18,
     });
     root.add(new THREE.Mesh(wireGeom, wireMat));
 
-    // Light mode adjustments
-    if (!isDarkRef.current) {
-      ambLight.color.set(0xa5b4fc); ambLight.intensity = 0.5;
-      keyLight.intensity = 1.4;
-      rimLight.color.set(0x6366f1); rimLight.intensity = 0.8;
-      fillLight.color.set(0x8b5cf6);
+    // Initial color application
+    if (isDarkRef.current) {
+      shellMat.color.setHSL(brandHsl.h, brandHsl.s * 0.8, brandHsl.l * 0.3);
+      shellMat.emissive.setHSL(brandHsl.h, brandHsl.s, brandHsl.l * 0.5);
+      shellMat.specular.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.5, 1));
+      shellMat.shininess = 80;
+      shellMat.opacity = 0.55;
+      wireMat.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1));
+      wireMat.opacity = 0.15;
+      ambLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); ambLight.intensity = 0.45;
+      keyLight.color.set(0xffffff); keyLight.intensity = 0.9;
+      rimLight.color.setHSL((brandHsl.h + 0.05) % 1.0, brandHsl.s, Math.min(brandHsl.l * 1.5, 1)); rimLight.intensity = 0.5;
+      fillLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); fillLight.intensity = 0.4;
+    } else {
+      shellMat.color.setHSL(brandHsl.h, brandHsl.s * 0.5, Math.min(brandHsl.l * 2.5, 0.95));
+      shellMat.emissive.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 1.5, 0.9));
+      shellMat.specular.set(0xffffff);
+      shellMat.shininess = 140;
+      shellMat.opacity = 0.60;
+      wireMat.color.setHSL(brandHsl.h, brandHsl.s, brandHsl.l);
+      wireMat.opacity = 0.18;
+      ambLight.color.setHSL(brandHsl.h, brandHsl.s, Math.min(brandHsl.l * 2.5, 0.9)); ambLight.intensity = 0.5;
+      keyLight.color.set(0xffffff); keyLight.intensity = 1.4;
+      rimLight.color.setHSL(brandHsl.h, brandHsl.s, brandHsl.l); rimLight.intensity = 0.8;
+      fillLight.color.setHSL((brandHsl.h + 0.05) % 1.0, brandHsl.s, Math.min(brandHsl.l * 1.2, 1)); fillLight.intensity = 0.4;
     }
 
     // Store refs

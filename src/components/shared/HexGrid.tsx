@@ -105,8 +105,8 @@ export function HexGrid({ isDark }: HexGridProps) {
 
     const dark = isDarkRef.current;
     const defaultStroke = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
-    const accentColor1 = dark ? [99, 102, 241] : [79, 70, 229];
-    const accentColor2 = dark ? [139, 92, 246] : [124, 58, 237];
+    const accentColor1 = dark ? [179, 45, 75] : [128, 0, 32];
+    const accentColor2 = dark ? [204, 58, 90] : [91, 15, 30];
 
     const qMin = Math.floor(-w / 2 / (HEX_SIZE * 1.5)) - 2;
     const qMax = Math.ceil(w / 2 / (HEX_SIZE * 1.5)) + 2;
