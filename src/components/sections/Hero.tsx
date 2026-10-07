@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { HexGrid } from '../shared/HexGrid';
 import { ArrowRight, Mail } from 'lucide-react';
 import avatarImg from '../../assets/2d14d34cc2c291f0d8b60d9b13506b1995d59f5f.png';
-import lightAvatarImg from '../../assets/ef9cb82bf32c8b9e3dfe70e9c1705569056e55ee.png';
+import lightAvatarImg from '../../assets/avatar-light-burgundy.png';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import { Button } from '../ui/button';
@@ -116,7 +116,7 @@ export function Hero({ isDark }: HeroProps) {
                 className="mb-[clamp(28px,4vh,44px)] shrink-0 w-[280px] sm:w-[320px] md:w-[26vw] md:min-w-[240px] md:max-w-[320px]"
               >
                 <img
-                  src={dark ? "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnhtMHpidGVkY205d3l3MjVhZ3lxbHo1N3Y0M2tjMW1hNGZiZ3dmbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/xrYXNJcnSJkhB02STp/giphy.gif" : (typeof lightAvatarImg === 'string' ? lightAvatarImg : (lightAvatarImg as any).src)}
+                  src={dark ? "/avatar-burgundy.webp" : (typeof lightAvatarImg === 'string' ? lightAvatarImg : (lightAvatarImg as any).src)}
                   alt="Osama Tammam"
                   className={`w-full h-auto max-w-[480px] block ${dark ? '-mb-[15%] [clip-path:inset(0_0_20px_0)]' : ''}`}
                 />
