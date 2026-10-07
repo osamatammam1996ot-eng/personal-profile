@@ -17,7 +17,7 @@ export function Footer({ isDark }: FooterProps) {
   };
 
   return (
-    <footer className="w-full py-7 border-t bg-surface border-border-default">
+    <footer className="w-full py-7 border-t bg-surface-raised border-border-default">
       <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10 flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Left */}
         <div className="flex items-center gap-2">

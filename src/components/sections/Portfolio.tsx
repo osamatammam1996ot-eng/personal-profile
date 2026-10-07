@@ -199,9 +199,6 @@ export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
       id="work"
       className="relative w-full py-24 md:py-32 bg-surface transition-colors duration-300"
     >
-      <div
-        className="absolute inset-0 pointer-events-none opacity-5 dark:opacity-10 glow-brand"
-      />
 
       <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-10">
         {/* Header */}

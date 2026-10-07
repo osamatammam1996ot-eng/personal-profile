@@ -295,14 +295,6 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
       onMouseMove={onMouseMove}
       className="relative w-full bg-surface transition-colors duration-300 overflow-hidden"
     >
-      {/* ── Background grid overlay ── */}
-      <div className="absolute inset-0 pointer-events-none grid-pattern" />
-      {/* Fade out edges of grid without expensive CSS masks */}
-      <div className="absolute inset-0 pointer-events-none grid-pattern-fade" />
-
-      {/* ── Ambient glow blobs ── */}
-      <div className="absolute inset-0 pointer-events-none why-ambient" />
-
       {/* ── CONTENT ─ */}
       <div className="relative w-full flex flex-col items-center pt-[10vh] pb-0">
 

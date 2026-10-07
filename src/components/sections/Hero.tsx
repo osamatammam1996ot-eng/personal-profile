@@ -78,7 +78,7 @@ export function Hero({ isDark }: HeroProps) {
   return (
     <section
       id="home"
-      className="relative flex flex-col items-center justify-center min-h-[100vh] overflow-hidden px-6 bg-hero-bg transition-[background] duration-[0.4s] ease-[ease]"
+      className="relative flex flex-col items-center justify-center min-h-[100vh] overflow-hidden px-6 bg-surface transition-[background] duration-[0.4s] ease-[ease]"
     >
       <HexGrid isDark={dark} />
 

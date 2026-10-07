@@ -354,11 +354,8 @@ export function Tools({ isDark = false }: ToolsProps) {
   return (
     <section
       id="tools"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-visible px-6 pt-20 pb-[60px] bg-surface transition-colors duration-300"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-visible px-6 pt-20 pb-[60px] bg-surface-raised transition-colors duration-300"
     >
-      {/* ambient brand glow */}
-      <div className="absolute inset-0 pointer-events-none tools-ambient" />
-
       {/* dust canvas */}
       <DustCanvas
         isDark={isDark}
