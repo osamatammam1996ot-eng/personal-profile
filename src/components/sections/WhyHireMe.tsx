@@ -4,7 +4,6 @@ import svgPaths from '../../imports/svg-nh6weynufu';
 import imgPortrait from '../../assets/e31509a0541824cfeda89ddabf83753388778df0.png';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
-import { DecorativeShape } from '../shared/DecorativeShape';
 import { Button } from '../ui/button';
 
 interface WhyHireMeProps {
@@ -74,122 +73,8 @@ const CARDS_VISUAL = [
   },
 ];
 
-// ─── Floating SVG decorations ─────────────────────────────────────────────────
-
-function AnchorPointSvg() {
-  return (
-    <svg width="62" height="62" viewBox="0 0 62 62" fill="none">
-      {/* dashed lines */}
-      <line x1="4" y1="31" x2="28" y2="31" stroke="var(--color-brand)" strokeOpacity="0.38" strokeWidth="1" strokeDasharray="3 3" />
-      <line x1="34" y1="31" x2="58" y2="31" stroke="var(--color-brand)" strokeOpacity="0.38" strokeWidth="1" strokeDasharray="3 3" />
-      {/* centre diamond */}
-      <rect x="27.5" y="27.5" width="7" height="7" rx="0" fill="var(--color-brand)" fillOpacity="0.1" stroke="var(--color-brand)" strokeOpacity="0.65" strokeWidth="1.5" transform="rotate(45 31 31)" />
-      {/* end circles */}
-      <path d={svgPaths.p3a962880} fill="var(--color-brand)" fillOpacity="0.1" stroke="var(--color-brand)" strokeOpacity="0.65" strokeWidth="1.5" transform="translate(0.25 23.5)" />
-      <path d={svgPaths.p3a962880} fill="var(--color-brand)" fillOpacity="0.1" stroke="var(--color-brand)" strokeOpacity="0.65" strokeWidth="1.5" transform="translate(53.25 23.5)" />
-    </svg>
-  );
-}
-
-function BezierSvg() {
-  return (
-    <svg width="108" height="68" viewBox="0 0 108 68" fill="none">
-      <path d={svgPaths.p3b7cfe96} stroke="var(--color-brand-hover)" strokeOpacity="0.52" strokeWidth="1.5" transform="scale(1.156) translate(-0.3 14.8)" />
-      {/* anchor circles */}
-      <path d={svgPaths.p1f8c1310} fill="var(--color-brand-hover)" fillOpacity="0.08" stroke="var(--color-brand-hover)" strokeOpacity="0.7" strokeWidth="1.5" transform="translate(3.5 48.5)" />
-      <path d={svgPaths.p1f8c1310} fill="var(--color-brand-hover)" fillOpacity="0.08" stroke="var(--color-brand-hover)" strokeOpacity="0.7" strokeWidth="1.5" transform="translate(95 48.5)" />
-      {/* control point lines */}
-      <path d={svgPaths.p4ae0400} stroke="var(--color-brand-hover)" strokeDasharray="3 3" strokeOpacity="0.3" transform="scale(0.42) translate(20 8)" />
-      <path d={svgPaths.p38601780} stroke="var(--color-brand-hover)" strokeDasharray="3 3" strokeOpacity="0.3" transform="scale(0.42) translate(195 8)" />
-      {/* control point dots */}
-      <path d={svgPaths.p969ae00} fill="var(--color-brand-hover)" fillOpacity="0.75" transform="translate(23 5)" />
-      <path d={svgPaths.p969ae00} fill="var(--color-brand-hover)" fillOpacity="0.75" transform="translate(79 5)" />
-    </svg>
-  );
-}
-
-function FigmaCursorSvg() {
-  return (
-    <svg width="28" height="36" viewBox="0 0 28 36" fill="none">
-      <path d={svgPaths.p16b8ea00} fill="var(--color-info)" fillOpacity="0.1" stroke="var(--color-info)" strokeLinejoin="round" strokeOpacity="0.78" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function GridSvg() {
-  return (
-    <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
-      {[0, 13.5, 27, 40.5, 54].map(y => (
-        <line key={`h${y}`} x1="0" y1={y} x2="54" y2={y} stroke="var(--color-brand)" strokeOpacity="0.32" strokeWidth="0.8" />
-      ))}
-      {[0, 13.5, 27, 40.5, 54].map(x => (
-        <line key={`v${x}`} x1={x} y1="0" x2={x} y2="54" stroke="var(--color-brand)" strokeOpacity="0.32" strokeWidth="0.8" />
-      ))}
-      <rect x="20.5" y="20.5" width="13" height="13" fill="var(--color-brand)" fillOpacity="0.1" stroke="var(--color-brand)" strokeOpacity="0.52" />
-    </svg>
-  );
-}
-
-function DiamondSvg() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <rect x="4" y="4" width="12" height="12" fill="var(--color-brand-hover)" fillOpacity="0.12" stroke="var(--color-brand-hover)" strokeOpacity="0.78" strokeWidth="1.5" transform="rotate(45 10 10)" />
-    </svg>
-  );
-}
-
-function SmallDotsSvg() {
-  return (
-    <svg width="36" height="8" viewBox="0 0 36 8" fill="none">
-      <circle cx="4" cy="4" r="2.5" fill="var(--color-brand)" fillOpacity="0.45" />
-      <circle cx="18" cy="4" r="2.5" fill="var(--color-brand)" fillOpacity="0.28" />
-      <circle cx="32" cy="4" r="2.5" fill="var(--color-brand)" fillOpacity="0.15" />
-    </svg>
-  );
-}
-
-const FLOATS = [
-  { id: 'anchor',   SVG: AnchorPointSvg, left: '4.2%',  top: '18.8%', depth: 0.7,  dur: 6,   del: 0    },
-  { id: 'cursor1',  SVG: FigmaCursorSvg, left: '83.3%', top: '46.6%', depth: 1.1,  dur: 7,   del: 2    },
-  { id: 'grid',     SVG: GridSvg,        left: '3.1%',  top: '72.8%', depth: 0.55, dur: 9,   del: 0.5  },
-  { id: 'diamond1', SVG: DiamondSvg,     left: '51.2%', top: '3.8%',  depth: 0.9,  dur: 5,   del: 1.8  },
-  { id: 'diamond2', SVG: DiamondSvg,     left: '88.4%', top: '63%',   depth: 0.65, dur: 7.5, del: 3    },
-  { id: 'dots',     SVG: SmallDotsSvg,   left: '3.4%',  top: '5.2%',  depth: 0.5,  dur: 10,  del: 0.8  },
-  { id: 'cursor2',  SVG: FigmaCursorSvg, left: '6.8%',  top: '87%',   depth: 1,    dur: 6.5, del: 1.5  },
-];
-
 // Lift-and-glow filter for the hovered card (animated by motion, so not a class)
 const HOVER_GLOW = 'drop-shadow(0 0 32px color-mix(in srgb, var(--color-brand) 86%, transparent)) drop-shadow(0 18px 48px color-mix(in srgb, var(--color-brand) 40%, transparent))';
-
-// ─── Floating element ────────────────────────────────────────────────────────
-interface FloatProps {
-  SVG: React.ComponentType;
-  left: string;
-  top: string;
-  depth: number;
-  dur: number;
-  del: number;
-  smX: MotionValue<number>;
-  smY: MotionValue<number>;
-}
-
-function FloatEl({ SVG, left, top, depth, dur, del, smX, smY }: FloatProps) {
-  const px = useTransform(smX, v => v * depth * 0.4);
-  const py = useTransform(smY, v => v * depth * 0.4);
-  return (
-    <motion.div
-      className="absolute pointer-events-none select-none opacity-[0.68]"
-      style={{ left, top, x: px, y: py }}
-    >
-      <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ repeat: Infinity, duration: dur, ease: 'easeInOut', delay: del }}
-      >
-        <SVG />
-      </motion.div>
-    </motion.div>
-  );
-}
 
 // ─── Tilt card ───────────────────────────────────────────────────────────────
 type CardWithText = typeof CARDS_VISUAL[0] & { title: string; desc: string };
@@ -417,21 +302,6 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
 
       {/* ── Ambient glow blobs ── */}
       <div className="absolute inset-0 pointer-events-none why-ambient" />
-
-      {/* ── Floating decorations ── */}
-      {FLOATS.map(f => (
-        <FloatEl key={f.id} {...f} smX={smX} smY={smY} />
-      ))}
-
-      {/* Decorative 3D shape — bottom-left */}
-      <DecorativeShape
-        shape="octahedron"
-        position="bottom-left"
-        size={520}
-        cropAmount={28}
-        rotationOffset={[0.5, -0.2, 0.4]}
-        isDark={isDark}
-      />
 
       {/* ── CONTENT ─ */}
       <div className="relative w-full flex flex-col items-center pt-[10vh] pb-0">

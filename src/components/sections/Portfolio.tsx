@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'motion/react';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
-import { DecorativeShape } from '../shared/DecorativeShape';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import { Button } from '../ui/button';
@@ -202,16 +201,6 @@ export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
     >
       <div
         className="absolute inset-0 pointer-events-none opacity-5 dark:opacity-10 glow-brand"
-      />
-
-      {/* Decorative 3D shape — bottom-right */}
-      <DecorativeShape
-        shape="octahedron"
-        position="bottom-right"
-        size={500}
-        cropAmount={30}
-        rotationOffset={[-0.3, 0.8, 0.15]}
-        isDark={dark}
       />
 
       <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-10">
