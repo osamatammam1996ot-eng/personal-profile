@@ -29,57 +29,34 @@ function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boole
   const brand = readToken('--brand');
   const [rr, gg, bb] = parseColor(brand);
   const brandA = (a: number) => `rgba(${rr},${gg},${bb},${a})`;
-  const halo = readToken('--canvas-halo');
 
-  const grd = cx.createRadialGradient(128,128,40,128,128,120);
-  grd.addColorStop(0, brandA(0.22));
-  grd.addColorStop(0.6, brandA(0.10));
-  grd.addColorStop(1, brandA(0));
-  cx.beginPath(); cx.arc(128,128,120,0,Math.PI*2);
-  cx.fillStyle = grd; cx.fill();
-
-  cx.beginPath(); cx.arc(128,128,88,0,Math.PI*2);
-  cx.fillStyle = brandA(0.13); cx.fill();
-
-  cx.beginPath(); cx.arc(128,128,88,0,Math.PI*2);
-  cx.shadowColor = brand; cx.shadowBlur = 14;
+  // Solid disc behind the label so the text never sits on the red gem itself
+  cx.beginPath(); cx.arc(128,128,92,0,Math.PI*2);
+  cx.fillStyle = tokenRgba('--surface-card');
+  cx.fill();
   cx.strokeStyle = brandA(0.85);
   cx.lineWidth = 3.5; cx.stroke();
-  cx.shadowBlur = 0;
 
-  // Use Space Grotesk to match site font
-  cx.font = '700 68px "Space Grotesk",Arial,sans-serif';
   cx.textAlign = 'center'; cx.textBaseline = 'middle';
 
-  if (isDarkTheme) {
-    cx.shadowColor = brand;
-    cx.shadowBlur = 20;
-    cx.fillStyle = brand;
-  } else {
-    // Darker brand variant reads better on the light background
-    cx.shadowColor = halo;
-    cx.shadowBlur = 4;
-    cx.fillStyle = `rgb(${Math.floor(rr * 0.5)},${Math.floor(gg * 0.5)},${Math.floor(bb * 0.5)})`;
-  }
-  cx.fillText(tool.abbr, 128, 108);
-  cx.shadowBlur = 0;
+  // Abbreviation: brand colour, lightened in dark mode for contrast on the dark disc
+  cx.font = '700 64px "Space Grotesk",Arial,sans-serif';
+  cx.fillStyle = readToken(isDarkTheme ? '--brand-light' : '--brand');
+  cx.fillText(tool.abbr, 128, 104);
 
-  cx.font = '600 21px "Space Grotesk",Arial,sans-serif';
+  cx.font = '700 22px "Space Grotesk",Arial,sans-serif';
   cx.fillStyle = readToken('--text-primary');
-  cx.shadowColor = halo;
-  cx.shadowBlur = 5;
-  cx.fillText(tool.name, 128, 162);
-  cx.shadowBlur = 0;
+  cx.fillText(tool.name, 128, 160);
 
-  cx.font = '500 14px "Inter",Arial,sans-serif';
+  cx.font = '500 16px "Inter",Arial,sans-serif';
   cx.fillStyle = tokenRgba('--text-secondary');
-  cx.shadowColor = halo;
-  cx.shadowBlur = isDarkTheme ? 0 : 3;
-  cx.fillText(tool.cat[lang] || tool.cat.en, 128, 188);
-  cx.shadowBlur = 0;
+  cx.fillText(tool.cat[lang] || tool.cat.en, 128, 186);
 
+  const texture = new THREE.CanvasTexture(cv);
+  // Canvas pixels are sRGB; without this three.js brightens them a second time
+  texture.colorSpace = THREE.SRGBColorSpace;
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({
-    map: new THREE.CanvasTexture(cv),
+    map: texture,
     transparent: true, depthWrite: false, depthTest: false,
   }));
   sp.scale.set(0.88, 0.88, 1);
