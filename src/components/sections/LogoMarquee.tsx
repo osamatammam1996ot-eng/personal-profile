@@ -52,13 +52,13 @@ const LogoSlot = ({ logo }: { logo: any }) => {
   }, [logo.url]);
 
   return (
-    <div className="w-[200px] shrink-0 flex items-center justify-center opacity-65">
+    <div className="w-[200px] shrink-0 flex items-center justify-center dark:opacity-65">
       <Image
         src={logo.url}
         alt={logo.name}
         width={120}
         height={40}
-        className={`object-contain max-h-10 w-[120px] h-10 ${solid ? '' : 'logo-mono'}`}
+        className={`object-contain max-h-10 w-[120px] h-10 ${solid ? 'logo-solid' : 'logo-mono'}`}
         unoptimized
       />
     </div>

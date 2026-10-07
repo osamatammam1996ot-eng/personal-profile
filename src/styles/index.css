@@ -396,11 +396,19 @@
 
   /* Client logos: one dark tone in light mode (many logos are white), original colors in dark mode */
   .logo-mono {
-    filter: brightness(0);
-    opacity: 0.55;
+    /* invert keeps the logo's own detail (emblems, thin text) instead of a flat silhouette */
+    filter: grayscale(1) invert(1);
+    opacity: 0.7;
   }
 
-  .dark .logo-mono {
+  /* Mostly-solid logos (e.g. a filled square badge) can't be inverted cleanly: grey them instead */
+  .logo-solid {
+    filter: grayscale(1);
+    opacity: 0.7;
+  }
+
+  .dark .logo-mono,
+  .dark .logo-solid {
     filter: none;
     opacity: 1;
   }
