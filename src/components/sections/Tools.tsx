@@ -11,7 +11,7 @@ import { motion, useInView } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import type { CmsToolItem } from '../../types/cms';
-import { readToken, parseColor, tokenRgba } from '../../lib/theme-tokens';
+import { readToken, parseColor, tokenRgba, resolveColor, ensureContrast } from '../../lib/theme-tokens';
 import { getScenePalette } from '../../lib/scene-palette';
 
 interface ToolsProps { isDark?: boolean; }
@@ -21,27 +21,28 @@ import { ActiveToolCard } from './tools/ActiveToolCard';
 import { FACE_NORMALS_NORMALIZED, rotForFace } from './tools/constants';
 
 /* ─── Face sprite builder ───────────────────────────────────────────────────── */
-function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar', isDarkTheme: boolean): THREE.Sprite {
+function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar'): THREE.Sprite {
   const SZ = 256;
   const cv = document.createElement('canvas');
   cv.width = SZ; cv.height = SZ;
   const cx = cv.getContext('2d')!;
-  const brand = readToken('--brand');
-  const [rr, gg, bb] = parseColor(brand);
-  const brandA = (a: number) => `rgba(${rr},${gg},${bb},${a})`;
+  // Each tool's own colour comes from the CMS ("glow"), adjusted if needed so it
+  // stays readable (WCAG AA) on the label disc in the current theme.
+  const disc = tokenRgba('--surface-card');
+  const toolColor = ensureContrast(resolveColor(tool.glow), disc);
+  const [rr, gg, bb] = parseColor(toolColor);
 
   // Solid disc behind the label so the text never sits on the red gem itself
   cx.beginPath(); cx.arc(128,128,92,0,Math.PI*2);
-  cx.fillStyle = tokenRgba('--surface-card');
+  cx.fillStyle = disc;
   cx.fill();
-  cx.strokeStyle = brandA(0.85);
+  cx.strokeStyle = `rgba(${rr},${gg},${bb},0.85)`;
   cx.lineWidth = 3.5; cx.stroke();
 
   cx.textAlign = 'center'; cx.textBaseline = 'middle';
 
-  // Abbreviation: brand colour, lightened in dark mode for contrast on the dark disc
   cx.font = '700 64px "Space Grotesk",Arial,sans-serif';
-  cx.fillStyle = readToken(isDarkTheme ? '--brand-light' : '--brand');
+  cx.fillStyle = toolColor;
   cx.fillText(tool.abbr, 128, 104);
 
   cx.font = '700 22px "Space Grotesk",Arial,sans-serif';
@@ -79,8 +80,6 @@ export function Tools({ isDark = false }: ToolsProps) {
   const isInView     = useInView(wrapRef, { margin: "200px" });
   const isInViewRef  = useRef(isInView);
   useEffect(() => { isInViewRef.current = isInView; }, [isInView]);
-  const isDarkRef = useRef(isDark);
-  useEffect(() => { isDarkRef.current = isDark; }, [isDark]);
 
   const [activeIdx, setActiveIdx]     = useState(0);
   const [cardVisible, setCardVisible] = useState(false);
@@ -160,7 +159,7 @@ export function Tools({ isDark = false }: ToolsProps) {
       ROOT.add(grp);
       grp.position.set(nx * PR, ny * PR, nz * PR);
       grp.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(nx, ny, nz));
-      const sp = makeFaceSprite(TOOLS[fi], lang, isDarkRef.current);
+      const sp = makeFaceSprite(TOOLS[fi], lang);
       sp.position.set(0, 0, 0.018);
       grp.add(sp);
       PANELS.push({ sprite: sp, grp, idx: fi });
@@ -173,7 +172,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         old.material.map?.dispose();
         old.material.dispose();
         PANELS[fi].grp.remove(old);
-        const sp = makeFaceSprite(TOOLS[fi], lang, isDarkRef.current);
+        const sp = makeFaceSprite(TOOLS[fi], lang);
         sp.position.set(0, 0, 0.018);
         PANELS[fi].grp.add(sp);
         PANELS[fi].sprite = sp;
