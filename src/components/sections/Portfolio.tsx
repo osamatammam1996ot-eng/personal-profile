@@ -189,7 +189,7 @@ export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
       tags: project.tags?.[lang] || project.tags?.en || [],
       image: project.image || PROJECTS_STATIC[idx % PROJECTS_STATIC.length].image,
       accent: project.accent || 'var(--color-brand)',
-      grad: `linear-gradient(135deg,${project.accent || 'var(--color-brand)'}cc,${project.accent || 'var(--color-brand)'}80)`,
+      grad: `linear-gradient(135deg,color-mix(in srgb, ${project.accent || 'var(--color-brand)'} 80%, transparent),color-mix(in srgb, ${project.accent || 'var(--color-brand)'} 50%, transparent))`,
       desc: project.desc?.[lang] || project.desc?.en || '',
     }));
 
