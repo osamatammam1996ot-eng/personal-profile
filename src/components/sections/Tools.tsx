@@ -349,7 +349,6 @@ export function Tools({ isDark = false }: ToolsProps) {
   const toolsTitle = cmsData.tools.title[lang] || (lang === 'en' ? 'My Arsenal!' : 'ترسانتي!');
   const toolsDesc = cmsData.tools.desc[lang] || (lang === 'en' ? 'Twelve tools. One cohesive workflow.' : 'اثنا عشر أداة. سير عمل متماسك واحد.');
   const clickHint = cmsData.tools.clickHint[lang] || (lang === 'en' ? 'Click any card to explore' : 'انقر على أي بطاقة للاستكشاف');
-  const proficiencyLabel = cmsData.tools.proficiency[lang] || (lang === 'en' ? 'Proficiency' : 'الكفاءة');
 
   return (
     <section
@@ -370,7 +369,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         transition={{ duration: 0.6, ease: [0.4,0,0.2,1] }}
         className="relative z-10 text-center mb-11"
       >
-        <h2 className="font-bold text-[clamp(2.5rem,5vw,4rem)] tracking-[-0.02em] leading-[1.15] text-text-primary m-0 mb-4">
+        <h2 className="font-bold text-[clamp(2rem,4vw,3.25rem)] tracking-[-0.02em] leading-[1.15] text-text-primary m-0 mb-4">
           <span>{toolsTitle}</span>
         </h2>
 
@@ -399,7 +398,6 @@ export function Tools({ isDark = false }: ToolsProps) {
           cardVisible={cardVisible}
           lang={lang}
           isRTL={isRTL}
-          proficiencyLabel={proficiencyLabel}
           clickHint={clickHint}
           tools={TOOLS}
           activeIdx={activeIdx}

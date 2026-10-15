@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { HexGrid } from '../shared/HexGrid';
-import { ArrowRight, Mail } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
-import { Button } from '../ui/button';
 import { CTAButton } from '../ui/cta-button';
 import { DecorativeShape } from '../shared/DecorativeShape';
 
@@ -78,7 +77,7 @@ export function Hero({ isDark }: HeroProps) {
   return (
     <section
       id="home"
-      className="relative flex flex-col items-center justify-center min-h-[100vh] overflow-hidden px-6 bg-surface transition-[background] duration-[0.4s] ease-[ease]"
+      className="relative isolate flex flex-col items-center justify-center min-h-[100vh] overflow-hidden px-6 bg-surface transition-[background] duration-[0.4s] ease-[ease]"
     >
       <HexGrid isDark={dark} />
 
@@ -90,37 +89,23 @@ export function Hero({ isDark }: HeroProps) {
       {/* Vignette layer */}
       <div className="absolute inset-0 z-[16] pointer-events-none bg-vignette" />
 
-      {/* Decorative 3D Shape */}
+      {/* Decorative 3D Shape — on the avatar's side so it never sits under the text */}
       <DecorativeShape
         shape="icosahedron"
-        position="bottom-left"
+        position={isRTL ? 'bottom-left' : 'bottom-right'}
         size={330}
         rotationOffset={[0.1, 0.2, 0]}
         isDark={dark}
       />
 
-      <div className="relative z-20 flex flex-col items-center text-center px-6 w-full max-w-[780px] mx-auto py-24">
-        {/* Dynamic Rendering of Elements */}
-        {(cmsData.hero.elementOrder || ['avatar', 'label', 'headline', 'roles', 'desc', 'ctas']).map((id, renderIndex) => {
-          const delay = 0.1 + (renderIndex * 0.08);
-
-          if (id === 'avatar' && cmsData.hero.showAvatar !== false) {
-            return (
-              <motion.div
-                key="hero-avatar"
-                initial={{ opacity: 0, scale: 0.88, y: -16 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
-                className="mb-[clamp(28px,4vh,44px)] shrink-0 w-[280px] sm:w-[320px] md:w-[26vw] md:min-w-[240px] md:max-w-[320px]"
-              >
-                <img
-                  src="/avatar-burgundy.webp"
-                  alt="Osama Tammam"
-                  className="w-full h-auto max-w-[480px] block -mb-[15%] [clip-path:inset(0_0_20px_0)]"
-                />
-              </motion.div>
-            );
-          }
+      {/* Editorial split: text on the reading side, avatar on the other.
+          Text elements keep the CMS order and visibility toggles; the avatar has its own column. */}
+      <div className="relative z-20 w-full max-w-[1200px] mx-auto md:px-4 pt-28 pb-24 grid items-center gap-8 md:gap-12 md:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
+        <div className="flex flex-col items-start text-start max-md:order-2">
+          {(cmsData.hero.elementOrder || ['avatar', 'label', 'headline', 'roles', 'desc', 'ctas'])
+            .filter((id) => id !== 'avatar')
+            .map((id, renderIndex) => {
+          const delay = 0.15 + (renderIndex * 0.08);
 
           if (id === 'label' && cmsData.hero.showLabel !== false) {
             return (
@@ -129,7 +114,7 @@ export function Hero({ isDark }: HeroProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay, ease: [0.4, 0, 0.2, 1] }}
-                className={`text-sm font-normal mb-[18px] text-text-faint ${isRTL ? 'tracking-[0.06em]' : 'tracking-[0.16em]'}`}
+                className={`m-0 mb-5 text-sm font-normal text-text-faint ${isRTL ? 'tracking-[0.06em]' : 'tracking-[0.16em]'}`}
               >
                 {heroLabel}
               </motion.p>
@@ -143,40 +128,31 @@ export function Hero({ isDark }: HeroProps) {
                 initial={{ opacity: 0, y: 28 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.75, delay, ease: [0.4, 0, 0.2, 1] }}
-                className="font-heading mb-6 leading-tight tracking-tight"
+                className="m-0 mb-7 font-heading font-bold text-[clamp(2.5rem,4.5vw,4rem)] leading-[1.08] tracking-[-0.03em] text-text-primary"
               >
-                <span className="block font-bold text-[clamp(2.5rem,5vw,4rem)] text-text-primary">
-                  {heroHeadline1}
-                </span>
-                <span className="block font-bold text-[clamp(2.5rem,5vw,4rem)] text-text-primary">
-                  {heroHeadline2}
-                </span>
+                <span className="block text-balance">{heroHeadline1}</span>
+                <span className="block text-balance">{heroHeadline2}</span>
               </motion.h1>
             );
           }
 
           if (id === 'roles') {
             return (
-              <motion.div
+              <motion.p
                 key="hero-roles"
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay, ease: [0.4, 0, 0.2, 1] }}
-                className="mb-6"
+                className="m-0 mb-6 flex min-h-[1.75em] items-center gap-2.5 font-heading font-semibold text-[clamp(1.05rem,1.6vw,1.25rem)] text-text-secondary"
               >
-                <span className={`roles-badge ${dark ? 'roles-badge-dark' : 'roles-badge-light'}`}>
-                  <span className="relative inline-flex items-center justify-center">
-                    <span className="ping-dot-outer" />
-                    <span className="ping-dot-inner" />
-                  </span>
-                  <span className={`font-heading font-semibold text-[clamp(1.05rem,2vw,1.4rem)] tracking-[-0.01em] text-foreground ${isRTL ? 'direction-rtl' : 'direction-ltr'}`}>
-                    {displayText}
-                    <span
-                      className={`typing-cursor bg-brand-light ${showCursor ? 'opacity-100' : 'opacity-0'} ${isRTL ? 'mr-1' : 'ml-1'}`}
-                    />
-                  </span>
+                <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-brand" />
+                <span className={isRTL ? 'direction-rtl' : 'direction-ltr'}>
+                  {displayText}
+                  <span
+                    className={`typing-cursor bg-brand-light ${showCursor ? 'opacity-100' : 'opacity-0'} ${isRTL ? 'mr-1' : 'ml-1'}`}
+                  />
                 </span>
-              </motion.div>
+              </motion.p>
             );
           }
 
@@ -187,7 +163,7 @@ export function Hero({ isDark }: HeroProps) {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay, ease: [0.4, 0, 0.2, 1] }}
-                className="font-body text-lg leading-[1.78] max-w-[540px] mb-6 text-text-muted whitespace-pre-line"
+                className="m-0 mb-9 font-body text-lg leading-[1.75] max-w-[520px] text-text-muted whitespace-pre-line"
               >
                 {heroDesc}
               </motion.p>
@@ -201,7 +177,7 @@ export function Hero({ isDark }: HeroProps) {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay, ease: [0.4, 0, 0.2, 1] }}
-                className="flex flex-wrap items-center justify-center gap-3 mb-[52px]"
+                className="flex flex-wrap items-center gap-x-7 gap-y-4"
               >
                 <CTAButton onClick={() => scrollToSection('work')}>
                   <span className="flex items-center gap-2">
@@ -209,22 +185,52 @@ export function Hero({ isDark }: HeroProps) {
                     <ArrowRight size={15} className={`transition-transform duration-200 ${isRTL ? '-scale-x-100' : ''}`} />
                   </span>
                 </CTAButton>
-                <CTAButton variant="secondary" onClick={() => scrollToSection('contact')}>
-                  <span className="flex items-center gap-2">
-                    {heroCta2}
-                  </span>
-                </CTAButton>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection('contact')}
+                  className="inline-flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer font-semibold text-base text-text-primary hover:text-brand transition-colors"
+                >
+                  {heroCta2}
+                  <ArrowUpRight size={16} className={isRTL ? '-scale-x-100' : ''} />
+                </button>
               </motion.div>
             );
           }
 
           return null;
-        })}
-</div>
+            })}
+        </div>
+
+        {cmsData.hero.showAvatar !== false && (
+          <motion.div
+            key="hero-avatar"
+            initial={{ opacity: 0, scale: 0.92, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            className="max-md:order-1 justify-self-start md:justify-self-end w-[220px] sm:w-[280px] md:w-[min(380px,30vw)]"
+          >
+            {/* The animated webp has hard 1-bit alpha with a dark fringe, which looks
+                jagged on the light background: erode the alpha by 1px and soften it. */}
+            <svg width="0" height="0" className="absolute" aria-hidden="true">
+              <filter id="avatar-smooth-edge" colorInterpolationFilters="sRGB">
+                <feMorphology in="SourceAlpha" operator="erode" radius="1" result="eroded" />
+                <feGaussianBlur in="eroded" stdDeviation="0.8" result="soft" />
+                <feComposite in="SourceGraphic" in2="soft" operator="in" />
+              </filter>
+            </svg>
+            {/* -mt-[20%]: the top ~21% of the image is transparent padding above the head */}
+            <img
+              src="/avatar-burgundy.webp"
+              alt="Osama Tammam"
+              className="w-full h-auto block -mt-[20%] -mb-[15%] [clip-path:inset(0_0_20px_0)] [filter:url(#avatar-smooth-edge)]"
+            />
+          </motion.div>
+        )}
+      </div>
 
       {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+        className="hero-scroll absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4 }}

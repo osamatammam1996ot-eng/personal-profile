@@ -3,6 +3,7 @@ import { Sun, Moon, Menu, X, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
+import { LIGHT_MODE_ENABLED } from '../../config/features';
 
 interface NavigationProps {
   isDark: boolean;
@@ -156,15 +157,17 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
             </AnimatePresence>
           </motion.button>
 
-          {/* Dark mode toggle */}
-          <motion.button
-            onClick={onToggleDark}
-            className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200 bg-foreground/6 text-brand-accent dark:text-brand-light"
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {isDark ? <Sun size={17} /> : <Moon size={17} />}
-          </motion.button>
+          {/* Dark mode toggle (hidden while light mode is disabled) */}
+          {LIGHT_MODE_ENABLED && (
+            <motion.button
+              onClick={onToggleDark}
+              className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200 bg-foreground/6 text-brand-accent dark:text-brand-light"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {isDark ? <Sun size={17} /> : <Moon size={17} />}
+            </motion.button>
+          )}
 
           {/* Mobile menu toggle */}
           <button

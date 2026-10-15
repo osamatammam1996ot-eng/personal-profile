@@ -72,6 +72,15 @@ export function ContactEditor({ draft, updateDraft }: ContactEditorProps) {
         onChangeEn={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, meetingAction: { ...prev.contact.meetingAction, en: value, ar: prev.contact.meetingAction?.ar || '' } } }))}
         onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, meetingAction: { ...prev.contact.meetingAction, ar: value, en: prev.contact.meetingAction?.en || '' } } }))}
       />
+      <label className="flex items-center gap-2 -mt-1 cursor-pointer self-start">
+        <input
+          type="checkbox"
+          checked={draft.contact.showMeetingAction ?? true}
+          onChange={(e) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, showMeetingAction: e.target.checked } }))}
+          className="cursor-pointer w-4 h-4 accent-brand transition-all"
+        />
+        <span className="text-sm text-text-muted">Show highlight box on the site</span>
+      </label>
       <BilingualField
         label="Meeting Link"
         en={draft.contact.meetingLink?.en || ''}

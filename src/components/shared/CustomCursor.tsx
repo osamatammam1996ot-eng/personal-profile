@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "motion/react";
+import { ArrowUpRight } from "lucide-react";
 
 export function CustomCursor() {
   const [portfolioHoverVisible, setPortfolioHoverVisible] = useState(false);
@@ -59,7 +60,7 @@ export function CustomCursor() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed z-[9999] pointer-events-none flex items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-hover size-20 opacity-90 backdrop-blur-sm shadow-[0_8px_30px_var(--color-brand)]"
+            className="fixed top-0 left-0 z-[9999] pointer-events-none flex items-center justify-center rounded-full bg-brand size-24 shadow-[0_8px_30px_var(--color-brand)]"
             style={{
               x: cursorXSpring,
               y: cursorYSpring,
@@ -67,8 +68,8 @@ export function CustomCursor() {
               translateY: "-50%",
             }}
           >
-            <span className="text-on-brand text-center tracking-wider leading-snug font-semibold text-xs">
-              View<br />Project
+            <span className="flex items-center gap-1 text-on-brand font-semibold text-sm">
+              View <ArrowUpRight size={14} />
             </span>
           </motion.div>
         )}

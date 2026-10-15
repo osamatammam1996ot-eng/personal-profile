@@ -103,6 +103,7 @@
   --surface-card: rgba(255, 255, 255, 0.95);
   --marquee-bg: var(--white);              /* light: clean white strip, logos shown in one dark tone */
   --marquee-border: rgba(0, 0, 0, 0.06);
+  --logo-strip-h: 98px;                    /* py-7 + 40px logos, plus breathing room */
   --overlay: rgba(255, 255, 255, 0.05);
   --scrim: var(--black);              /* dark layer behind media / modals; use with /alpha */
 
@@ -216,7 +217,7 @@
   --brand: var(--burgundy-500);       /* lighter burgundy for dark-mode contrast */
   --brand-hover: var(--burgundy-400);
   --brand-accent: var(--burgundy-500);
-  --brand-gradient: linear-gradient(135deg, var(--burgundy-400) 0%, var(--burgundy-500) 100%);
+  --brand-gradient: linear-gradient(135deg, var(--burgundy-500) 0%, var(--burgundy-700) 100%);
   --brand-line: linear-gradient(90deg, var(--burgundy-400), var(--burgundy-600));
   --cursor-glow: var(--burgundy-400);
   --focus-ring: var(--burgundy-300);
@@ -419,6 +420,35 @@
 
   .fade-edge-r {
     background: linear-gradient(to left, var(--marquee-bg), transparent);
+  }
+
+  /* Dark mode: a logo strip right after the hero overlaps the hero's bottom
+     edge with no fill, so the hex grid and 3D shape show through it. */
+  .dark #home:has(+ .logo-strip) {
+    padding-bottom: var(--logo-strip-h);
+  }
+
+  .dark #home:has(+ .logo-strip) .hero-scroll {
+    bottom: calc(var(--logo-strip-h) + 2rem);
+  }
+
+  /* Phones: the stacked hero reaches the bottom edge, so the scroll hint would sit on the buttons */
+  @media (max-width: 767px) {
+    #home .hero-scroll {
+      display: none;
+    }
+  }
+
+  .dark #home + .logo-strip {
+    margin-top: calc(-1 * var(--logo-strip-h));
+    background: transparent;
+    /* Edge fade without a solid colour to fade from */
+    mask-image: linear-gradient(to right, transparent, #000 100px, #000 calc(100% - 100px), transparent);
+  }
+
+  .dark #home + .logo-strip .fade-edge-l,
+  .dark #home + .logo-strip .fade-edge-r {
+    display: none;
   }
 
   .section-fade-bottom {

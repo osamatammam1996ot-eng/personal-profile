@@ -17,6 +17,7 @@ import { CustomCursor } from '../components/shared/CustomCursor';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { useCms } from '../contexts/CmsContext';
 import { ErrorBoundary } from '../components/layout/ErrorBoundary';
+import { LIGHT_MODE_ENABLED } from '../config/features';
 
 export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: { id: number; title: string } | null } = {}) {
   const [isDark, setIsDark] = useState(true);
@@ -26,7 +27,8 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
   const { cmsData, loading, error } = useCms();
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('ot_theme');
+    // While light mode is disabled, ignore any saved preference and stay dark.
+    const savedTheme = LIGHT_MODE_ENABLED ? localStorage.getItem('ot_theme') : null;
     if (savedTheme) {
       setIsDark(savedTheme === 'dark');
     }
@@ -36,7 +38,7 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
   // Layout effect so the theme class is on <html> before child effects run —
   // canvas/WebGL sections read color tokens from it when isDark changes.
   useLayoutEffect(() => {
-    if (themeLoaded) {
+    if (themeLoaded && LIGHT_MODE_ENABLED) {
       localStorage.setItem('ot_theme', isDark ? 'dark' : 'light');
     }
     document.documentElement.classList.toggle('dark', isDark);

@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { motion } from 'motion/react';
-import { ArrowUpRight, ArrowRight } from 'lucide-react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react';
+import { ChevronRight } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
-import { Button } from '../ui/button';
-import { CTAButton } from '../ui/cta-button';
 
 interface PortfolioProps {
   isDark: boolean;
@@ -43,140 +41,62 @@ const PROJECTS_STATIC = [
   },
 ];
 
+type Project = typeof PROJECTS_STATIC[0] & { desc: string };
+
+const pillButton =
+  'inline-flex items-center gap-2 self-start rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors cursor-pointer';
+
 function ProjectCard({
   project,
-  desc,
-  projectLabel,
-  viewCaseLabel,
-  isDark,
   index,
   onViewCase,
 }: {
-  project: typeof PROJECTS_STATIC[0];
-  desc: string;
-  projectLabel: string;
-  viewCaseLabel: string;
-  isDark: boolean;
+  project: Project;
   index: number;
   onViewCase: (projectId: number, projectTitle: string) => void;
 }) {
-  const { lang, fontHeading, fontBody, isRTL } = useLanguage();
-
-  const dark = isDark;
-
-  // In LTR: even=row (image left), odd=row-reverse (image right)
-  // In RTL: dir=rtl on <html> means flex-row starts from the RIGHT,
-  //         so same logic naturally mirrors: even=image right, odd=image left
-  const isReversed = index % 2 !== 0;
-
-  const projectNum = isRTL
-    ? String(project.id).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[+d]).padStart(2, '٠')
-    : String(project.id).padStart(2, '0');
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 60 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-      className={`flex flex-wrap items-center gap-12 ${isReversed ? 'flex-row-reverse' : 'flex-row'}`}
+    <button
+      type="button"
+      onClick={() => onViewCase(project.id, project.title)}
+      onMouseEnter={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: true }))}
+      onMouseLeave={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: false }))}
+      className="group relative h-full w-[85vw] md:w-auto md:aspect-[3/2] shrink-0 snap-center overflow-hidden rounded-3xl text-start cursor-none border-none p-0 bg-surface-raised"
     >
-      {/* ── Image ── */}
-      <div
-        onClick={() => onViewCase(project.id, project.title)}
-        className="relative overflow-hidden rounded-2xl aspect-[16/10] flex-1 min-w-[340px] cursor-none group"
-        onMouseEnter={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: true }))}
-        onMouseLeave={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: false }))}
-      >
-        <div className="w-full h-full relative">
-          <Image
-            src={project.image}
-            alt={project.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority={index < 2}
-            className="object-cover transition-transform duration-700 scale-110"
-          />
-        </div>
-        {/* Hover overlay */}
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-500 project-accent-overlay"
-          style={{ '--accent': project.accent } as React.CSSProperties}
-        />
-        {/* Corner tag — auto-flips in RTL */}
-        <div className="absolute top-4 start-4 px-3 py-1.5 rounded-lg max-md:bg-scrim/80 max-md:backdrop-blur-none md:bg-scrim/50 md:backdrop-blur-md border border-on-media/10">
-          <span className="font-medium text-sm text-on-media">
-            {projectLabel} {projectNum}
-          </span>
-        </div>
-      </div>
+      <Image
+        src={project.image}
+        alt=""
+        fill
+        sizes="(max-width: 768px) 85vw, 60vw"
+        priority={index < 2}
+        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-scrim/80 via-scrim/15 to-transparent" />
 
-      {/* ── Text ── */}
-      <div className="flex-1 min-w-[300px] flex flex-col gap-5">
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
+      <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+        <h3 className="m-0 font-bold text-[clamp(1.5rem,2.4vw,2.25rem)] text-on-media tracking-tight leading-tight">
+          {project.title}
+        </h3>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {project.tags.slice(0, 4).map((tag) => (
             <span
               key={tag}
-              className="px-3 py-1 rounded-full text-sm font-medium bg-brand/10 border border-brand/20 text-brand"
+              className="rounded-full border border-on-media/20 bg-on-media/10 backdrop-blur-md px-3 py-1 text-sm font-medium text-on-media"
             >
               {tag}
             </span>
           ))}
         </div>
-
-        {/* Title */}
-        <h3
-          className="font-bold text-[clamp(1.5rem,2.5vw,2rem)] text-text-primary tracking-tight leading-tight m-0"
-          
-        >
-          {project.title}
-        </h3>
-
-        {/* Description */}
-        <p
-          className="text-lg text-text-secondary leading-relaxed m-0"
-          
-        >
-          {desc}
-        </p>
-
-        <div className="h-px w-full bg-border-default" />
-
-        <motion.button
-          onClick={() => onViewCase(project.id, project.title)}
-          className="inline-flex items-center gap-2 font-semibold text-base text-brand hover:text-brand-hover transition-colors bg-transparent border-none cursor-pointer p-0 self-start"
-          
-          whileHover={{ x: isRTL ? -4 : 4 }}
-          transition={{ duration: 0.2 }}
-        >
-          {isRTL && (
-            <ArrowUpRight
-              size={16}
-              className="shrink-0 -scale-x-100"
-            />
-          )}
-          {viewCaseLabel}
-          {!isRTL && <ArrowUpRight size={16} className="shrink-0" />}
-        </motion.button>
       </div>
-    </motion.div>
+    </button>
   );
 }
 
-export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
-  const { lang, fontHeading, fontBody } = useLanguage();
-  const { cmsData, content } = useCms();
-  const dark = isDark;
+export function Portfolio({ onViewCase }: PortfolioProps) {
+  const { lang, isRTL } = useLanguage();
+  const { cmsData } = useCms();
 
-  const portfolioLabel = lang === 'en' ? 'Selected Work' : 'الأعمال المختارة';
-  const projectLabel = lang === 'en' ? 'Project' : 'مشروع';
-  const viewCaseLabel = lang === 'en' ? 'View Case Study' : 'عرض المشروع';
-  const caseStudiesLabel =
-    content.portfolio?.fields?.[`caseStudiesLabel_${lang}`] ||
-    (lang === 'en' ? 'Case Studies' : 'دراسات الحالة');
-
-  const projects = (cmsData.projects || [])
+  const projects: Project[] = (cmsData.projects || [])
     .filter((project) => project.visible)
     .map((project, idx) => ({
       id: project.id,
@@ -187,69 +107,106 @@ export function Portfolio({ isDark, onViewCase }: PortfolioProps) {
       desc: project.desc?.[lang] || project.desc?.en || '',
     }));
 
-  const fallbackProjects = PROJECTS_STATIC.map((project, idx) => ({
+  const fallbackProjects: Project[] = PROJECTS_STATIC.map((project, idx) => ({
     ...project,
     desc: lang === 'en' ? `Case study ${idx + 1} description` : `وصف دراسة الحالة ${idx + 1}`,
   }));
 
   const renderedProjects = projects.length ? projects : fallbackProjects;
 
+  const t = lang === 'en'
+    ? {
+        title: 'Selected Work',
+        desc: 'A selection of apps, platforms and dashboards I designed end to end.',
+        request: 'Request full portfolio',
+      }
+    : {
+        title: 'الأعمال المختارة',
+        desc: 'مجموعة من التطبيقات والمنصات ولوحات التحكم التي صممتها من البداية للنهاية.',
+        request: 'طلب معرض الأعمال الكامل',
+      };
+
+  const scrollToContact = () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+
+  // ── Pinned horizontal scroll (desktop) ──
+  // The section is as tall as the sideways distance the track needs to travel;
+  // while it is pinned, vertical scroll progress slides the track horizontally.
+  const sectionRef = useRef<HTMLElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [distance, setDistance] = useState(0);
+
+  useEffect(() => {
+    const desktopMq = window.matchMedia('(min-width: 768px)');
+    const measure = () => {
+      if (!trackRef.current || !viewportRef.current) return;
+      setDistance(desktopMq.matches
+        ? Math.max(0, trackRef.current.offsetWidth - viewportRef.current.clientWidth)
+        : 0);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (trackRef.current) ro.observe(trackRef.current);
+    if (viewportRef.current) ro.observe(viewportRef.current);
+    return () => ro.disconnect();
+  }, [renderedProjects.length]);
+
+  // The section's height changes once measured: let GSAP-pinned sections recalculate.
+  useEffect(() => {
+    import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => ScrollTrigger.refresh());
+  }, [distance]);
+
+  // Distance and direction live in motion values so the scroll mapping always sees the latest ones.
+  const distanceMV = useMotionValue(0);
+  const directionMV = useMotionValue(isRTL ? 1 : -1);
+  useEffect(() => { distanceMV.set(distance); }, [distance, distanceMV]);
+  useEffect(() => { directionMV.set(isRTL ? 1 : -1); }, [isRTL, directionMV]);
+
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] });
+  const rawX = useTransform(
+    [scrollYProgress, distanceMV, directionMV],
+    ([p, d, dir]: number[]) => dir * p * d,
+  );
+  const x = useSpring(rawX, { stiffness: 260, damping: 40, mass: 0.4 });
+
   return (
     <section
       id="work"
-      className="relative w-full py-24 md:py-32 bg-surface transition-colors duration-300"
+      ref={sectionRef}
+      className="relative w-full bg-surface transition-colors duration-300 max-md:py-24 md:h-[calc(100vh+var(--work-scroll))]"
+      style={{ '--work-scroll': `${distance}px` } as React.CSSProperties}
     >
-
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-10">
-        {/* Header */}
+      <div
+        ref={viewportRef}
+        className="md:sticky md:top-0 md:h-screen md:flex md:items-center md:pt-[72px] md:overflow-hidden max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:[scrollbar-width:none]"
+      >
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          className="text-center mb-20"
+          ref={trackRef}
+          style={{
+            x,
+            paddingInline: 'max(1.5rem, calc((100vw - 1200px) / 2 + 2.5rem))',
+          }}
+          className="flex w-max gap-5 md:gap-6 h-[460px] md:h-[min(64vh,600px)]"
         >
+          {/* Intro card */}
+          <div className="h-full w-[80vw] md:w-[340px] shrink-0 snap-center flex flex-col rounded-3xl border border-border-default bg-surface-card p-7 md:p-8">
+            <h2 className="m-0 mt-auto font-bold text-[clamp(2rem,4vw,3.25rem)] text-text-primary tracking-[-0.02em] leading-[1.15]">
+              {t.title}
+            </h2>
+            <p className="m-0 mt-auto text-base text-text-secondary leading-relaxed">{t.desc}</p>
+            <button
+              type="button"
+              onClick={scrollToContact}
+              className={`${pillButton} mt-6 border-brand/40 bg-transparent text-text-primary hover:bg-brand/10`}
+            >
+              {t.request}
+              <ChevronRight size={16} className={isRTL ? '-scale-x-100' : ''} />
+            </button>
+          </div>
 
-          <h2
-            className="mt-2 font-bold text-[clamp(2rem,4vw,3.25rem)] text-text-primary tracking-tight leading-[1.15]"
-            
-          >
-            {portfolioLabel}
-          </h2>
-        </motion.div>
-
-        {/* Projects */}
-        <div className="flex flex-col gap-24">
           {renderedProjects.map((project, index) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              desc={project.desc ?? ''}
-              projectLabel={projectLabel}
-              viewCaseLabel={viewCaseLabel}
-              isDark={dark}
-              index={index}
-              onViewCase={onViewCase}
-            />
+            <ProjectCard key={project.id} project={project} index={index} onViewCase={onViewCase} />
           ))}
-        </div>
-
-        {/* CTA: Request Full Portfolio */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          className="flex justify-center mt-24"
-        >
-          <CTAButton
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            <span className="flex items-center gap-2">
-              {lang === 'en' ? 'Request full portfolio' : 'طلب معرض الأعمال الكامل'}
-              <ArrowRight size={15} className={`transition-transform duration-200 ${lang === 'ar' ? '-scale-x-100' : ''}`} />
-            </span>
-          </CTAButton>
         </motion.div>
       </div>
     </section>

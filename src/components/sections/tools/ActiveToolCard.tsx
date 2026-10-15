@@ -7,7 +7,6 @@ interface ActiveToolCardProps {
   cardVisible: boolean;
   lang: 'en' | 'ar';
   isRTL: boolean;
-  proficiencyLabel: string;
   clickHint: string;
   tools: CmsToolItem[];
   activeIdx: number;
@@ -17,11 +16,9 @@ interface ActiveToolCardProps {
 }
 
 export function ActiveToolCard({
-  tool, cardVisible, lang, isRTL, proficiencyLabel, clickHint, tools, activeIdx,
+  tool, cardVisible, lang, isRTL, clickHint, tools, activeIdx,
   goTo, prev, next,
 }: ActiveToolCardProps) {
-  const pct = tool?.proficiency || 80;
-
   return (
     <div className="flex flex-col items-center flex-auto w-full min-w-[280px] max-w-[420px]">
       {/* ── Info Card ── */}
@@ -48,21 +45,6 @@ export function ActiveToolCard({
               </div>
               <div className="text-base leading-relaxed mb-2.5 text-text-muted">
                 {(tool.desc?.[lang] || tool.desc?.en)}
-              </div>
-              {/* skill bar */}
-              <div className="mb-2.5">
-                <div className="flex justify-between items-center mb-[5px]">
-                  <span className="text-xs tracking-widest text-text-faint">{proficiencyLabel}</span>
-                  <span className="text-sm font-bold text-brand-gradient">{pct}%</span>
-                </div>
-                <div className="h-1 rounded-full overflow-hidden bg-brand/10">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${pct}%` }}
-                    transition={{ duration: 0.9, ease: [0.34, 1.10, 0.64, 1], delay: 0.1 }}
-                    className="h-full rounded-full bg-brand-gradient shadow-glow-brand"
-                  />
-                </div>
               </div>
               <div className="flex flex-wrap gap-[5px]">
                 {(tool.tags?.[lang] || tool.tags?.en || []).map((tag: string) => (

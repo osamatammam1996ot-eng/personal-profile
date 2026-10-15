@@ -44,6 +44,7 @@ export interface CmsContact {
   body: Bilingual;
   note: Bilingual;
   meetingAction?: Bilingual;
+  showMeetingAction?: boolean;
   meetingLink?: Bilingual;
   signoff1: Bilingual;
   signoff2: Bilingual;

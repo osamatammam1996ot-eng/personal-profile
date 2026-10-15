@@ -1,84 +1,28 @@
 import { useRef, useCallback, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'motion/react';
-import svgPaths from '../../imports/svg-nh6weynufu';
 import imgPortrait from '../../assets/e31509a0541824cfeda89ddabf83753388778df0.png';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
-import { Button } from '../ui/button';
 
 interface WhyHireMeProps {
   isDark: boolean;
 }
 
 // ─── Card definitions ─────────────────────────────────────────────────────────
+// Each card floats above the portrait at its own slight angle.
 const CARDS_VISUAL = [
-  {
-    id: 'systems',
-    rotate: -1,
-    renderIcon: () => (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <g clipPath="url(#c1)">
-          <path d={svgPaths.p1a3b4700} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p3c552480} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p174f7d00} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p310deb70} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d="M10 10V6.66667" stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-        </g>
-        <defs><clipPath id="c1"><rect width="20" height="20" /></clipPath></defs>
-      </svg>
-    ),
-    delay: 0,
-  },
-  {
-    id: 'ai',
-    rotate: -2,
-    renderIcon: () => (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <g clipPath="url(#c2)">
-          <path d={svgPaths.p17e613c0} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p3d61d240} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p20534e00} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p392fc080} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p3fbca400} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p1c1c7100} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p240a1800} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.p162c4500} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-          <path d={svgPaths.pc0a4800} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-        </g>
-        <defs><clipPath id="c2"><rect width="20" height="20" /></clipPath></defs>
-      </svg>
-    ),
-    delay: 0.08,
-  },
-  {
-    id: 'enterprise',
-    rotate: 2,
-    renderIcon: () => (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d={svgPaths.p25fc4100} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-      </svg>
-    ),
-    delay: 0.16,
-  },
-  {
-    id: 'conversion',
-    rotate: 1.5,
-    renderIcon: () => (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d={svgPaths.p3c797180} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-        <path d={svgPaths.p3ac0b600} stroke="var(--color-on-brand)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-      </svg>
-    ),
-    delay: 0.24,
-  },
+  { id: 'systems', rotate: -1, delay: 0 },
+  { id: 'ai', rotate: -2, delay: 0.08 },
+  { id: 'enterprise', rotate: 2, delay: 0.16 },
+  { id: 'conversion', rotate: 1.5, delay: 0.24 },
 ];
 
-// Lift-and-glow filter for the hovered card (animated by motion, so not a class)
-// Light mode gets a much softer glow, and dims the other cards by fading them
+// Lift filter for the hovered card (animated by motion, so not a class): mostly a deep
+// shadow with a hint of brand. Light mode dims the other cards by fading them
 // rather than darkening (darkening turns white cards grey).
 const HOVER_LOOK = {
   dark: {
-    glow: 'drop-shadow(0 0 32px color-mix(in srgb, var(--color-brand) 86%, transparent)) drop-shadow(0 18px 48px color-mix(in srgb, var(--color-brand) 40%, transparent))',
+    glow: 'drop-shadow(0 22px 40px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 18px color-mix(in srgb, var(--color-brand) 28%, transparent))',
     sibling: { filter: 'brightness(0.55) saturate(0.7)', opacity: 1 },
   },
   light: {
@@ -88,10 +32,9 @@ const HOVER_LOOK = {
 };
 
 // ─── Tilt card ───────────────────────────────────────────────────────────────
-type CardWithText = typeof CARDS_VISUAL[0] & { title: string; desc: string };
+type CardWithText = typeof CARDS_VISUAL[0] & { title: string; desc: string; num: string };
 
-function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
-  const { fontHeading, fontBody } = useLanguage();
+function TiltCard({ card }: { card: CardWithText; isDark: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const rotX = useMotionValue(0);
   const rotY = useMotionValue(0);
@@ -107,8 +50,6 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
   }, [rotX, rotY]);
 
   const onLeave = useCallback(() => { rotX.set(0); rotY.set(0); }, [rotX, rotY]);
-
-  const Icon = card.renderIcon;
 
   return (
     <motion.div
@@ -129,36 +70,17 @@ function TiltCard({ card, isDark }: { card: CardWithText; isDark: boolean }) {
       }}
       className="relative flex-1 min-w-0 cursor-default"
     >
-      {/* Card surface */}
-      <div
-        className="relative rounded-2xl overflow-hidden px-[21px] pt-[20px] pb-[24px] min-h-[200px] bg-surface-elevated border border-brand/15 dark:border-border-default/70 shadow-tilt"
-      >
-        {/* Ambient radial glow */}
-        <div className="absolute inset-0 pointer-events-none rounded-2xl why-card-ambient" />
+      {/* Card surface: a solid dark panel, no outline */}
+      <div className="relative rounded-2xl overflow-hidden px-6 pt-5 pb-6 min-h-[200px] bg-surface-raised shadow-tilt">
+        <span className="block mb-6 text-sm font-semibold tabular-nums text-brand">{card.num}</span>
 
-        {/* Icon badge */}
-        <div className="relative flex items-center justify-center shrink-0 size-[45px] rounded-[14px] mb-[18px] why-card-icon">
-          <Icon />
-        </div>
-
-        {/* Title */}
-        <h3
-          className="font-bold text-lg text-text-primary leading-[19.136px] mb-2 whitespace-normal"
-          
-        >
+        <h3 className="m-0 mb-2 font-bold text-lg leading-snug text-text-primary whitespace-normal">
           {card.title}
         </h3>
 
-        {/* Body */}
-        <p
-          className="text-base text-text-secondary leading-[20.064px] m-0"
-          
-        >
+        <p className="m-0 text-base leading-relaxed text-text-muted">
           {card.desc}
         </p>
-
-        {/* Bottom shimmer line */}
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 pointer-events-none why-card-shimmer" />
       </div>
     </motion.div>
   );
@@ -192,7 +114,9 @@ function CardsRow({ isDark }: { isDark: boolean }) {
   const CARDS = CARDS_VISUAL.map((v, i) => {
     const title = cmsData.whyHireMe.cards[i]?.title?.[lang] || fallbackTitles[i] || v.id;
     const desc = cmsData.whyHireMe.cards[i]?.desc?.[lang] || fallbackDescs[i] || '';
-    return { ...v, title, desc };
+    const n = String(i + 1).padStart(2, '0');
+    const num = lang === 'ar' ? n.replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[+d]) : n;
+    return { ...v, title, desc, num };
   });
   return (
     <div className="flex flex-col sm:flex-row gap-5 items-stretch justify-center">
@@ -220,28 +144,6 @@ function CardsRow({ isDark }: { isDark: boolean }) {
             }
             className="relative flex flex-1"
           >
-            {/* Glow halo */}
-            <motion.div
-              aria-hidden
-              animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.65 }}
-              transition={{ duration: 0.45, ease: 'easeOut' }}
-              className="absolute -inset-[22px] rounded-[32px] z-0 pointer-events-none why-card-halo"
-            />
-            {/* Spinning conic ring */}
-            <motion.div
-              aria-hidden
-              animate={{
-                opacity: isHovered ? 1 : 0,
-                scale: isHovered ? 1 : 0.8,
-                rotate: 360,
-              }}
-              transition={{
-                opacity: { duration: 0.3 },
-                scale: { duration: 0.38, ease: [0.34, 1.56, 0.64, 1] },
-                rotate: { duration: 7, repeat: Infinity, ease: 'linear' },
-              }}
-              className="absolute -inset-[5px] rounded-3xl z-0 pointer-events-none why-card-ring"
-            />
             <div className="relative z-[2] flex flex-1">
               <TiltCard card={card} isDark={isDark} />
             </div>
@@ -319,7 +221,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
           className="select-none text-center mb-[7vh]"
         >
           <div
-            className="font-bold text-[clamp(2.5rem,5vw,4rem)] leading-none tracking-tighter flex gap-[0.14em] items-baseline flex-wrap justify-center"
+            className="font-bold text-[clamp(2rem,4vw,3.25rem)] leading-none tracking-tighter flex gap-[0.14em] items-baseline flex-wrap justify-center"
             
           >
             <span className="text-text-primary">{word1}</span>
