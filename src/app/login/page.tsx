@@ -9,6 +9,7 @@ import Home from '@/app/page';
 export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showReset, setShowReset] = useState(false);
 
   const handleSubmit = async (formData: FormData) => {
     setLoading(true);
@@ -61,6 +62,26 @@ export default function LoginPage() {
             {loading ? 'Authenticating...' : 'Enter Dashboard'}
           </CTAButton>
         </form>
+
+        <div className="mt-6 text-center">
+          <button
+            type="button"
+            onClick={() => setShowReset(!showReset)}
+            className="text-text-secondary underline underline-offset-4 hover:text-text-primary transition-colors"
+          >
+            Forgot password?
+          </button>
+        </div>
+
+        {showReset && (
+          <ol className="mt-4 space-y-2 list-decimal list-inside text-text-secondary text-sm text-left">
+            <li>Sign in to Vercel and open the <strong>personal-profile</strong> project.</li>
+            <li>Go to <strong>Settings → Environment Variables</strong>.</li>
+            <li>Edit <strong>ADMIN_SECRET</strong> (or add it) and enter a new password.</li>
+            <li>Open <strong>Deployments</strong>, click <strong>⋯</strong> on the latest one and choose <strong>Redeploy</strong>.</li>
+            <li>Log in here with the new password. All old sessions are signed out.</li>
+          </ol>
+        )}
         </div>
       </div>
     </div>
