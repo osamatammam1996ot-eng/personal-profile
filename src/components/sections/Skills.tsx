@@ -67,14 +67,14 @@ export function Skills({ isDark }: SkillsProps) {
     resize();
 
     // Lights
-    const ambLight = new THREE.AmbientLight(p.ambient, 0.45);
+    const ambLight = new THREE.AmbientLight(p.ambient, 0.15);
     scene.add(ambLight);
 
-    const keyLight = new THREE.DirectionalLight(p.key, 0.9);
+    const keyLight = new THREE.DirectionalLight(p.key, 2.4);
     keyLight.position.set(3, 4, 5);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(p.rim, 0.5);
+    const rimLight = new THREE.DirectionalLight(p.rim, 1.3);
     rimLight.position.set(-4, -1, -3);
     scene.add(rimLight);
 
@@ -108,7 +108,7 @@ export function Skills({ isDark }: SkillsProps) {
       color: p.shell,
       emissive: p.emissive,
       specular: p.specular,
-      shininess: isDark ? 80 : 140,
+      shininess: isDark ? 40 : 140,
       transparent: true,
       opacity: 0.9,
       side: THREE.DoubleSide,
@@ -276,17 +276,17 @@ export function Skills({ isDark }: SkillsProps) {
     s.shellMat.color.setHex(p.shell);
     s.shellMat.emissive.setHex(p.emissive);
     s.shellMat.specular.setHex(p.specular);
-    s.shellMat.shininess = isDark ? 80 : 140;
+    s.shellMat.shininess = isDark ? 40 : 140;
 
     s.wireMat.color.setHex(p.wire);
     s.pointsMat.color.setHex(p.point);
 
     s.ambLight.color.setHex(p.ambient);
-    s.ambLight.intensity = isDark ? 0.45 : 0.5;
+    s.ambLight.intensity = isDark ? 0.15 : 0.5;
     s.keyLight.color.setHex(p.key);
-    s.keyLight.intensity = isDark ? 0.9 : 1.4;
+    s.keyLight.intensity = isDark ? 2.4 : 1.4;
     s.rimLight.color.setHex(p.rim);
-    s.rimLight.intensity = isDark ? 0.5 : 0.8;
+    s.rimLight.intensity = isDark ? 1.3 : 0.8;
     s.fillLight.color.setHex(p.fill);
   }, [isDark]);
 

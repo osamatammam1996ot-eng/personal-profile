@@ -66,7 +66,7 @@ function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar'): THREE.Sprite {
 
 /* Material/light strengths per theme — light mode reads as a frosted gem. */
 const SCENE_LOOK = {
-  dark:  { shininess: 80,  shellOpacity: 0.65, wireOpacity: 0.11, amb: 0.55, key: 1.2, rim: 0.75, fill: 0.6 },
+  dark:  { shininess: 40,  shellOpacity: 0.85, wireOpacity: 0.2,  amb: 0.12, key: 1.5, rim: 1.2,  fill: 0.25 },
   light: { shininess: 140, shellOpacity: 0.78, wireOpacity: 0.28, amb: 0.6,  key: 1.8, rim: 1.1,  fill: 0.5 },
 };
 

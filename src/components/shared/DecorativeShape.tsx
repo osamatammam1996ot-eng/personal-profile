@@ -61,7 +61,8 @@ interface DecorMaterials {
 
 /* Material/light strengths per theme */
 const DECOR_LOOK = {
-  dark:  { shininess: 80,  shellOpacity: 0.55, wireOpacity: 0.15, amb: 0.45, key: 0.9, rim: 0.5, fill: 0.4 },
+  // Low ambient + strong key/rim so faces read by angle (depth), not one flat tint
+  dark:  { shininess: 30,  shellOpacity: 0.85, wireOpacity: 0.3,  amb: 0.08, key: 2.6, rim: 1.5, fill: 0.6 },
   light: { shininess: 140, shellOpacity: 0.60, wireOpacity: 0.18, amb: 0.5,  key: 1.4, rim: 0.8, fill: 0.4 },
 };
 

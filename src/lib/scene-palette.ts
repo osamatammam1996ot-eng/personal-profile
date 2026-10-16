@@ -36,8 +36,9 @@ export function getScenePalette(isDark: boolean): ScenePalette {
   const base = hslHex(h, s, l);
 
   return {
-    shell: hslHex(h, s, isDark ? Math.max(0.05, l - 0.2) : Math.min(0.95, l + 0.3)),
-    emissive: hslHex(h, s, isDark ? Math.max(0.1, l - 0.1) : l),
+    shell: hslHex(h, s, isDark ? Math.max(0.08, l - 0.12) : Math.min(0.95, l + 0.3)),
+    // Dark: keep the self-glow well below the shell so the lights shape each face
+    emissive: hslHex(h, s, isDark ? Math.max(0.04, l - 0.3) : l),
     specular: isDark ? hslHex(h, Math.min(1, s + 0.2), Math.min(0.9, l + 0.3)) : light,
     wire: base,
     point,
@@ -56,9 +57,10 @@ export function getDecorPalette(isDark: boolean): ScenePalette {
 
   if (isDark) {
     return {
-      shell: hslHex(h, s * 0.8, l * 0.3),
-      emissive: hslHex(h, s, l * 0.5),
-      specular: hslHex(h, s, Math.min(l * 1.5, 1)),
+      shell: hslHex(h, s * 0.8, l * 0.45),
+      // A faint self-glow only, so the lights (not a flat tint) shape each face
+      emissive: hslHex(h, s, l * 0.18),
+      specular: hslHex(h, s * 0.6, Math.min(l * 2, 0.85)),
       wire: hslHex(h, s, Math.min(l * 1.2, 1)),
       point: hslHex(h, s, Math.min(l * 1.2, 1)),
       rim: hslHex(shiftedHue, s, Math.min(l * 1.5, 1)),
