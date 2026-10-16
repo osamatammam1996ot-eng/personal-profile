@@ -23,22 +23,23 @@
 /* ─── 1. PALETTE ─────────────────────────────────────────────────────────── */
 :root {
   /* Brand — burgundy scale */
-  --burgundy-50: #fcf7f8;
-  --burgundy-100: #f4e8eb;
-  --burgundy-300: #e0607e;
-  --burgundy-400: #cc3a5a;
-  --burgundy-500: #b32d4b;
-  --burgundy-600: #9e1b34;
-  --burgundy-700: #800020;
-  --burgundy-750: #731224;
-  --burgundy-800: #5b0f1e;
-  --burgundy-850: #4a0c18;
-  --burgundy-900: #1a050a;
-  --burgundy-940: #1f0b11;
-  --burgundy-950: #100508;
-  --burgundy-975: #0f0305;
+  --burgundy-50: #f7f1ea;
+  --burgundy-100: #eee4d8;
+  --burgundy-300: #d07a7e;
+  --burgundy-400: #b5464f;
+  --burgundy-500: #9c2a36;
+  --burgundy-600: #8c1d2c;
+  --burgundy-700: #6e1520;
+  --burgundy-750: #5f121c;
+  --burgundy-800: #4d0f17;
+  --burgundy-850: #3d0d13;
+  --burgundy-900: #1b1213;
+  --burgundy-940: #1e1819;
+  --burgundy-950: #141011;
+  --burgundy-975: #0f0c0d;
 
   /* Neutrals */
+  --bone-50: #efe6da;            /* warm off-white for text on dark */
   --white: #ffffff;
   --black: #000000;
   --ink-50: #f8f8fb;
@@ -191,7 +192,7 @@
 /* ─── 2. SEMANTIC — dark theme ───────────────────────────────────────────── */
 .dark {
   --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --foreground: var(--bone-50);
   --card: oklch(0.145 0 0);
   --primary: oklch(0.985 0 0);
   --primary-foreground: oklch(0.205 0 0);
@@ -210,8 +211,8 @@
   --marquee-bg: var(--burgundy-850);
   --marquee-border: rgba(255, 255, 255, 0.06);
   --surface-elevated: rgba(255, 255, 255, 0.04);
-  --surface-glass: rgba(16, 5, 8, 0.65);
-  --surface-card: rgba(16, 5, 8, 0.95);
+  --surface-glass: color-mix(in srgb, var(--burgundy-950) 65%, transparent);
+  --surface-card: color-mix(in srgb, var(--burgundy-950) 95%, transparent);
   --overlay: rgba(0, 0, 0, 0.05);
 
   --brand: var(--burgundy-500);       /* lighter burgundy for dark-mode contrast */
@@ -221,6 +222,7 @@
   --brand-line: linear-gradient(90deg, var(--burgundy-400), var(--burgundy-600));
   --cursor-glow: var(--burgundy-400);
   --focus-ring: var(--burgundy-300);
+  --on-brand: var(--bone-50);
 
   --success: var(--green-400);        /* WCAG 2.2 AA pass on dark */
   --warning: var(--amber-400);
@@ -228,24 +230,25 @@
   --info: var(--blue-400);
   --disabled: var(--zinc-600);
 
-  --text-primary: var(--ink-50);
-  --text-secondary: rgba(255, 255, 255, 0.65); /* 4.5:1 pass */
-  --text-muted: rgba(255, 255, 255, 0.45);
-  --text-dim: rgba(255, 255, 255, 0.65);
-  --text-faint: rgba(255, 255, 255, 0.35);
+  /* Warm bone text instead of cool white: reads printed/editorial on the warm ink background */
+  --text-primary: var(--bone-50);
+  --text-secondary: color-mix(in srgb, var(--bone-50) 65%, transparent); /* 4.5:1 pass */
+  --text-muted: color-mix(in srgb, var(--bone-50) 45%, transparent);
+  --text-dim: color-mix(in srgb, var(--bone-50) 65%, transparent);
+  --text-faint: color-mix(in srgb, var(--bone-50) 35%, transparent);
 
-  --border-default: rgba(255, 255, 255, 0.15);
-  --border-strong: rgba(255, 255, 255, 0.4);
+  --border-default: color-mix(in srgb, var(--bone-50) 15%, transparent);
+  --border-strong: color-mix(in srgb, var(--bone-50) 40%, transparent);
 
-  --nav-bg-scrolled: rgba(8, 8, 16, 0.85);
-  --nav-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+  --nav-bg-scrolled: color-mix(in srgb, var(--burgundy-975) 85%, transparent);
+  --nav-shadow: 0 1px 0 color-mix(in srgb, var(--bone-50) 6%, transparent);
   --nav-link-active: var(--burgundy-300);
-  --nav-link-inactive: rgba(255, 255, 255, 0.65);
-  --footer-text: rgba(255, 255, 255, 0.4);
-  --footer-link: rgba(255, 255, 255, 0.45);
+  --nav-link-inactive: color-mix(in srgb, var(--bone-50) 65%, transparent);
+  --footer-text: color-mix(in srgb, var(--bone-50) 40%, transparent);
+  --footer-link: color-mix(in srgb, var(--bone-50) 45%, transparent);
 
   --vignette: radial-gradient(circle, transparent 30%, rgba(0, 0, 0, 1) 120%);
-  --hero-overlay: radial-gradient(ellipse 72% 85% at 50% 50%, rgba(16, 5, 8, 0.65) 0%, rgba(16, 5, 8, 0.38) 60%, transparent 100%);
+  --hero-overlay: radial-gradient(ellipse 72% 85% at 50% 50%, color-mix(in srgb, var(--burgundy-950) 65%, transparent) 0%, color-mix(in srgb, var(--burgundy-950) 38%, transparent) 60%, transparent 100%);
 
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.3);
   --shadow-floating: 0 16px 40px rgba(0, 0, 0, 0.6);

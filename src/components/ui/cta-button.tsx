@@ -50,7 +50,7 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
         {...props}
       >
         {/* Floating Hexagons Background */}
-        <div className="absolute inset-0 w-full h-[200%] top-0 left-0 pointer-events-none opacity-70 animate-[bubbles_5s_linear_infinite_both]">
+        <div className="absolute inset-0 w-full h-[200%] top-0 left-0 pointer-events-none opacity-40 animate-[bubbles_5s_linear_infinite_both]">
            {/* First Half (0% to 50%) */}
            <Hexagon className="absolute left-[20%] top-[10%] w-4 h-4 text-on-brand fill-transparent opacity-35" />
            <Hexagon className="absolute left-[75%] top-[20%] w-6 h-6 text-on-brand fill-transparent opacity-25" />

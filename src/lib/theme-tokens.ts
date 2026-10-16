@@ -18,10 +18,17 @@ let probe: CanvasRenderingContext2D | null = null;
 export function parseColor(color: string): [number, number, number, number] {
   probe ??= document.createElement('canvas').getContext('2d');
   if (!probe) return [0, 0, 0, 0];
-  // Canvas normalises whatever it's given to "#rrggbb" or "rgba(r, g, b, a)".
+  // Canvas normalises whatever it's given to "#rrggbb", "rgba(r, g, b, a)" or, for newer
+  // color syntax such as color-mix(), "color(srgb r g b / a)".
   probe.fillStyle = 'transparent';
   probe.fillStyle = color;
   const normalized = String(probe.fillStyle);
+  // Tokens built with color-mix() come back as "color(srgb r g b / a)" with channels in 0–1.
+  const srgb = normalized.match(/^color\(srgb\s+([\d.e-]+)\s+([\d.e-]+)\s+([\d.e-]+)(?:\s*\/\s*([\d.e-]+))?\)$/);
+  if (srgb) {
+    const [r, g, b] = [srgb[1], srgb[2], srgb[3]].map((c) => Math.round(Number(c) * 255));
+    return [r, g, b, srgb[4] === undefined ? 1 : Number(srgb[4])];
+  }
   if (normalized.startsWith('#')) {
     return [
       parseInt(normalized.slice(1, 3), 16),

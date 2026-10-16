@@ -220,7 +220,7 @@ export function Hero({ isDark }: HeroProps) {
             </svg>
             {/* -mt-[20%]: the top ~21% of the image is transparent padding above the head */}
             <img
-              src="/avatar-burgundy.webp"
+              src="/avatar-oxblood.webp"
               alt="Osama Tammam"
               className="w-full h-auto block -mt-[20%] -mb-[15%] [clip-path:inset(0_0_20px_0)] [filter:url(#avatar-smooth-edge)]"
             />
