@@ -373,7 +373,7 @@ export function Tools({ isDark = false }: ToolsProps) {
           <span>{toolsTitle}</span>
         </h2>
 
-        <p className="text-lg font-normal text-text-muted leading-[1.75] max-w-[380px] mx-auto">
+        <p className="text-lg font-normal text-text-muted leading-[1.75] max-w-[380px] md:max-w-none md:whitespace-nowrap mx-auto">
           {toolsDesc}
         </p>
       </motion.div>

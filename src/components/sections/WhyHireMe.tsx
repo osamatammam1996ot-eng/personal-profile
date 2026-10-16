@@ -32,7 +32,7 @@ const HOVER_LOOK = {
 };
 
 // ─── Tilt card ───────────────────────────────────────────────────────────────
-type CardWithText = typeof CARDS_VISUAL[0] & { title: string; desc: string; num: string };
+type CardWithText = typeof CARDS_VISUAL[0] & { title: string; desc: string };
 
 function TiltCard({ card }: { card: CardWithText; isDark: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -71,9 +71,7 @@ function TiltCard({ card }: { card: CardWithText; isDark: boolean }) {
       className="relative flex-1 min-w-0 cursor-default"
     >
       {/* Card surface: a solid dark panel, no outline */}
-      <div className="relative rounded-2xl overflow-hidden px-6 pt-5 pb-6 min-h-[200px] bg-surface-raised shadow-tilt">
-        <span className="block mb-6 text-sm font-semibold tabular-nums text-brand">{card.num}</span>
-
+      <div className="relative h-full rounded-2xl overflow-hidden px-6 py-5 bg-surface-raised shadow-tilt">
         <h3 className="m-0 mb-2 font-bold text-lg leading-snug text-text-primary whitespace-normal">
           {card.title}
         </h3>
@@ -114,9 +112,7 @@ function CardsRow({ isDark }: { isDark: boolean }) {
   const CARDS = CARDS_VISUAL.map((v, i) => {
     const title = cmsData.whyHireMe.cards[i]?.title?.[lang] || fallbackTitles[i] || v.id;
     const desc = cmsData.whyHireMe.cards[i]?.desc?.[lang] || fallbackDescs[i] || '';
-    const n = String(i + 1).padStart(2, '0');
-    const num = lang === 'ar' ? n.replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[+d]) : n;
-    return { ...v, title, desc, num };
+    return { ...v, title, desc };
   });
   return (
     <div className="flex flex-col sm:flex-row gap-5 items-stretch justify-center">

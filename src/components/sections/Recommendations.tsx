@@ -58,8 +58,15 @@ function ScrollRing({ progress }: { progress: MotionValue<number> }) {
 }
 
 export function Recommendations(_props: RecommendationsProps) {
-  const { lang } = useLanguage();
   const { cmsData } = useCms();
+  const recs = cmsData.recommendations?.filter((r) => r.visible) || [];
+  if (!cmsData.sections.recommendations || recs.length === 0) return null;
+  // Scroll-linked hooks live in the child so they only run when the section is rendered.
+  return <RecommendationsContent recs={recs} />;
+}
+
+function RecommendationsContent({ recs }: { recs: CmsRecommendation[] }) {
+  const { lang } = useLanguage();
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -69,9 +76,6 @@ export function Recommendations(_props: RecommendationsProps) {
   // The background glow drifts across the section while it is on screen.
   const { scrollYProgress: sectionProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
   const glowX = useTransform(sectionProgress, [0, 1], ['-40vw', '40vw']);
-
-  const recs = cmsData.recommendations?.filter((r) => r.visible) || [];
-  if (!cmsData.sections.recommendations || recs.length === 0) return null;
 
   const t = lang === 'en'
     ? { title: 'What People Say', sub: "A few words from the people I've built, solved, and collaborated with.", keep: 'Keep scrolling' }
