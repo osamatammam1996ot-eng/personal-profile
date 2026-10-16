@@ -31,6 +31,13 @@ function mergeDeep<T>(base: T, override: any): T {
     for (const key of Object.keys(baseObj)) {
       result[key] = mergeDeep(baseObj[key], overrideObj[key]);
     }
+    // Keep saved fields the defaults don't list (e.g. contact.showMeetingAction), so they
+    // show in the editors and aren't wiped by the next save.
+    for (const key of Object.keys(overrideObj)) {
+      if (!(key in baseObj) && overrideObj[key] !== undefined) {
+        result[key] = JSON.parse(JSON.stringify(overrideObj[key]));
+      }
+    }
     return result as T;
   }
   return (override as T) ?? base;
@@ -302,7 +309,7 @@ export default function AdminDashboard() {
                         onClick={() => setActiveSection(item.id)}
                         className={`group flex items-center gap-3 w-[calc(100%-32px)] mx-4 my-1 px-4 py-2.5 rounded-xl border cursor-pointer transition-all duration-300 text-left text-base ${isActive ? "bg-admin-fg/10 text-admin-fg font-semibold border-admin-fg/20 shadow-[0_0_20px_color-mix(in_srgb,var(--admin-fg)_5%,transparent)]" : "bg-transparent text-admin-fg/60 hover:text-admin-fg hover:bg-admin-fg/5 hover:border-admin-fg/10 border-transparent font-medium"}`}
                       >
-                        <span className={`transition-colors duration-300 ${isActive ? 'text-brand' : 'text-admin-fg/40 group-hover:text-admin-fg/70'}`}>{item.icon}</span>
+                        <span className={`transition-colors duration-300 ${isActive ? 'text-brand-text' : 'text-admin-fg/40 group-hover:text-admin-fg/70'}`}>{item.icon}</span>
                         <span className="flex-1">
                           {item.label}
                         </span>

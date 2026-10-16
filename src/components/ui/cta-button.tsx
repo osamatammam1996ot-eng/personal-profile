@@ -19,7 +19,7 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
             "relative inline-flex items-center justify-center cursor-pointer outline-none",
             "font-medium text-base",
             "px-8 py-4 rounded-xl",
-            "border border-brand/30 dark:border-brand/40 text-brand dark:text-text-primary",
+            "border border-brand/30 dark:border-brand/40 text-brand-text dark:text-text-primary",
             "bg-brand/5 dark:bg-brand/10",
             "hover:bg-brand/15 dark:hover:bg-brand/20 hover:border-brand dark:hover:border-brand",
             "transition-all duration-300",
@@ -80,7 +80,7 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
         {/* Clipped Top Layer (Combines Mask and Top Text) */}
         <div 
           className={cn(
-            "absolute inset-0 z-30 pointer-events-none bg-surface text-brand dark:text-text-primary",
+            "absolute inset-0 z-30 pointer-events-none bg-surface text-brand-text dark:text-text-primary",
             "transition-all duration-[400ms] ease-out",
             "[clip-path:polygon(0_0,100%_0,100%_0,0_0)]",
             "group-hover:[clip-path:polygon(0_0,100%_0,100%_53%,0_53%)]",

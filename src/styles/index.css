@@ -113,6 +113,7 @@
   --brand-hover: var(--burgundy-800);
   --brand-accent: var(--burgundy-600);
   --brand-light: var(--burgundy-300);
+  --brand-text: var(--brand);          /* brand-colored text (links, labels) */
   --brand-gradient: linear-gradient(135deg, var(--burgundy-600) 0%, var(--burgundy-700) 100%);
   --brand-line: linear-gradient(90deg, var(--burgundy-600), var(--burgundy-750));
   --cursor-glow: var(--burgundy-500);
@@ -217,6 +218,7 @@
 
   --brand: var(--burgundy-500);       /* lighter burgundy for dark-mode contrast */
   --brand-hover: var(--burgundy-400);
+  --brand-text: var(--burgundy-300);   /* lighter shade so small brand text passes 4.5:1 on dark */
   --brand-accent: var(--burgundy-500);
   --brand-gradient: linear-gradient(135deg, var(--burgundy-500) 0%, var(--burgundy-700) 100%);
   --brand-line: linear-gradient(90deg, var(--burgundy-400), var(--burgundy-600));
@@ -297,6 +299,7 @@
 
   /* Brand */
   --color-brand: var(--brand);
+  --color-brand-text: var(--brand-text);
   --color-brand-hover: var(--brand-hover);
   --color-brand-accent: var(--brand-accent);
   --color-brand-light: var(--brand-light);
@@ -795,4 +798,37 @@ body.cyber-glitch-active {
 @keyframes bubbles {
   0% { transform: translateY(0); }
   100% { transform: translateY(-50%); }
+}
+
+/* Hero title shimmer: a soft accent band sweeps through the text in the reading
+   direction (the letters stay still; only the fill color moves). */
+.text-wave {
+  background-image: linear-gradient(
+    90deg,
+    var(--text-primary) 0%,
+    var(--text-primary) 35%,
+    var(--brand-light) 50%,
+    var(--text-primary) 65%,
+    var(--text-primary) 100%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: text-wave 4.5s ease-in-out infinite;
+}
+
+[dir='rtl'] .text-wave {
+  animation-direction: reverse;
+}
+
+@keyframes text-wave {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-wave { animation: none; }
 }

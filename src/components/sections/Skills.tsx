@@ -321,7 +321,7 @@ export function Skills({ isDark }: SkillsProps) {
             <button
               key={num}
               onClick={() => scrollToChapter(num)}
-              className={`text-xs lg:text-sm font-bold transition-colors duration-300 tracking-widest ${activeChapter === num ? 'text-brand' : 'text-text-faint hover:text-text-secondary'}`}
+              className={`text-xs lg:text-sm font-bold transition-colors duration-300 tracking-widest ${activeChapter === num ? 'text-brand-text' : 'text-text-faint hover:text-text-secondary'}`}
               
             >
               {num === 0 ? 'Intro' : `0${num}`}
@@ -355,7 +355,7 @@ export function Skills({ isDark }: SkillsProps) {
             </p>
             <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-border-default `}>
               {getArr(disc1?.tags).map((cap: string) => (
-                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
+                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand-text transition-colors cursor-default" >
                   {cap}
                 </li>
               ))}
@@ -371,7 +371,7 @@ export function Skills({ isDark }: SkillsProps) {
             </p>
             <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-border-default `}>
               {getArr(disc2?.tags).map((cap: string) => (
-                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
+                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand-text transition-colors cursor-default" >
                   {cap}
                 </li>
               ))}
@@ -389,7 +389,7 @@ export function Skills({ isDark }: SkillsProps) {
             </div>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-border-default pt-4 md:pt-6 ">
               {getArr(disc3?.tags).map((cap: string) => (
-                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand transition-colors cursor-default" >
+                <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand-text transition-colors cursor-default" >
                   {cap}
                 </li>
               ))}

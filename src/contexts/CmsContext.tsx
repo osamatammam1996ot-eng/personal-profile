@@ -48,6 +48,13 @@ function mergeDeep<T>(base: T, override: any): T {
     for (const key of Object.keys(baseObj)) {
       result[key] = mergeDeep(baseObj[key], overrideObj[key]);
     }
+    // Keep saved fields the defaults don't list (optional settings such as
+    // contact.showMeetingAction); without this they were silently dropped.
+    for (const key of Object.keys(overrideObj)) {
+      if (!(key in baseObj) && overrideObj[key] !== undefined) {
+        result[key] = clone(overrideObj[key]);
+      }
+    }
 
     return result as T;
   }

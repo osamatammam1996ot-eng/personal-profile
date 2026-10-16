@@ -229,7 +229,7 @@ export function Contact({ isDark }: ContactProps) {
               transition={{ delay: 0.3 }}
               className="flex items-start gap-4 p-5 rounded-xl border border-border-default bg-surface/50 max-w-md"
             >
-              <CodeXml className="w-5 h-5 text-brand shrink-0 mt-0.5" />
+              <CodeXml className="w-5 h-5 text-brand-text shrink-0 mt-0.5" />
               <p className="text-base font-normal text-text-secondary leading-relaxed">
                 {meetingAction}
               </p>
@@ -274,7 +274,7 @@ export function Contact({ isDark }: ContactProps) {
             )}
             
             <motion.span 
-              className="relative z-10 text-sm font-bold text-brand uppercase tracking-wider mb-6 block"
+              className="relative z-10 text-sm font-bold text-brand-text uppercase tracking-wider mb-6 block"
               style={shouldAnimate ? { z: zTitle } : undefined}
             >
               {emailLabel}
@@ -287,7 +287,7 @@ export function Contact({ isDark }: ContactProps) {
             >
               <a 
                 href={`mailto:${email}`} 
-                className="text-2xl sm:text-3xl lg:text-[1.75rem] font-medium text-foreground hover:text-brand transition-colors break-all outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm"
+                className="text-2xl sm:text-3xl lg:text-[1.75rem] font-medium text-foreground hover:text-brand-text transition-colors break-all outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm"
               >
                 {email}
               </a>

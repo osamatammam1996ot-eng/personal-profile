@@ -72,7 +72,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
       >
         <button
           onClick={onClose}
-          className="fixed top-8 right-8 size-10 rounded-lg flex items-center justify-center border-none cursor-pointer bg-brand/10 text-brand"
+          className="fixed top-8 right-8 size-10 rounded-lg flex items-center justify-center border-none cursor-pointer bg-brand/10 text-brand-text"
         >
           ✕
         </button>
@@ -142,7 +142,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
               >
                 {!loaded[currentIndex] && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Loader2 size={32} className="animate-spin text-brand" />
+                    <Loader2 size={32} className="animate-spin text-brand-text" />
                   </div>
                 )}
 

@@ -157,14 +157,14 @@ export function HeroEditor({ draft, updateDraft, updateHeroRole, addHeroRole, re
                     <button 
                       onClick={() => moveElement(index, 'up')}
                       disabled={index === 0}
-                      className="text-text-muted hover:text-brand disabled:opacity-30 disabled:hover:text-text-muted transition-colors cursor-pointer"
+                      className="text-text-muted hover:text-brand-text disabled:opacity-30 disabled:hover:text-text-muted transition-colors cursor-pointer"
                     >
                       <ChevronUp size={16} />
                     </button>
                     <button 
                       onClick={() => moveElement(index, 'down')}
                       disabled={index === elementOrder.length - 1}
-                      className="text-text-muted hover:text-brand disabled:opacity-30 disabled:hover:text-text-muted transition-colors cursor-pointer"
+                      className="text-text-muted hover:text-brand-text disabled:opacity-30 disabled:hover:text-text-muted transition-colors cursor-pointer"
                     >
                       <ChevronDown size={16} />
                     </button>

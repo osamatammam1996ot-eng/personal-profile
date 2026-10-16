@@ -88,7 +88,7 @@ export function ImageUploader({ label, value, onChange, helpText, placeholder = 
           </div>
           {isUploading && (
             <div className="absolute inset-0 bg-admin-scrim/50 flex items-center justify-center">
-              <Loader2 className="animate-spin text-brand" size={24} />
+              <Loader2 className="animate-spin text-brand-text" size={24} />
             </div>
           )}
         </div>
@@ -98,13 +98,13 @@ export function ImageUploader({ label, value, onChange, helpText, placeholder = 
           className={`border-2 border-dashed border-admin-fg/10 rounded-lg p-6 flex flex-col items-center justify-center gap-3 bg-admin-fg/5 hover:bg-admin-fg/10 transition-colors cursor-pointer text-center ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {isUploading ? (
-            <Loader2 className="animate-spin text-brand" size={32} />
+            <Loader2 className="animate-spin text-brand-text" size={32} />
           ) : (
             <ImageIcon size={32} className="text-admin-fg/20" />
           )}
           
           <div>
-            <span className="text-base text-brand font-medium">Click to upload</span>
+            <span className="text-base text-brand-text font-medium">Click to upload</span>
             <span className="text-base text-admin-fg/50"> or drag and drop</span>
           </div>
         </div>

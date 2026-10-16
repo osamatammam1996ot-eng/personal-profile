@@ -48,7 +48,7 @@ export function ActiveToolCard({
               </div>
               <div className="flex flex-wrap gap-[5px]">
                 {(tool.tags?.[lang] || tool.tags?.en || []).map((tag: string) => (
-                  <span key={tag} className="text-sm font-medium px-2 py-1 rounded-full bg-brand/10 text-brand border border-brand/20">
+                  <span key={tag} className="text-sm font-medium px-2 py-1 rounded-full bg-brand/10 text-brand-text border border-brand/20">
                     {tag}
                   </span>
                 ))}

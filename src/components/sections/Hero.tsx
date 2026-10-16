@@ -130,7 +130,7 @@ export function Hero({ isDark }: HeroProps) {
                 transition={{ duration: 0.75, delay, ease: [0.4, 0, 0.2, 1] }}
                 className="m-0 mb-7 font-heading font-bold text-[clamp(2.5rem,4.5vw,4rem)] leading-[1.08] tracking-[-0.03em] text-text-primary"
               >
-                <span className="block text-balance">{heroHeadline1}</span>
+                <span className="block text-balance text-wave">{heroHeadline1}</span>
                 <span className="block text-balance">{heroHeadline2}</span>
               </motion.h1>
             );
@@ -188,7 +188,7 @@ export function Hero({ isDark }: HeroProps) {
                 <button
                   type="button"
                   onClick={() => scrollToSection('contact')}
-                  className="inline-flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer font-semibold text-base text-text-primary hover:text-brand transition-colors"
+                  className="inline-flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer font-semibold text-base text-text-primary hover:text-brand-text transition-colors"
                 >
                   {heroCta2}
                   <ArrowUpRight size={16} className={isRTL ? '-scale-x-100' : ''} />

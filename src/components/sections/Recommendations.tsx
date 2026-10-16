@@ -35,7 +35,7 @@ function FeedbackCard({ rec, lang, animate }: { rec: CmsRecommendation; lang: 'e
           </span>
           <span className="font-bold text-text-primary">{rec.name}</span>
         </div>
-        <span className="text-base font-medium text-brand">{rec.position[lang]}</span>
+        <span className="text-base font-medium text-brand-text">{rec.position[lang]}</span>
       </div>
 
       {/* Accent dot on the bottom edge */}
