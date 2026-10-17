@@ -1,6 +1,7 @@
 import { useRef, useCallback, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'motion/react';
-import imgPortrait from '../../assets/e31509a0541824cfeda89ddabf83753388778df0.png';
+// Graded warm (oxblood shadows, bone highlights, crimson rim) to sit in the same world as the 3D avatar
+import imgPortrait from '../../assets/why-portrait.webp';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 
@@ -251,7 +252,7 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
             className="relative w-full z-[2]"
           >
             <div
-              className="relative w-full overflow-hidden pb-[35%]"
+              className="relative w-full overflow-clip pb-[35%]"
             >
               <img
                 src={typeof imgPortrait === 'string' ? imgPortrait : (imgPortrait as any).src}
