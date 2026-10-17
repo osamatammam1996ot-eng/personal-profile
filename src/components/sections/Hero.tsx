@@ -1,15 +1,19 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { HexGrid } from '../shared/HexGrid';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Pause, Play } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import { CTAButton } from '../ui/cta-button';
-import { DecorativeShape } from '../shared/DecorativeShape';
 
 interface HeroProps {
   isDark: boolean;
 }
+
+const AVATAR_SRC = '/avatar-hex.webp';
+// First frame of the loop, shown while paused so pausing also resets it
+const AVATAR_STILL = '/avatar-hex-still.webp';
+const AVATAR_MOTION_KEY = 'avatar-motion';
 
 export function Hero({ isDark }: HeroProps) {
   const { lang, isRTL, fontHeading, fontBody } = useLanguage();
@@ -67,6 +71,39 @@ export function Hero({ isDark }: HeroProps) {
     return () => clearInterval(iv);
   }, []);
 
+  // Avatar animation toggle. Visitors' choice is remembered; reduced-motion visitors start paused.
+  const reduceMotion = useReducedMotion();
+  const [avatarPlaying, setAvatarPlaying] = useState(true);
+  const [avatarSrc, setAvatarSrc] = useState(AVATAR_SRC);
+  const avatarBlobUrl = useRef<string | null>(null);
+
+  useEffect(() => {
+    let saved: string | null = null;
+    try { saved = localStorage.getItem(AVATAR_MOTION_KEY); } catch { /* storage blocked */ }
+    if (saved === 'paused' || (saved === null && reduceMotion)) setAvatarPlaying(false);
+  }, [reduceMotion]);
+
+  useEffect(() => () => {
+    if (avatarBlobUrl.current) URL.revokeObjectURL(avatarBlobUrl.current);
+  }, []);
+
+  const toggleAvatar = async () => {
+    const next = !avatarPlaying;
+    try { localStorage.setItem(AVATAR_MOTION_KEY, next ? 'playing' : 'paused'); } catch { /* storage blocked */ }
+    if (!next) { setAvatarPlaying(false); return; }
+    // Browsers keep an animated image's clock per resource, so a fresh blob URL
+    // (from the HTTP cache, no re-download) makes the loop start again at frame 1.
+    try {
+      const blob = await (await fetch(AVATAR_SRC)).blob();
+      if (avatarBlobUrl.current) URL.revokeObjectURL(avatarBlobUrl.current);
+      avatarBlobUrl.current = URL.createObjectURL(blob);
+      setAvatarSrc(avatarBlobUrl.current);
+    } catch {
+      setAvatarSrc(AVATAR_SRC);
+    }
+    setAvatarPlaying(true);
+  };
+
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -88,15 +125,6 @@ export function Hero({ isDark }: HeroProps) {
 
       {/* Vignette layer */}
       <div className="absolute inset-0 z-[16] pointer-events-none bg-vignette" />
-
-      {/* Decorative 3D Shape — on the avatar's side so it never sits under the text */}
-      <DecorativeShape
-        shape="icosahedron"
-        position={isRTL ? 'bottom-left' : 'bottom-right'}
-        size={330}
-        rotationOffset={[0.1, 0.2, 0]}
-        isDark={dark}
-      />
 
       {/* Editorial split: text on the reading side, avatar on the other.
           Text elements keep the CMS order and visibility toggles; the avatar has its own column. */}
@@ -207,23 +235,35 @@ export function Hero({ isDark }: HeroProps) {
             initial={{ opacity: 0, scale: 0.92, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-            className="max-md:order-1 justify-self-start md:justify-self-end w-[220px] sm:w-[280px] md:w-[min(380px,30vw)]"
+            className="relative max-md:order-1 justify-self-start md:justify-self-end w-[220px] sm:w-[280px] md:w-[min(380px,30vw)]"
           >
-            {/* The animated webp has hard 1-bit alpha with a dark fringe, which looks
-                jagged on the light background: erode the alpha by 1px and soften it. */}
-            <svg width="0" height="0" className="absolute" aria-hidden="true">
-              <filter id="avatar-smooth-edge" colorInterpolationFilters="sRGB">
-                <feMorphology in="SourceAlpha" operator="erode" radius="1" result="eroded" />
-                <feGaussianBlur in="eroded" stdDeviation="0.8" result="soft" />
-                <feComposite in="SourceGraphic" in2="soft" operator="in" />
-              </filter>
-            </svg>
-            {/* -mt-[20%]: the top ~21% of the image is transparent padding above the head */}
+            {/* Seamless 9s loop, keyed with soft alpha: the glows are additive light, so the grid shows through them.
+                The frame leaves ~18% of room around the hex for the glows, so the image overhangs its box:
+                the hex lines up with the text edge on phones and fills the column on desktop. */}
             <img
-              src="/avatar-oxblood.webp"
+              src={avatarPlaying ? avatarSrc : AVATAR_STILL}
               alt="Osama Tammam"
-              className="w-full h-auto block -mt-[20%] -mb-[15%] [clip-path:inset(0_0_20px_0)] [filter:url(#avatar-smooth-edge)]"
+              width={512}
+              height={512}
+              className="block h-auto w-[130%] max-w-none pointer-events-none -my-[12%] -ms-[23%] md:-mx-[15%]"
             />
+            {/* Sits in the empty corner beside the hex's lower edge, clear of the hands */}
+            <button
+              type="button"
+              onClick={toggleAvatar}
+              aria-pressed={!avatarPlaying}
+              aria-label={avatarPlaying
+                ? (lang === 'en' ? 'Pause animation' : 'إيقاف الحركة')
+                : (lang === 'en' ? 'Play animation' : 'تشغيل الحركة')}
+              title={avatarPlaying
+                ? (lang === 'en' ? 'Pause animation' : 'إيقاف الحركة')
+                : (lang === 'en' ? 'Play animation' : 'تشغيل الحركة')}
+              className="absolute bottom-[2%] end-[-2%] z-10 inline-flex size-8 md:size-9 items-center justify-center rounded-full cursor-pointer bg-surface-glass backdrop-blur-md border border-text-primary/15 text-text-secondary shadow-[0_4px_16px_rgb(0_0_0/0.35)] hover:text-text-primary hover:border-text-primary/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            >
+              {avatarPlaying
+                ? <Pause size={14} fill="currentColor" strokeWidth={0} />
+                : <Play size={14} fill="currentColor" strokeWidth={0} className="translate-x-px" />}
+            </button>
           </motion.div>
         )}
       </div>
