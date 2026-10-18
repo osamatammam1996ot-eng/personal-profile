@@ -281,16 +281,19 @@ export function Contact({ isDark }: ContactProps) {
               {emailLabel}
             </motion.span>
             
-            {/* Email Action */}
-            <motion.div 
-              className="relative z-10 flex flex-wrap sm:flex-nowrap items-end justify-between border-b border-brand pb-3 mb-10 gap-4"
+            {/* Email Action: the copy icon always stays on the address's row. The address scales
+                to fit one line on phones and, on very narrow screens, may only break after the @ */}
+            <motion.div
+              className="contact-email-row relative z-10 flex flex-nowrap items-end justify-between border-b border-brand pb-3 mb-10 gap-3 sm:gap-4"
               style={shouldAnimate ? { z: zActions } : undefined}
             >
-              <a 
-                href={`mailto:${email}`} 
-                className="text-2xl sm:text-3xl lg:text-[1.75rem] font-medium text-foreground hover:text-brand-text transition-colors break-all outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm"
+              <a
+                href={`mailto:${email}`}
+                dir="ltr"
+                style={{ '--email-chars': email.length } as React.CSSProperties}
+                className="contact-email min-w-0 font-medium text-foreground hover:text-brand-text transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm"
               >
-                {email}
+                {email.includes('@') ? <>{email.split('@')[0]}@<wbr />{email.split('@').slice(1).join('@')}</> : email}
               </a>
               <div className="flex items-center gap-4 text-text-muted shrink-0 pb-1">
 

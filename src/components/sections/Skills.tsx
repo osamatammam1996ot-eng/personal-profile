@@ -44,12 +44,17 @@ function setupChapterStepper(
   let leaving = 0;         // direction this gesture is leaving the section in; it keeps going natively
   let touchActiveUntil = 0; // a swipe and its momentum are still moving the page until then
   let lastScrollY = window.scrollY;
+  let queued = 0;          // one new gesture made during a transition plays right after it
+  let lastStepAt = 0;
+  let lastAbs = 0;
+  let tailLow = Infinity;  // lowest wheel speed since the last step: the bottom of the momentum
   let lockTimer: ReturnType<typeof setTimeout> | undefined;
 
   const span = () => container.offsetHeight - window.innerHeight;
   const engaged = () => {
+    // 3px of slack: at display zoom levels scroll positions land on fractional pixels
     const r = container.getBoundingClientRect();
-    return r.top <= 1 && r.bottom >= window.innerHeight - 1;
+    return r.top <= 3 && r.bottom >= window.innerHeight - 3;
   };
   const nearest = () => {
     const progress = Math.min(1, Math.max(0, -container.getBoundingClientRect().top / Math.max(1, span())));
@@ -71,14 +76,27 @@ function setupChapterStepper(
     if (scroll) scrollToChapter(k);
     if (steps < 0.001) return;
     animating = true;
+    lastStepAt = performance.now();
+    tailLow = Infinity;
     const duration = STEP_SECONDS * Math.min(steps, 1.5);
-    gsap.to(tl, { time: k, duration, ease: 'none', overwrite: true, onComplete: () => { animating = false; } });
+    gsap.to(tl, { time: k, duration, ease: 'none', overwrite: true, onComplete: finish });
     // Backup release: if the browser pauses animation frames mid-transition (background tab,
     // battery saver) the tween stalls, and input must not stay locked until frames resume
     clearTimeout(lockTimer);
-    lockTimer = setTimeout(() => { animating = false; }, duration * 1000 + 150);
+    lockTimer = setTimeout(finish, duration * 1000 + 150);
   };
-  goToRef.current = (k) => { aligned = true; goTo(k); };
+
+  // Transition done: unlock, and play the one step that was asked for while it ran
+  function finish() {
+    if (!animating) return;
+    animating = false;
+    clearTimeout(lockTimer);
+    const dir = queued;
+    queued = 0;
+    const next = chapter + dir;
+    if (dir && next >= 0 && next <= LAST_CHAPTER && engaged()) goTo(next);
+  }
+  goToRef.current = (k) => { aligned = true; queued = 0; goTo(k); };
 
   const step = (dir: number, e: Event, fresh: boolean) => {
     if (!engaged()) { aligned = false; leaving = 0; return; }
@@ -107,17 +125,25 @@ function setupChapterStepper(
       return;
     }
     e.preventDefault();
-    if (animating || gestureUsed) return;
+    if (gestureUsed) return;
     gestureUsed = true;
+    // A new gesture while a transition is still playing isn't lost: it runs right after
+    if (animating) { queued = dir; return; }
     goTo(next);
   };
 
   const onWheel = (e: WheelEvent) => {
     const now = performance.now();
-    const fresh = now - lastWheel > GESTURE_GAP_MS;
-    if (fresh) { gestureUsed = false; leaving = 0; }
+    const abs = Math.abs(e.deltaY);
+    // Trackpad momentum only ever slows down. A clear speed-up well above the slowest point it
+    // reached is a new swipe, even though the events never paused, so it counts as fresh.
+    const speedUp = abs >= 12 && abs > lastAbs && abs > tailLow * 3 && now - lastStepAt > 400;
+    const fresh = now - lastWheel > GESTURE_GAP_MS || speedUp;
+    if (fresh) { gestureUsed = false; leaving = 0; tailLow = Infinity; }
+    tailLow = Math.min(tailLow, abs);
+    lastAbs = abs;
     lastWheel = now;
-    if (Math.abs(e.deltaY) < 1) return;
+    if (abs < 1) return;
     step(Math.sign(e.deltaY), e, fresh);
   };
 

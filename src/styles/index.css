@@ -457,6 +457,16 @@
     display: none;
   }
 
+  /* Contact email: sized to its row so the address fits on one line next to the copy icon
+     (about 0.56em per character; 2.75rem leaves room for the icon and gap), up to 1.75rem.
+     Below 1rem it stops shrinking and may only break after the @ (there's a <wbr> there). */
+  .contact-email-row {
+    container-type: inline-size;
+  }
+  .contact-email {
+    font-size: clamp(1rem, calc((100cqw - 2.75rem) / (var(--email-chars, 24) * 0.58)), 1.75rem);
+  }
+
   .section-fade-bottom {
     background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--surface-raised) 60%, transparent) 40%, var(--surface-raised) 100%);
   }
