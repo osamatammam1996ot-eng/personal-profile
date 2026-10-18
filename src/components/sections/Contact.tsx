@@ -343,9 +343,9 @@ export function Contact({ isDark }: ContactProps) {
             </motion.p>
           </motion.div>
 
-          {/* 3D Decorative Shape overlapping the bottom right */}
-          <div className="absolute -bottom-16 -right-16 z-0 opacity-80 pointer-events-none hidden md:block">
-            <DecorativeShape shape="icosahedron" position="bottom-right" size={280} isDark={isDark} />
+          {/* 3D Decorative Shape overlapping the card's outer bottom corner (bottom left in RTL) */}
+          <div className={`absolute -bottom-16 ${isRTL ? '-left-16' : '-right-16'} z-0 opacity-80 pointer-events-none hidden md:block`}>
+            <DecorativeShape shape="icosahedron" position={isRTL ? 'bottom-left' : 'bottom-right'} size={280} isDark={isDark} />
           </div>
         </motion.div>
       </div>
