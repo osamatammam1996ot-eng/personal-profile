@@ -17,7 +17,10 @@ const LAST_CHAPTER = 3;
 const STEP_SECONDS = 0.9;
 // A trackpad flick keeps firing wheel events for a second or more. Events closer together than
 // this belong to the same gesture, and one gesture may move at most one chapter.
-const GESTURE_GAP_MS = 250;
+const GESTURE_GAP_MS = 150;
+// Moving the cursor more than this between wheel events starts a new gesture: you can't move the
+// pointer and scroll in one motion, and on a touchpad touching it to move also stops the momentum
+const POINTER_MOVE_PX = 4;
 const SWIPE_PX = 30;
 
 /**
@@ -47,7 +50,9 @@ function setupChapterStepper(
   let queued = 0;          // one new gesture made during a transition plays right after it
   let lastStepAt = 0;
   let lastAbs = 0;
-  let tailLow = Infinity;  // lowest wheel speed since the last step: the bottom of the momentum
+  const recentAbs: number[] = []; // last few wheel speeds, to tell momentum from a new swipe
+  let pointerMoved = 0;    // cursor travel since the last wheel event
+  let lastPointer: { x: number; y: number } | null = null;
   let lockTimer: ReturnType<typeof setTimeout> | undefined;
 
   const span = () => container.offsetHeight - window.innerHeight;
@@ -77,7 +82,6 @@ function setupChapterStepper(
     if (steps < 0.001) return;
     animating = true;
     lastStepAt = performance.now();
-    tailLow = Infinity;
     const duration = STEP_SECONDS * Math.min(steps, 1.5);
     gsap.to(tl, { time: k, duration, ease: 'none', overwrite: true, onComplete: finish });
     // Backup release: if the browser pauses animation frames mid-transition (background tab,
@@ -135,12 +139,19 @@ function setupChapterStepper(
   const onWheel = (e: WheelEvent) => {
     const now = performance.now();
     const abs = Math.abs(e.deltaY);
-    // Trackpad momentum only ever slows down. A clear speed-up well above the slowest point it
-    // reached is a new swipe, even though the events never paused, so it counts as fresh.
-    const speedUp = abs >= 12 && abs > lastAbs && abs > tailLow * 3 && now - lastStepAt > 400;
-    const fresh = now - lastWheel > GESTURE_GAP_MS || speedUp;
-    if (fresh) { gestureUsed = false; leaving = 0; tailLow = Infinity; }
-    tailLow = Math.min(tailLow, abs);
+    // Momentum (the scroll that keeps going after your fingers lift) is a smooth, steady slowdown.
+    // Once the transition has finished, any real speed-up in the stream is a new swipe even though
+    // the events never paused. Small wobble inside one swipe stays under the 1.5x-of-recent-low bar.
+    const speedUp = recentAbs.length >= 3
+      && abs >= 4
+      && abs > lastAbs * 1.15
+      && abs > Math.min(...recentAbs) * 1.5
+      && now - lastStepAt > STEP_SECONDS * 1000 + 100;
+    const fresh = now - lastWheel > GESTURE_GAP_MS || pointerMoved > POINTER_MOVE_PX || speedUp;
+    if (fresh) { gestureUsed = false; leaving = 0; recentAbs.length = 0; }
+    recentAbs.push(abs);
+    if (recentAbs.length > 5) recentAbs.shift();
+    pointerMoved = 0;
     lastAbs = abs;
     lastWheel = now;
     if (abs < 1) return;
@@ -153,6 +164,11 @@ function setupChapterStepper(
     gestureUsed = false;
     leaving = 0;
   };
+  const onPointerMove = (e: MouseEvent) => {
+    if (lastPointer) pointerMoved += Math.hypot(e.clientX - lastPointer.x, e.clientY - lastPointer.y);
+    lastPointer = { x: e.clientX, y: e.clientY };
+  };
+
   const onTouchEnd = () => { touchActiveUntil = performance.now() + 1000; }; // momentum keeps going
   const onTouchMove = (e: TouchEvent) => {
     touchActiveUntil = performance.now() + 1000;
@@ -217,6 +233,7 @@ function setupChapterStepper(
   window.addEventListener('touchstart', onTouchStart, { passive: true });
   window.addEventListener('touchmove', onTouchMove, { passive: false });
   window.addEventListener('touchend', onTouchEnd, { passive: true });
+  window.addEventListener('mousemove', onPointerMove, { passive: true });
   window.addEventListener('keydown', onKey);
   window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -228,6 +245,7 @@ function setupChapterStepper(
     window.removeEventListener('touchstart', onTouchStart);
     window.removeEventListener('touchmove', onTouchMove);
     window.removeEventListener('touchend', onTouchEnd);
+    window.removeEventListener('mousemove', onPointerMove);
     window.removeEventListener('keydown', onKey);
     window.removeEventListener('scroll', onScroll);
     gsap.killTweensOf(tl);
