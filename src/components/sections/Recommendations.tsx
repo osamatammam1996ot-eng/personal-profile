@@ -1,8 +1,10 @@
-import { useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import type { CmsRecommendation } from '../../types/cms';
+import { MessageSquarePlus } from 'lucide-react';
+import { FeedbackDialog } from '../shared/FeedbackDialog';
 
 interface RecommendationsProps {
   isDark: boolean;
@@ -70,6 +72,12 @@ function RecommendationsContent({ recs }: { recs: CmsRecommendation[] }) {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const addBtnRef = useRef<HTMLButtonElement>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const closeFeedback = useCallback(() => {
+    setFeedbackOpen(false);
+    addBtnRef.current?.focus();
+  }, []);
 
   // Progress through the list of cards drives the side bar and the header ring.
   const { scrollYProgress: listProgress } = useScroll({ target: listRef, offset: ['start center', 'end center'] });
@@ -78,8 +86,8 @@ function RecommendationsContent({ recs }: { recs: CmsRecommendation[] }) {
   const glowX = useTransform(sectionProgress, [0, 1], ['-40vw', '40vw']);
 
   const t = lang === 'en'
-    ? { title: 'What People Say', sub: "A few words from the people I've built, solved, and collaborated with.", keep: 'Keep scrolling' }
-    : { title: 'ماذا يقولون', sub: 'بعض الكلمات ممن عملت، وبنيت، وتعاونت معهم.', keep: 'استمر في التمرير' };
+    ? { title: 'What People Say', sub: "A few words from the people I've built, solved, and collaborated with.", keep: 'Keep scrolling', add: 'Add yours' }
+    : { title: 'ماذا يقولون', sub: 'بعض الكلمات ممن عملت، وبنيت، وتعاونت معهم.', keep: 'استمر في التمرير', add: 'أضف رأيك' };
 
   return (
     <section
@@ -117,6 +125,20 @@ function RecommendationsContent({ recs }: { recs: CmsRecommendation[] }) {
             >
               {t.sub}
             </motion.p>
+            <motion.button
+              ref={addBtnRef}
+              type="button"
+              onClick={() => setFeedbackOpen(true)}
+              aria-haspopup="dialog"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-6 inline-flex items-center gap-2 rounded-full cursor-pointer px-5 py-2.5 bg-surface-glass backdrop-blur-md border border-text-primary/15 text-sm font-semibold text-text-primary hover:border-brand/60 hover:text-brand-text transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            >
+              <MessageSquarePlus size={16} className="rtl:-scale-x-100" />
+              {t.add}
+            </motion.button>
           </div>
           {recs.length > 1 && (
             <div className="hidden md:flex items-center gap-3 text-sm text-text-muted">
@@ -146,6 +168,7 @@ function RecommendationsContent({ recs }: { recs: CmsRecommendation[] }) {
           )}
         </div>
       </div>
+      <FeedbackDialog open={feedbackOpen} onClose={closeFeedback} />
     </section>
   );
 }

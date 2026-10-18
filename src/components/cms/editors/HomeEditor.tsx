@@ -94,8 +94,8 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
       hero: {
         ...prev.hero,
         roles: {
-          en: prev.hero.roles.en.filter((_: any, i: number) => i !== index),
-          ar: prev.hero.roles.ar.filter((_: any, i: number) => i !== index),
+          en: prev.hero.roles.en.filter((_, i) => i !== index),
+          ar: prev.hero.roles.ar.filter((_, i) => i !== index),
         },
       },
     }));

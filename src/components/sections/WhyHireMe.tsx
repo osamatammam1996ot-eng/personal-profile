@@ -1,5 +1,5 @@
 import { useRef, useCallback, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'motion/react';
+import { motion, useMotionValue, useSpring } from 'motion/react';
 // Graded warm (oxblood shadows, bone highlights, crimson rim) to sit in the same world as the 3D avatar
 import imgPortrait from '../../assets/why-portrait.webp';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -151,39 +151,8 @@ function CardsRow({ isDark }: { isDark: boolean }) {
   );
 }
 
-// ─── Eye tracking ────────────────────────────────────────────────────────────
-function EyeOverlay({ smX, smY }: { smX: MotionValue<number>; smY: MotionValue<number> }) {
-  const rawPX = useTransform(smX, [-36, 36], [-3, 3]);
-  const rawPY = useTransform(smY, [-36, 36], [-1.8, 1.8]);
-  const px = useSpring(rawPX, { stiffness: 55, damping: 14 });
-  const py = useSpring(rawPY, { stiffness: 55, damping: 14 });
-  const catchX = useTransform(px, v => v * -0.5);
-  const catchY = useTransform(py, v => v * -0.5);
-
-  // Approximate iris centres as % of the portrait image
-  // New close-up photo: eyes with glasses sit at ~50-54% from image top,
-  // left eye ~38% from left, right eye ~59% from left
-  const eyes = [
-    { left: '38%', top: '52%' },
-    { left: '59%', top: '50%' },
-  ];
-
-  return (
-    <div className="absolute inset-0 pointer-events-none select-none z-[4]">
-      {eyes.map((eye, i) => (
-        null
-      ))}
-    </div>
-  );
-}
-
 // ── Main export ────────────────────────────────────────────────────────────
 export function WhyHireMe({ isDark }: WhyHireMeProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-  const smX = useSpring(rawX, { stiffness: 48, damping: 18 });
-  const smY = useSpring(rawY, { stiffness: 48, damping: 18 });
   const { fontHeading, isRTL, lang } = useLanguage();
   const { cmsData } = useCms();
 
@@ -191,19 +160,9 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
   const word2 = cmsData.whyHireMe.word2[lang] || (lang === 'en' ? 'Hire' : 'توظيف');
   const word3 = cmsData.whyHireMe.word3[lang] || (lang === 'en' ? 'Me' : 'أنا');
 
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    if (typeof window !== 'undefined' && window.matchMedia("(hover: none)").matches) return;
-    const rect = sectionRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    rawX.set(((e.clientX - rect.left) / rect.width - 0.5) * 72);
-    rawY.set(((e.clientY - rect.top) / rect.height - 0.5) * 72);
-  }, [rawX, rawY]);
-
   return (
     <section
-      ref={sectionRef}
       id="why-me"
-      onMouseMove={onMouseMove}
       className="relative w-full bg-surface transition-colors duration-300 overflow-hidden"
     >
       {/* ── CONTENT ─ */}
@@ -255,11 +214,10 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
               className="relative w-full overflow-clip pb-[35%]"
             >
               <img
-                src={typeof imgPortrait === 'string' ? imgPortrait : (imgPortrait as any).src}
+                src={imgPortrait.src}
                 alt="Osama Tammam"
                 className="portrait-img"
               />
-              <EyeOverlay smX={smX} smY={smY} />
             </div>
           </motion.div>
         </div>

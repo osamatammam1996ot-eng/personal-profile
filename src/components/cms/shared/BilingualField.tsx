@@ -77,7 +77,7 @@ export function BilingualField({
             {...extra}
             className={inputClasses}
             value={en}
-            onChange={(e: any) => onChangeEn(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChangeEn(e.target.value)}
           />
         </div>
         <div>
@@ -87,7 +87,7 @@ export function BilingualField({
             className={inputClasses}
             dir="rtl"
             value={ar}
-            onChange={(e: any) => onChangeAr(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChangeAr(e.target.value)}
           />
         </div>
       </div>

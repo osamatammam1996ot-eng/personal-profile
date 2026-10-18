@@ -5,14 +5,14 @@ import Home from '@/app/page';
 
 export async function generateStaticParams() {
   return DEFAULT_CMS_DATA.caseStudies
-    .filter((study: any) => study.visible !== false)
-    .map((study: any) => ({
+    .filter((study) => study.visible !== false)
+    .map((study) => ({
       id: study.id.toString(),
     }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const caseStudy = DEFAULT_CMS_DATA.caseStudies.find((s: any) => s.id.toString() === params.id);
+  const caseStudy = DEFAULT_CMS_DATA.caseStudies.find((s) => s.id.toString() === params.id);
   
   if (!caseStudy) {
     return { title: 'Case Study Not Found' };
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const title = `${caseStudy.title.en} UX Case Study | Osama Tammam`;
   const desc = siteConfig.defaultDescription;
   const url = `${siteConfig.productionOrigin}/case-study/${params.id}`;
-  const firstImage = caseStudy.media?.find((m: any) => m.type === 'image')?.url;
+  const firstImage = caseStudy.media?.find((m) => m.type === 'image')?.url;
 
   return {
     title,
@@ -51,13 +51,13 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 }
 
 export default function CaseStudyPage({ params }: { params: { id: string } }) {
-  const caseStudy = DEFAULT_CMS_DATA.caseStudies.find((s: any) => s.id.toString() === params.id);
+  const caseStudy = DEFAULT_CMS_DATA.caseStudies.find((s) => s.id.toString() === params.id);
 
   if (!caseStudy) {
     return null;
   }
   
-  const firstImage = caseStudy.media?.find((m: any) => m.type === 'image')?.url;
+  const firstImage = caseStudy.media?.find((m) => m.type === 'image')?.url;
 
   const jsonLdCreativeWork = {
     "@context": "https://schema.org",

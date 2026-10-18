@@ -3,46 +3,44 @@ import React, { ReactNode, ErrorInfo } from 'react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
+  /** Rendered instead of the children after an error. Pass null to drop a failed section quietly. */
+  fallback?: ReactNode;
 }
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error: Error | null;
 }
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // Details stay in the console; visitors never see a stack trace
     console.error('Error caught by boundary:', error, errorInfo);
   }
 
   render() {
-    if (this.state.hasError) {
-      return (
-        <div className="dark p-8 min-h-screen bg-surface text-text-primary font-mono text-xs">
-          <h1 className="mt-0 text-danger">Application Error</h1>
-          <p className="text-warning">{this.state.error?.message}</p>
-          <pre className="p-4 rounded-lg overflow-auto text-[11px] bg-scrim/40">
-            {this.state.error?.stack}
-          </pre>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 rounded border-none cursor-pointer bg-brand text-on-brand"
-          >
-            Reload Page
-          </button>
-        </div>
-      );
-    }
+    if (!this.state.hasError) return this.props.children;
+    if (this.props.fallback !== undefined) return this.props.fallback;
 
-    return this.props.children;
+    return (
+      <div className="dark min-h-screen flex flex-col items-center justify-center gap-5 p-8 bg-surface text-center">
+        <h1 className="m-0 font-heading font-bold text-2xl text-text-primary">Something didn&apos;t load right.</h1>
+        <p className="m-0 max-w-sm text-text-muted">A reload usually fixes it.</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-6 py-3 rounded-xl border-none cursor-pointer font-semibold bg-brand text-on-brand"
+        >
+          Reload
+        </button>
+      </div>
+    );
   }
 }

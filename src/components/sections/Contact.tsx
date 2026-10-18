@@ -128,10 +128,11 @@ export function Contact({ isDark }: ContactProps) {
   const email = cmsData?.contact?.email || 'osvartsarmen72604@gmail.com';
   const availability = cmsData?.contact?.availability?.[lang] || (lang === 'en' ? 'Available for new projects' : 'متاح لمشاريع جديدة');
   
-  // Overriding headline and body to perfectly match the image context if it's English
-  const headline = cmsData?.contact?.headline1?.[lang] 
-    ? <>{cmsData.contact.headline1[lang]}<br/>{cmsData.contact.headline2?.[lang] || ''}<br/>{cmsData.contact.headline3?.[lang] || ''}</>
-    : (lang === 'en' 
+  // The CMS headline is three lines; built-in copy covers an empty CMS
+  const { headline1, headline2, headline3 } = cmsData.contact;
+  const headline = headline1[lang]
+    ? <>{headline1[lang]}<br/>{headline2[lang]}<br/>{headline3[lang]}</>
+    : (lang === 'en'
         ? <>Got a problem<br/>worth solving?<br/>Let's talk about it.</>
         : 'هل لديك مشكلة تستحق الحل؟ دعنا نتحدث.');
     

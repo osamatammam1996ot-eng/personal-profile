@@ -3,6 +3,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
 import { verifyAuthAction } from '@/app/actions/auth';
+import type { CmsData } from '@/types/cms';
 
 // ── Supabase clients ────────────────────────────────────────────────────────────
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -95,14 +96,14 @@ export async function getCmsDataAction() {
     }
 
     return { data: null };
-  } catch (e: any) {
+  } catch (e) {
     console.error('CMS GET action error:', e);
     return { error: 'Failed to retrieve CMS data' };
   }
 }
 
 // ── SAVE CMS Data ───────────────────────────────────────────────────────────────
-export async function saveCmsDataAction(data: any) {
+export async function saveCmsDataAction(data: CmsData) {
   if (!(await verifyAuthAction())) {
     return { error: 'Unauthorized' };
   }
@@ -178,7 +179,7 @@ export async function saveCmsDataAction(data: any) {
         ? undefined
         : 'Saved locally only. For cloud persistence, ensure SUPABASE_SERVICE_ROLE_KEY is set in your Vercel environment variables.',
     };
-  } catch (e: any) {
+  } catch (e) {
     console.error('CMS PUT action error:', e);
     return { error: 'Failed to save CMS data' };
   }

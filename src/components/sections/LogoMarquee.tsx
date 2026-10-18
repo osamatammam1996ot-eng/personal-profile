@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useCms } from '../../contexts/CmsContext';
 import Image from 'next/image';
+import type { CmsLogo } from '../../types/cms';
 
 interface LogoMarqueeProps { isDark: boolean; }
 
@@ -43,7 +44,7 @@ function isSolidLogo(url: string): Promise<boolean> {
   return solidCache.get(url)!;
 }
 
-const LogoSlot = ({ logo }: { logo: any }) => {
+const LogoSlot = ({ logo }: { logo: CmsLogo }) => {
   const [solid, setSolid] = useState(false);
   useEffect(() => {
     let alive = true;
@@ -69,7 +70,7 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
   const { cmsData } = useCms();
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  const logos = (cmsData?.logoMarquee || []).filter((l: any) => l.visible);
+  const logos = (cmsData?.logoMarquee || []).filter((l) => l.visible);
 
   // Pad until we have enough logos to fill any screen (each slot = 200px, need > 2560px)
   let set = logos.length > 0 ? [...logos] : [];

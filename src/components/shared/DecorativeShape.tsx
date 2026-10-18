@@ -18,6 +18,7 @@
 import { useRef, useEffect, memo } from 'react';
 import * as THREE from 'three';
 import { getDecorPalette } from '../../lib/scene-palette';
+import { createRenderer, releaseRenderer } from '../../lib/webgl';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
 type ShapeType = 'icosahedron' | 'octahedron' | 'dodecahedron' | 'torusKnot';
@@ -162,6 +163,14 @@ export const DecorativeShape = memo(function DecorativeShape({
     const wrapper = wrapperRef.current;
     if (!canvas || !wrapper) return;
 
+    // Hidden by its container (e.g. Contact on phones): don't spend one of the
+    // browser's limited WebGL contexts on a shape nobody sees
+    if (getComputedStyle(wrapper).display === 'none' || !wrapper.offsetParent) return;
+
+    // Purely decorative: without WebGL the shape is simply left out
+    const renderer = createRenderer(canvas);
+    if (!renderer) return;
+
     // Check prefers-reduced-motion
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     reducedMotionRef.current = motionQuery.matches;
@@ -182,7 +191,6 @@ export const DecorativeShape = memo(function DecorativeShape({
 
     // ── Three.js init ──
     const dpr = Math.min(window.devicePixelRatio, 1.5);
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(dpr);
     renderer.setClearAlpha(0);
     renderer.setSize(effectiveSize, effectiveSize, false);
@@ -351,7 +359,7 @@ export const DecorativeShape = memo(function DecorativeShape({
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
       motionQuery.removeEventListener('change', onMotionChange);
-      renderer.dispose();
+      releaseRenderer(renderer);
       geom.dispose();
       wireGeom.dispose();
       shellMat.dispose();

@@ -8,56 +8,14 @@ import {
 } from 'lucide-react';
 import type { CmsData } from '../../types/cms';
 import { DEFAULT_CMS_DATA } from '../../types/cms';
+import { normalizeCmsData } from '../../lib/cms-normalize';
 import { HomeEditor } from '../../components/cms/editors/HomeEditor';
 import { CaseStudiesEditor } from '../../components/cms/editors/CaseStudiesEditor';
 import { GlobalSettingsEditor } from '../../components/cms/editors/GlobalSettingsEditor';
 import { RecommendationsEditor } from '../../components/cms/editors/RecommendationsEditor';
+import { FeedbackInboxEditor } from '../../components/cms/editors/FeedbackInboxEditor';
 import { LogoMarqueeEditor } from '../../components/cms/editors/LogoMarqueeEditor';
 import { Button } from '../../components/ui/button';
-
-// Deep-merge helper: ensures every key from `base` exists in the result,
-// filling in missing fields from DEFAULT_CMS_DATA.
-function mergeDeep<T>(base: T, override: any): T {
-  if (override === undefined || override === null) {
-    return JSON.parse(JSON.stringify(base));
-  }
-  if (Array.isArray(base)) {
-    return (Array.isArray(override) ? JSON.parse(JSON.stringify(override)) : JSON.parse(JSON.stringify(base))) as T;
-  }
-  if (typeof base === 'object' && base !== null) {
-    const result: Record<string, any> = {};
-    const baseObj = base as Record<string, any>;
-    const overrideObj = typeof override === 'object' && override !== null ? override : {};
-    for (const key of Object.keys(baseObj)) {
-      result[key] = mergeDeep(baseObj[key], overrideObj[key]);
-    }
-    // Keep saved fields the defaults don't list (e.g. contact.showMeetingAction), so they
-    // show in the editors and aren't wiped by the next save.
-    for (const key of Object.keys(overrideObj)) {
-      if (!(key in baseObj) && overrideObj[key] !== undefined) {
-        result[key] = JSON.parse(JSON.stringify(overrideObj[key]));
-      }
-    }
-    return result as T;
-  }
-  return (override as T) ?? base;
-}
-
-function normalizeCmsData(input: unknown): CmsData {
-  const data = mergeDeep(DEFAULT_CMS_DATA, input);
-  
-  // Migration: ensure logoMarquee is in sectionOrder
-  if (data.sectionOrder && !data.sectionOrder.includes('logoMarquee')) {
-    const heroIdx = data.sectionOrder.indexOf('hero');
-    if (heroIdx !== -1) {
-      data.sectionOrder.splice(heroIdx + 1, 0, 'logoMarquee');
-    } else {
-      data.sectionOrder.splice(1, 0, 'logoMarquee');
-    }
-  }
-  
-  return data;
-}
 
 // ─── Nav items structure ──────────────────────────────────────────────────────
 type NavSection = {
@@ -83,6 +41,7 @@ const NAV: NavSection[] = [
       { id: 'home-tools', label: 'Tools', icon: '🛠️' },
       { id: 'home-portfolio', label: 'Portfolio Projects', icon: '💼' },
       { id: 'home-recommendations', label: 'Recommendations', icon: '💬' },
+      { id: 'home-new-feedback', label: 'New Feedback', icon: '📥' },
       { id: 'home-contact', label: 'Contact', icon: '✉️' },
     ],
   },
@@ -459,7 +418,7 @@ export default function AdminDashboard() {
             {/* Editors */}
             {!loading && draft && (
               <>
-                {activeSection.startsWith('home-') && activeSection !== 'home-recommendations' && activeSection !== 'home-logo-marquee' && (
+                {activeSection.startsWith('home-') && activeSection !== 'home-recommendations' && activeSection !== 'home-logo-marquee' && activeSection !== 'home-new-feedback' && (
                   <HomeEditor
                     draft={draft}
                     updateDraft={updateDraft}
@@ -478,6 +437,7 @@ export default function AdminDashboard() {
                     updateDraft={updateDraft}
                   />
                 )}
+                {activeSection === 'home-new-feedback' && <FeedbackInboxEditor />}
                 {activeSection.startsWith('cs-') && (
                   <CaseStudiesEditor
                     draft={draft}
@@ -510,6 +470,7 @@ function getActiveSectionLabel(id: string): string {
     'home-tools': 'Tools',
     'home-portfolio': 'Portfolio Projects',
     'home-recommendations': 'Recommendations',
+    'home-new-feedback': 'New Feedback',
     'home-contact': 'Contact',
     'cs-1': 'Nexus Analytics Platform',
     'cs-2': 'Orion Enterprise Suite',

@@ -11,7 +11,7 @@ interface CaseStudiesEditorProps {
 }
 
 export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudiesEditorProps) {
-  const index = draft.caseStudies.findIndex((item: any) => item.id === activeCsId);
+  const index = draft.caseStudies.findIndex((item) => item.id === activeCsId);
   const rawCaseStudy = draft.caseStudies[index];
 
   // Fallback structure in case it's missing or legacy
@@ -25,7 +25,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
   const updateCaseStudy = (updater: (value: typeof caseStudy) => typeof caseStudy) => {
     updateDraft((prev) => {
       const caseStudies = [...prev.caseStudies];
-      const currentIndex = caseStudies.findIndex((item: any) => item.id === activeCsId);
+      const currentIndex = caseStudies.findIndex((item) => item.id === activeCsId);
       if (currentIndex >= 0) {
         caseStudies[currentIndex] = updater(caseStudies[currentIndex] as typeof caseStudy);
       } else {

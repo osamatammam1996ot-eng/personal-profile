@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useCms } from '../../contexts/CmsContext';
 import { getScenePalette } from '../../lib/scene-palette';
+import { createRenderer, releaseRenderer } from '../../lib/webgl';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -50,21 +51,14 @@ export function Skills({ isDark }: SkillsProps) {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const dpr = Math.min(window.devicePixelRatio, 1.5);
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(dpr);
-    renderer.setClearAlpha(0);
+    // Null when WebGL is unavailable: the chapters still scroll, only the 3D is skipped
+    const renderer = createRenderer(canvas);
+    renderer?.setPixelRatio(dpr);
+    renderer?.setClearAlpha(0);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.z = 6;
-
-    const resize = () => {
-      renderer.setSize(window.innerWidth, window.innerHeight, false);
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-    };
-    window.addEventListener('resize', resize);
-    resize();
 
     // Lights
     const ambLight = new THREE.AmbientLight(p.ambient, 0.15);
@@ -127,6 +121,31 @@ export function Skills({ isDark }: SkillsProps) {
       ambLight, keyLight, rimLight, fillLight,
       shellMat, wireMat, pointsMat,
     };
+
+    const resize = () => {
+      // Phones (below Tailwind's md) size the stage with svh, so read the canvas box there;
+      // wider screens keep sizing from the window as before
+      const isPhone = window.innerWidth < 768;
+      const w = isPhone ? canvas.clientWidth || window.innerWidth : window.innerWidth;
+      const h = isPhone ? canvas.clientHeight || window.innerHeight : window.innerHeight;
+      renderer?.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+
+      if (isPhone) {
+        // Shrink the shape and lift it into the top of the screen, clear of the
+        // chapter text that sits at the bottom
+        const unitsPerPx = (2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) / h;
+        const diameterPx = Math.min(w * 0.5, h * 0.26);
+        root.scale.setScalar((diameterPx * unitsPerPx) / 2.8);
+        root.position.y = (0.5 - 0.27) * h * unitsPerPx;
+      } else {
+        root.scale.setScalar(1);
+        root.position.y = 0;
+      }
+    };
+    window.addEventListener('resize', resize);
+    resize();
 
     // Initial position
     const isMobile = window.innerWidth <= 768;
@@ -252,18 +271,18 @@ export function Skills({ isDark }: SkillsProps) {
         root.rotation.y += targetRot.y * 0.1;
       }
 
-      renderer.render(scene, camera);
+      renderer?.render(scene, camera);
     };
-    loop();
+    if (renderer) loop();
 
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onPointerMove);
-      renderer.dispose();
+      releaseRenderer(renderer);
+      // Only this section's trigger: other sections own theirs
+      tl.scrollTrigger?.kill();
       tl.kill();
-      // clean up any floating scrolltriggers
-      ScrollTrigger.getAll().forEach((t: globalThis.ScrollTrigger | any) => t.kill());
     };
   }, []); // End of main ThreeJS init
 
@@ -310,10 +329,14 @@ export function Skills({ isDark }: SkillsProps) {
       id="skills"
       className="relative w-full h-[300vh] bg-surface-raised transition-colors duration-300"
     >
-      <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center pointer-events-none" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* svh on phones so the bottom-anchored text never hides under the browser toolbar */}
+      <div className="sticky top-0 w-full h-svh md:h-screen overflow-hidden flex items-center justify-center pointer-events-none" dir={isRTL ? 'rtl' : 'ltr'}>
 
         {/* WebGL Canvas */}
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-0" />
+
+        {/* Phones: scrim under the chapter text in case it reaches the shape on short screens */}
+        <div aria-hidden className="md:hidden absolute inset-x-0 bottom-0 h-3/5 z-[5] bg-linear-to-t from-surface-raised from-55% to-transparent" />
 
         {/* Navigation Dots */}
         <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2 lg:bottom-auto lg:left-auto lg:${isRTL ? 'left-6' : 'right-6'} z-20 flex flex-row lg:flex-col gap-6 lg:gap-4 pointer-events-auto lg:translate-x-0`}>
@@ -332,28 +355,28 @@ export function Skills({ isDark }: SkillsProps) {
         <div className="relative z-10 w-full max-w-[1200px] h-full mx-auto px-6 md:px-10">
 
           {/* Intro State */}
-          <div id="ui-intro" className={`absolute top-[25%] md:top-1/3 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-lg`}>
+          <div id="ui-intro" className={`absolute bottom-20 md:bottom-auto md:top-1/3 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-lg`}>
 
-            <h1 className="font-bold text-4xl md:text-6xl text-text-primary mb-6 leading-tight" >
+            <h1 className="font-bold text-4xl md:text-6xl text-text-primary mb-4 md:mb-6 leading-tight" >
               {getStr(skills.heading1)}<br />{getStr(skills.heading2)}
             </h1>
             <p className="text-text-secondary text-lg md:text-xl leading-relaxed" >
               “{getStr(skills.desc)}”
             </p>
-            <div className="mt-8 md:mt-12 flex items-center gap-3 text-text-muted text-sm md:text-base">
+            <div className="mt-6 md:mt-12 flex items-center gap-3 text-text-muted text-sm md:text-base">
               <span className="w-10 h-px bg-text-muted/30"></span>
               Scroll to explore
             </div>
           </div>
 
           {/* State 1: Research */}
-          <div id="ui-01" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-sm opacity-0 invisible pointer-events-auto`}>
+          <div id="ui-01" className={`absolute bottom-20 md:bottom-auto md:top-1/4 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-sm opacity-0 invisible pointer-events-auto`}>
             <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >01</h2>
             <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc1?.title).replace(/\n/g, ' ')}</h3>
-            <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
+            <p className="text-text-secondary text-base md:text-lg mb-4 md:mb-8" >
               “{getStr(disc1?.tagline)}”
             </p>
-            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-border-default `}>
+            <ul className={`grid grid-cols-2 gap-x-4 gap-y-2 md:flex md:flex-col md:gap-3 ${isRTL ? 'border-r pr-4 md:pr-5' : 'border-l pl-4 md:pl-5'} border-brand/10 dark:border-border-default `}>
               {getArr(disc1?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand-text transition-colors cursor-default" >
                   {cap}
@@ -363,13 +386,13 @@ export function Skills({ isDark }: SkillsProps) {
           </div>
 
           {/* State 2: Design */}
-          <div id="ui-02" className={`absolute top-[20%] md:top-1/4 ${isRTL ? 'left-6 md:left-10 pr-12 md:pr-0' : 'right-6 md:right-10 pl-12 md:pl-0'} max-w-sm opacity-0 invisible pointer-events-auto`}>
+          <div id="ui-02" className={`absolute bottom-20 md:bottom-auto md:top-1/4 ${isRTL ? 'left-6 md:left-10 pr-12 md:pr-0' : 'right-6 md:right-10 pl-12 md:pl-0'} max-w-sm opacity-0 invisible pointer-events-auto`}>
             <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >02</h2>
             <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc2?.title).replace(/\n/g, ' ')}</h3>
-            <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
+            <p className="text-text-secondary text-base md:text-lg mb-4 md:mb-8" >
               “{getStr(disc2?.tagline)}”
             </p>
-            <ul className={`flex flex-col gap-2 md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-border-default `}>
+            <ul className={`grid grid-cols-2 gap-x-4 gap-y-2 md:flex md:flex-col md:gap-3 ${isRTL ? 'border-r md:border-r-0 md:border-l pr-4 md:pr-0 md:pl-5' : 'border-l md:border-l-0 md:border-r pl-4 md:pl-0 md:pr-5'} border-brand/10 dark:border-border-default `}>
               {getArr(disc2?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand-text transition-colors cursor-default" >
                   {cap}
@@ -379,15 +402,15 @@ export function Skills({ isDark }: SkillsProps) {
           </div>
 
           {/* State 3: Prototyping */}
-          <div id="ui-03" className={`absolute bottom-10 md:bottom-20 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-3xl opacity-0 invisible pointer-events-auto`}>
+          <div id="ui-03" className={`absolute bottom-20 ${isRTL ? 'right-6 md:right-10 pl-12 md:pl-0' : 'left-6 md:left-10 pr-12 md:pr-0'} max-w-3xl opacity-0 invisible pointer-events-auto`}>
             <div className="md:w-1/2">
               <h2 className="text-text-secondary text-4xl md:text-5xl font-bold mb-1 md:mb-2" >03</h2>
               <h3 className="text-text-primary text-xl md:text-2xl mb-3 md:mb-4 whitespace-nowrap" >{getStr(disc3?.title).replace(/\n/g, ' ')}</h3>
-              <p className="text-text-secondary text-base md:text-lg mb-6 md:mb-8" >
+              <p className="text-text-secondary text-base md:text-lg mb-4 md:mb-8" >
                 “{getStr(disc3?.tagline)}”
               </p>
             </div>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-border-default pt-4 md:pt-6 ">
+            <ul className="grid grid-cols-2 gap-2 md:gap-4 border-t border-brand/10 dark:border-border-default pt-4 md:pt-6 ">
               {getArr(disc3?.tags).map((cap: string) => (
                 <li key={cap} className="text-text-secondary text-sm md:text-base tracking-wide hover:text-brand-text transition-colors cursor-default" >
                   {cap}

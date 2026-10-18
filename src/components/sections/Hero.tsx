@@ -120,7 +120,6 @@ export function Hero({ isDark }: HeroProps) {
 
       <div className="absolute inset-0 z-10 pointer-events-none hero-overlay" />
 
-      {/* Overlay layer requested by user */}
       <div className="absolute inset-0 z-[15] pointer-events-none bg-overlay" />
 
       {/* Vignette layer */}

@@ -13,12 +13,12 @@ import { useCms } from '../../contexts/CmsContext';
 import type { CmsToolItem } from '../../types/cms';
 import { readToken, parseColor, tokenRgba, resolveColor, ensureContrast } from '../../lib/theme-tokens';
 import { getScenePalette } from '../../lib/scene-palette';
-
-interface ToolsProps { isDark?: boolean; }
-
+import { createRenderer, releaseRenderer } from '../../lib/webgl';
 import { DustCanvas } from './tools/DustCanvas';
 import { ActiveToolCard } from './tools/ActiveToolCard';
 import { FACE_NORMALS_NORMALIZED, rotForFace } from './tools/constants';
+
+interface ToolsProps { isDark?: boolean; }
 
 /* ─── Face sprite builder ───────────────────────────────────────────────────── */
 function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar'): THREE.Sprite {
@@ -95,6 +95,9 @@ export function Tools({ isDark = false }: ToolsProps) {
 
   const panelsRef = useRef<{ sprite: THREE.Sprite; grp: THREE.Group; idx: number }[]>([]);
   const rebuildSpritesRef = useRef<(() => void) | null>(null);
+  /* scene controls, set by the Three.js effect and used by the nav handlers */
+  const sceneGoToRef    = useRef<((i: number) => void) | null>(null);
+  const resetAutoRef    = useRef<(() => void) | null>(null);
 
 
   /* ─── Three.js scene ───────────────────────────────────────────────────── */
@@ -103,9 +106,10 @@ export function Tools({ isDark = false }: ToolsProps) {
     const wrap   = wrapRef.current;
     if (!canvas || !wrap) return;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearAlpha(0);
+    // Null when WebGL is unavailable: the tool card and its navigation keep working, only the 3D is skipped
+    const renderer = createRenderer(canvas);
+    renderer?.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer?.setClearAlpha(0);
 
     const scene  = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 100);
@@ -114,7 +118,7 @@ export function Tools({ isDark = false }: ToolsProps) {
     function onResize() {
       const W = canvas!.clientWidth, H = canvas!.clientHeight;
       if (W === 0 || H === 0) return;
-      renderer.setSize(W, H, false);
+      renderer?.setSize(W, H, false);
       camera.aspect = W / H;
       camera.updateProjectionMatrix();
     }
@@ -213,7 +217,7 @@ export function Tools({ isDark = false }: ToolsProps) {
       });
     }
 
-    (canvas as any).__goTo = goTo;
+    sceneGoToRef.current = goTo;
 
     let autoTimer: ReturnType<typeof setTimeout> | null = null;
     function resetAuto() {
@@ -224,7 +228,7 @@ export function Tools({ isDark = false }: ToolsProps) {
       }
       autoTimer = setTimeout(tick, 4000);
     }
-    (canvas as any).__resetAuto = resetAuto;
+    resetAutoRef.current = resetAuto;
 
     const clock = new THREE.Clock();
     let elapsed = 0;
@@ -275,18 +279,20 @@ export function Tools({ isDark = false }: ToolsProps) {
       }
 
       camera.lookAt(0, 0, 0);
-      renderer.render(scene, camera);
+      renderer?.render(scene, camera);
     }
 
     goTo(0);
     resetAuto();
-    loop();
+    if (renderer) loop();
 
     return () => {
       cancelAnimationFrame(rafId);
       if (autoTimer) clearTimeout(autoTimer);
+      sceneGoToRef.current = null;
+      resetAutoRef.current = null;
       window.removeEventListener('resize', onResize);
-      renderer.dispose();
+      releaseRenderer(renderer);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -327,9 +333,8 @@ export function Tools({ isDark = false }: ToolsProps) {
 
   /* ─── Nav handlers ───────────────────────────────────────────────────────── */
   const goTo = useCallback((i: number) => {
-    const c = glRef.current as any;
-    if (c?.__goTo) c.__goTo(i);
-    if (c?.__resetAuto) c.__resetAuto();
+    sceneGoToRef.current?.(i);
+    resetAutoRef.current?.();
   }, []);
 
   const prev = useCallback(() => goTo(currentIdxRef.current - 1), [goTo]);

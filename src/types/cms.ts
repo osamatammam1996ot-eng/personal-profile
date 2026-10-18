@@ -162,7 +162,7 @@ export type CmsDataRaw = CmsData;
 export type CmsCaseStudyRaw = CmsCaseStudy;
 
 // Default CMS data
-export const DEFAULT_CMS_DATA: any = {
+export const DEFAULT_CMS_DATA: CmsData = {
   sectionOrder: ['hero', 'logoMarquee', 'whyHireMe', 'skills', 'portfolio', 'recommendations', 'tools', 'contact', 'footer'],
   sections: {
     hero: true,
@@ -327,231 +327,22 @@ export const DEFAULT_CMS_DATA: any = {
     {
       id: 1, visible: true,
       title: { en: 'Nexus Analytics', ar: '\u0646\u064a\u0643\u0633\u0633 \u0623\u0646\u0627\u0644\u064a\u062a\u0643\u0633' },
-      tagline: { en: 'Redesigning a B2B SaaS analytics suite to reduce cognitive load and boost activation', ar: '\u0625\u0639\u0627\u062f\u0629 \u062a\u0635\u0645\u064a\u0645 \u062d\u0632\u0645\u0629 \u062a\u062d\u0644\u064a\u0644\u0627\u062a SaaS \u0644\u062a\u0642\u0644\u064a\u0644 \u0627\u0644\u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u0645\u0639\u0631\u0641\u064a \u0648\u0632\u064a\u0627\u062f\u0629 \u0627\u0644\u062a\u0641\u0639\u064a\u0644' },
-      heroImage: '',
-      meta: { role: { en: 'Lead UX/UI Designer', ar: '\u0645\u0635\u0645\u0645 UX/UI \u0631\u0626\u064a\u0633\u064a' }, timeline: { en: '6 months', ar: '6 أشهر' }, team: { en: '3 designers, 8 engineers', ar: '3 \u0645\u0635\u0645\u0645\u064a\u0646\u060c 8 \u0645\u0647\u0646\u062f\u0633\u064a\u0646' }, industry: { en: 'Technology / SaaS', ar: '\u062a\u0643\u0646\u0648\u0644\u0648\u062c\u064a\u0627 / SaaS' } },
-      metrics: [
-        { value: '-40%', label: { en: 'Cognitive Load Reduction', ar: 'تقليل التحميل المعرفي' }, sub: { en: '', ar: '' } },
-        { value: '+28%', label: { en: 'User Activation', ar: 'تفعيل المستخدمين' }, sub: { en: '', ar: '' } },
-        { value: '4.6/5', label: { en: 'Satisfaction Score', ar: 'درجة الرضا' }, sub: { en: '', ar: '' } },
-      ],
-      problem: { narrative: { en: '', ar: '' }, painPoints: [] },
-      research: { methods: { en: [], ar: [] }, insights: [], findings: { en: [], ar: [] } },
-      process: { steps: [], tradeoffs: [] },
-      solution: { screens: [] },
-      screenshots: [],
-      video: { url: '', youtubeId: '', aspectRatio: '16/9', title: { en: '', ar: '' }, desc: { en: '', ar: '' }, duration: '' },
-      results: { metrics: [], quote: { text: { en: '', ar: '' }, author: { en: '', ar: '' }, role: { en: '', ar: '' } } },
-      reflection: { summary: { en: '', ar: '' }, lessons: { en: [], ar: [] }, next: { en: [], ar: [] } },
-      settings: { showProblem: true, showResearch: true, showProcess: true, showSolution: true, showMedia: true, showResults: true, showReflection: true },
-      labels: {
-        overview: { en: 'Overview', ar: 'نظرة عامة' },
-        problem: { en: 'The Problem', ar: 'المشكلة' },
-        research: { en: 'Research & Discovery', ar: 'البحث والاكتشاف' },
-        process: { en: 'Design Process', ar: 'عملية التصميم' },
-        solution: { en: 'The Solution', ar: 'الحل' },
-        media: { en: 'Walkthrough', ar: 'جولة' },
-        results: { en: 'Results & Impact', ar: 'النتائج والأثر' },
-        reflection: { en: 'Reflection', ar: 'تأملات' }
-      },
+      media: [],
     },
     {
       id: 2, visible: true,
       title: { en: 'Orion Enterprise', ar: '\u0623\u0648\u0631\u064a\u0648\u0646 \u0625\u0646\u062a\u0631\u0628\u0631\u0627\u064a\u0632' },
-      tagline: { en: 'Design system and UX overhaul for a Fortune 500 enterprise productivity platform', ar: '\u0646\u0638\u0627\u0645 \u062a\u0635\u0645\u064a\u0645 \u0648\u062a\u062d\u062f\u064a\u062b UX \u0644\u0645\u0646\u0635\u0629 \u0625\u0646\u062a\u0627\u062c\u064a\u0629 \u0644\u0645\u0624\u0633\u0633\u0629 Fortune 500' },
-      heroImage: '',
-      meta: { role: { en: 'Senior Product Designer', ar: '\u0645\u0635\u0645\u0645 \u0645\u0646\u062a\u062c\u0627\u062a \u0623\u0648\u0644' }, timeline: { en: '8 months', ar: '8 أشهر' }, team: { en: '5 designers, 20+ engineers', ar: '5 \u0645\u0635\u0645\u0645\u064a\u0646\u060c 20+ \u0645\u0647\u0646\u062f\u0633' }, industry: { en: 'Enterprise Software', ar: '\u0628\u0631\u0645\u062c\u064a\u0627\u062a \u0627\u0644\u0645\u0624\u0633\u0633\u0627\u062a' } },
-      metrics: [
-        { value: '50K+', label: { en: 'Daily Active Users', ar: 'مستخدم نشط يومياً' }, sub: { en: '', ar: '' } },
-        { value: '12', label: { en: 'Product Areas Unified', ar: 'منطقة منتج موحدة' }, sub: { en: '', ar: '' } },
-        { value: '-35%', label: { en: 'Design Debt Reduction', ar: 'تقليل ديون التصميم' }, sub: { en: '', ar: '' } },
-      ],
-      problem: {
-        narrative: { en: 'Orion\'s ecosystem consisted of 12 acquired products that looked and behaved differently. This fragmentation caused severe workflow friction for enterprise users who had to context-switch across platforms, resulting in high training costs.', ar: 'تألف نظام أوريون البيئي من 12 منتجاً مستحوذاً تبدو وتتصرف بشكل مختلف تماماً. أدى هذا التفتت إلى احتكاك شديد في سير العمل للمستخدمين.' },
-        painPoints: [
-          { icon: 'component', title: { en: 'Inconsistent UI', ar: 'واجهة غير متسقة' }, desc: { en: '15 different button styles and 8 navigation patterns', ar: '15 نمط أزرار مختلف و8 أنماط تنقل' } },
-          { icon: 'timer', title: { en: 'Workflow Friction', ar: 'احتكاك سير العمل' }, desc: { en: 'Users took 40% longer to complete cross-app tasks', ar: 'استغرق إكمال المهام وقتاً أطول بنسبة 40%' } }
-        ]
-      },
-      research: {
-        methods: { en: ['UI Audit', 'Stakeholder Workshops'], ar: ['تدقيق الواجهة', 'ورش عمل أصحاب المصلحة'] },
-        insights: [
-          { id: '1', quote: { en: 'I feel like I have to learn a new software every time I switch modules.', ar: 'أشعر وكأنني أتعلم برنامجاً جديداً في كل مرة أبدل فيها الوحدات.' }, author: { en: 'Enterprise User', ar: 'مستخدم مؤسسة' }, theme: { en: 'Consistency', ar: 'الاتساق' } }
-        ],
-        findings: { en: [], ar: [] }
-      },
-      process: {
-        steps: [
-          { phase: 'Audit', title: { en: 'Component Inventory', ar: 'جرد المكونات' }, duration: { en: '3 weeks', ar: '3 أسابيع' }, desc: { en: 'Cataloged over 800 divergent components to identify baseline patterns.', ar: 'جرد أكثر من 800 مكون مختلف لتحديد الأنماط الأساسية.' } },
-          { phase: 'Design', title: { en: 'Token Architecture', ar: 'هيكلة الرموز' }, duration: { en: '4 weeks', ar: '4 أسابيع' }, desc: { en: 'Established a semantic design token system to unify colors, typography, and spacing.', ar: 'إنشاء نظام رموز تصميم دلالي لتوحيد الألوان والطباعة.' } }
-        ],
-        tradeoffs: [
-          { decision: { en: 'Gradual Rollout', ar: 'إطلاق تدريجي' }, rationale: { en: 'We rolled out updates modularly to avoid disrupting enterprise workflows abruptly.', ar: 'أطلقنا التحديثات تدريجياً لتجنب تعطيل سير عمل المؤسسة.' } }
-        ]
-      },
-      solution: {
-        screens: [
-          { title: { en: 'Unified Component Library', ar: 'مكتبة مكونات موحدة' }, desc: { en: 'A centralized Figma library linked to React components, enforcing strict brand guidelines.', ar: 'مكتبة Figma مركزية مرتبطة بمكونات React لفرض إرشادات العلامة التجارية.' }, image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000', callouts: { en: ['Semantic tokens', 'Dark mode support'], ar: ['رموز دلالية', 'دعم الوضع الداكن'] }, align: 'left' }
-        ]
-      },
-      screenshots: [
-        { image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=1000', caption: { en: 'Documentation Portal', ar: 'بوابة التوثيق' }, tag: { en: 'Web', ar: 'ويب' } }
-      ],
-      video: { url: '', youtubeId: '', aspectRatio: '16/9', title: { en: '', ar: '' }, desc: { en: '', ar: '' }, duration: '' },
-      results: {
-        metrics: [
-          { value: '3x', label: { en: 'Faster Prototyping', ar: 'نماذج أولية أسرع' }, sub: { en: 'For the design team', ar: 'لفريق التصميم' } }
-        ],
-        quote: { text: { en: 'The new system finally makes our suite feel like a single, premium product.', ar: 'النظام الجديد يجعل حزمتنا تبدو أخيراً كمنتج واحد متميز.' }, author: { en: 'VP of Product', ar: 'نائب رئيس المنتج' }, role: { en: 'Stakeholder', ar: 'صاحب المصلحة' } }
-      },
-      reflection: {
-        summary: { en: 'Establishing governance early was critical. A design system is only as good as the adoption process supporting it.', ar: 'كان تأسيس الحوكمة مبكراً أمراً بالغ الأهمية. نظام التصميم جيد بقدر عملية الاعتماد التي تدعمه.' },
-        lessons: { en: ['Documentation is UX', 'Developer advocacy matters'], ar: ['التوثيق هو تجربة مستخدم', 'دعم المطورين مهم'] },
-        next: { en: ['Automate token sync to code', 'Expand motion guidelines'], ar: ['أتمتة مزامنة الرموز إلى الكود', 'توسيع إرشادات الحركة'] }
-      },
-      settings: { showProblem: true, showResearch: true, showProcess: true, showSolution: true, showMedia: true, showResults: true, showReflection: true },
-      labels: {
-        overview: { en: 'Overview', ar: 'نظرة عامة' },
-        problem: { en: 'The Problem', ar: 'المشكلة' },
-        research: { en: 'Research & Discovery', ar: 'البحث والاكتشاف' },
-        process: { en: 'Design Process', ar: 'عملية التصميم' },
-        solution: { en: 'The Solution', ar: 'الحل' },
-        media: { en: 'Walkthrough', ar: 'جولة' },
-        results: { en: 'Results & Impact', ar: 'النتائج والأثر' },
-        reflection: { en: 'Reflection', ar: 'تأملات' }
-      },
+      media: [],
     },
     {
       id: 3, visible: true,
       title: { en: 'Lumina AI', ar: '\u0644\u0648\u0645\u064a\u0646\u0627 \u0625\u064a\u0647 \u0622\u064a' },
-      tagline: { en: 'Zero-to-launch product design for an AI-powered content generation platform', ar: '\u062a\u0635\u0645\u064a\u0645 \u0645\u0646\u062a\u062c \u0645\u0646 \u0627\u0644\u0635\u0641\u0631 \u0644\u0645\u0646\u0635\u0629 \u0625\u0646\u0634\u0627\u0621 \u0645\u062d\u062a\u0648\u0649 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a' },
-      heroImage: '',
-      meta: { role: { en: 'Product Designer (Solo)', ar: '\u0645\u0635\u0645\u0645 \u0645\u0646\u062a\u062c (\u0645\u0646\u0641\u0631\u062f)' }, timeline: { en: '8 weeks', ar: '8 أسابيع' }, team: { en: '1 designer, 4 engineers', ar: '\u0645\u0635\u0645\u0645 \u0648\u0627\u062d\u062f\u060c 4 \u0645\u0647\u0646\u062f\u0633\u064a\u0646' }, industry: { en: 'AI / Content', ar: '\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a / \u0627\u0644\u0645\u062d\u062a\u0648\u0649' } },
-      metrics: [
-        { value: '4.8/5', label: { en: 'User Satisfaction', ar: 'رضا المستخدمين' }, sub: { en: '', ar: '' } },
-        { value: '8 wks', label: { en: 'Time to Launch', ar: 'وقت الإطلاق' }, sub: { en: '', ar: '' } },
-        { value: '+62%', label: { en: 'Retention Rate', ar: 'معدل الاحتفاظ' }, sub: { en: '', ar: '' } },
-      ],
-      problem: {
-        narrative: { en: 'The AI content generation space is crowded with complex, developer-focused tools. Lumina needed to stand out by offering an intuitive, consumer-grade experience for marketers without sacrificing advanced prompt controls.', ar: 'مجال إنشاء المحتوى بالذكاء الاصطناعي مزدحم بأدوات معقدة. احتاجت لومينا إلى التميز من خلال تقديم تجربة بديهية للمسوقين دون التضحية بعناصر التحكم المتقدمة.' },
-        painPoints: [
-          { icon: 'wand', title: { en: 'Prompt Engineering', ar: 'هندسة الأوامر' }, desc: { en: 'Marketers struggled to write effective AI prompts', ar: 'عانى المسوقون في كتابة أوامر فعالة' } },
-          { icon: 'layout', title: { en: 'Cluttered Workspaces', ar: 'مساحات عمل فوضوية' }, desc: { en: 'Competitor tools felt like IDEs rather than writing apps', ar: 'بدت أدوات المنافسين كبيئات تطوير بدلاً من تطبيقات كتابة' } }
-        ]
-      },
-      research: {
-        methods: { en: ['Competitor Analysis', 'User Testing'], ar: ['تحليل المنافسين', 'اختبار المستخدم'] },
-        insights: [
-          { id: '1', quote: { en: 'I just want to write. If I have to tweak 10 sliders before generating text, I\'ll just do it myself.', ar: 'أريد فقط أن أكتب. إذا كان علي تعديل 10 أشرطة قبل الإنشاء، فسأفعل ذلك بنفسي.' }, author: { en: 'Content Marketer', ar: 'مسوق محتوى' }, theme: { en: 'Simplicity', ar: 'البساطة' } }
-        ],
-        findings: { en: [], ar: [] }
-      },
-      process: {
-        steps: [
-          { phase: 'Ideation', title: { en: 'Rapid Prototyping', ar: 'نماذج أولية سريعة' }, duration: { en: '2 weeks', ar: 'أسبوعين' }, desc: { en: 'Created 5 distinct interaction models for the AI assistant and tested them with target users.', ar: 'تم إنشاء 5 نماذج تفاعل مختلفة للمساعد واختبارها مع المستخدمين.' } },
-          { phase: 'Refinement', title: { en: 'Micro-interactions', ar: 'تفاعلات دقيقة' }, duration: { en: '2 weeks', ar: 'أسبوعين' }, desc: { en: 'Designed subtle animations to make the AI generation process feel magical rather than mechanical.', ar: 'تصميم رسوم متحركة دقيقة لجعل عملية الإنشاء تبدو سحرية.' } }
-        ],
-        tradeoffs: [
-          { decision: { en: 'Hidden Advanced Controls', ar: 'إخفاء عناصر التحكم المتقدمة' }, rationale: { en: 'Prioritized a clean default view, moving advanced prompt tuning behind an "Expert Mode" toggle.', ar: 'إعطاء الأولوية لعرض نظيف، ونقل الضبط المتقدم خلف زر "الوضع الاحترافي".' } }
-        ]
-      },
-      solution: {
-        screens: [
-          { title: { en: 'The Magic Canvas', ar: 'لوحة قماشية سحرية' }, desc: { en: 'A distraction-free writing environment where AI suggestions seamlessly blend into the user\'s flow.', ar: 'بيئة كتابة خالية من المشتتات حيث تمتزج اقتراحات الذكاء الاصطناعي بسلاسة.' }, image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=2000', callouts: { en: ['Inline AI suggestions', 'Context-aware prompts'], ar: ['اقتراحات مضمنة', 'أوامر مدركة للسياق'] }, align: 'right' }
-        ]
-      },
-      screenshots: [
-        { image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000', caption: { en: 'AI Writing Interface', ar: 'واجهة الكتابة' }, tag: { en: 'Desktop', ar: 'سطح المكتب' } }
-      ],
-      video: { url: '', youtubeId: '', aspectRatio: '16/9', title: { en: '', ar: '' }, desc: { en: '', ar: '' }, duration: '' },
-      results: {
-        metrics: [
-          { value: '10K+', label: { en: 'Beta Signups', ar: 'تسجيلات تجريبية' }, sub: { en: 'In first month', ar: 'في الشهر الأول' } }
-        ],
-        quote: { text: { en: 'It feels less like a tool and more like a co-writer.', ar: 'يبدو كأنه كاتب مساعد أكثر من كونه مجرد أداة.' }, author: { en: 'Beta Tester', ar: 'مختبر للنسخة التجريبية' }, role: { en: 'Copywriter', ar: 'كاتب نصوص' } }
-      },
-      reflection: {
-        summary: { en: 'Designing for AI requires a careful balance between user agency and automation. Trust is built through transparency.', ar: 'يتطلب التصميم للذكاء الاصطناعي توازناً دقيقاً بين تحكم المستخدم والأتمتة.' },
-        lessons: { en: ['Loading states are critical for AI', 'Default to simplicity'], ar: ['حالات التحميل مهمة جداً', 'الاعتماد على البساطة افتراضياً'] },
-        next: { en: ['Voice input features', 'Custom AI personas'], ar: ['ميزات الإدخال الصوتي', 'شخصيات ذكاء اصطناعي مخصصة'] }
-      },
-      settings: { showProblem: true, showResearch: true, showProcess: true, showSolution: true, showMedia: true, showResults: true, showReflection: true },
-      labels: {
-        overview: { en: 'Overview', ar: 'نظرة عامة' },
-        problem: { en: 'The Problem', ar: 'المشكلة' },
-        research: { en: 'Research & Discovery', ar: 'البحث والاكتشاف' },
-        process: { en: 'Design Process', ar: 'عملية التصميم' },
-        solution: { en: 'The Solution', ar: 'الحل' },
-        media: { en: 'Walkthrough', ar: 'جولة' },
-        results: { en: 'Results & Impact', ar: 'النتائج والأثر' },
-        reflection: { en: 'Reflection', ar: 'تأملات' }
-      },
+      media: [],
     },
     {
       id: 4, visible: true,
       title: { en: 'HealthBridge', ar: '\u0647\u064a\u0644\u062b\u0628\u0631\u064a\u062f\u062c' },
-      tagline: { en: 'Accessibility-first healthcare management app for diverse patient demographics', ar: '\u062a\u0637\u0628\u064a\u0642 \u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0631\u0639\u0627\u064a\u0629 \u0627\u0644\u0635\u062d\u064a\u0629 \u0628\u0625\u0645\u0643\u0627\u0646\u064a\u0629 \u0648\u0635\u0648\u0644 \u0623\u0648\u0644\u0627\u064b' },
-      heroImage: '',
-      meta: { role: { en: 'Lead UX Designer', ar: '\u0645\u0635\u0645\u0645 UX \u0631\u0626\u064a\u0633\u064a' }, timeline: { en: '7 months', ar: '7 أشهر' }, team: { en: '2 designers, 6 engineers', ar: '\u0645\u0635\u0645\u0645\u0627\u0646\u060c 6 \u0645\u0647\u0646\u062f\u0633\u064a\u0646' }, industry: { en: 'Healthcare', ar: '\u0627\u0644\u0631\u0639\u0627\u064a\u0629 \u0627\u0644\u0635\u062d\u064a\u0629' } },
-      metrics: [
-        { value: '-65%', label: { en: 'Support Tickets', ar: 'تذاكر الدعم' }, sub: { en: '', ar: '' } },
-        { value: '98%', label: { en: 'WCAG Compliance', ar: 'امتثال WCAG' }, sub: { en: '', ar: '' } },
-        { value: '+45%', label: { en: 'Task Completion', ar: 'إكمال المهام' }, sub: { en: '', ar: '' } },
-      ],
-      problem: {
-        narrative: { en: 'Elderly patients were consistently abandoning the appointment booking flow. The existing app was cluttered, lacked contrast, and relied heavily on complex gestures, making it inaccessible to our primary demographic.', ar: 'كان المرضى المسنون يتخلون باستمرار عن عملية حجز المواعيد. كان التطبيق الحالي فوضوياً، وافتقر إلى التباين، واعتمد على إيماءات معقدة.' },
-        painPoints: [
-          { icon: 'eye', title: { en: 'Poor Accessibility', ar: 'ضعف إمكانية الوصول' }, desc: { en: 'Small touch targets and low-contrast text', ar: 'أهداف لمس صغيرة ونص منخفض التباين' } },
-          { icon: 'calendar', title: { en: 'Complex Booking', ar: 'حجز معقد' }, desc: { en: '7 steps required to book a basic checkup', ar: '7 خطوات مطلوبة لحجز فحص أساسي' } }
-        ]
-      },
-      research: {
-        methods: { en: ['Accessibility Audit', 'In-person Testing'], ar: ['تدقيق إمكانية الوصول', 'اختبار شخصي'] },
-        insights: [
-          { id: '1', quote: { en: 'I can\'t read these gray dates, and I\'m afraid of tapping the wrong thing.', ar: 'لا أستطيع قراءة هذه التواريخ الرمادية، وأخشى النقر على شيء خاطئ.' }, author: { en: 'Patient (68)', ar: 'مريض (68)' }, theme: { en: 'Confidence', ar: 'الثقة' } }
-        ],
-        findings: { en: [], ar: [] }
-      },
-      process: {
-        steps: [
-          { phase: 'Redesign', title: { en: 'Inclusive UI', ar: 'واجهة شاملة' }, duration: { en: '4 weeks', ar: '4 أسابيع' }, desc: { en: 'Increased minimum touch targets to 48px and ensured AA compliance for all typography and contrast ratios.', ar: 'زيادة الحد الأدنى لأهداف اللمس وضمان الامتثال لـ AA.' } },
-          { phase: 'Testing', title: { en: 'Validation', ar: 'التحقق' }, duration: { en: '2 weeks', ar: 'أسبوعين' }, desc: { en: 'Conducted usability sessions with patients aged 60+ to validate the simplified flow.', ar: 'إجراء جلسات قابلية الاستخدام مع مرضى تجاوزوا الـ 60 عاماً.' } }
-        ],
-        tradeoffs: [
-          { decision: { en: 'Linear Navigation', ar: 'تنقل خطي' }, rationale: { en: 'Abandoned modern swipe gestures in favor of clear, explicit "Next" and "Back" buttons.', ar: 'التخلي عن إيماءات التمرير الحديثة لصالح أزرار "التالي" و"السابق" الصريحة.' } }
-        ]
-      },
-      solution: {
-        screens: [
-          { title: { en: 'Accessible Booking Flow', ar: 'مسار حجز يسهل الوصول إليه' }, desc: { en: 'A streamlined, step-by-step process with large typography, high contrast, and unmistakable primary actions.', ar: 'عملية مبسطة خطوة بخطوة مع طباعة كبيرة وتباين عالٍ.' }, image: 'https://images.unsplash.com/photo-1576091160550-2173ff9e594b?auto=format&fit=crop&q=80&w=2000', callouts: { en: ['High contrast UI', 'Large touch targets'], ar: ['واجهة تباين عالي', 'أهداف لمس كبيرة'] }, align: 'left' }
-        ]
-      },
-      screenshots: [
-        { image: 'https://images.unsplash.com/photo-1576091160550-2173ff9e594b?auto=format&fit=crop&q=80&w=1000', caption: { en: 'Appointment Screen', ar: 'شاشة الموعد' }, tag: { en: 'Mobile', ar: 'هاتف' } }
-      ],
-      video: { url: '', youtubeId: '', aspectRatio: '16/9', title: { en: '', ar: '' }, desc: { en: '', ar: '' }, duration: '' },
-      results: {
-        metrics: [
-          { value: '+85%', label: { en: 'Booking Success Rate', ar: 'معدل نجاح الحجز' }, sub: { en: 'Among seniors', ar: 'بين كبار السن' } }
-        ],
-        quote: { text: { en: 'For the first time, I booked my appointment without asking my daughter for help.', ar: 'لأول مرة، حجزت موعدي دون طلب المساعدة من ابنتي.' }, author: { en: 'Patient (72)', ar: 'مريض (72)' }, role: { en: 'User', ar: 'مستخدم' } }
-      },
-      reflection: {
-        summary: { en: 'Good design is accessible design. Removing friction for impaired users actually improved the experience for everyone.', ar: 'التصميم الجيد هو تصميم يسهل الوصول إليه. إزالة العقبات حسّن التجربة للجميع.' },
-        lessons: { en: ['Never sacrifice clarity for aesthetics', 'Test with extreme users'], ar: ['لا تضحي بالوضوح من أجل الجماليات', 'اختبر مع مستخدمين من شرائح مختلفة'] },
-        next: { en: ['Implement voice feedback', 'Add multi-language support'], ar: ['تنفيذ ردود فعل صوتية', 'إضافة دعم متعدد اللغات'] }
-      },
-      settings: { showProblem: true, showResearch: true, showProcess: true, showSolution: true, showMedia: true, showResults: true, showReflection: true },
-      labels: {
-        overview: { en: 'Overview', ar: 'نظرة عامة' },
-        problem: { en: 'The Problem', ar: 'المشكلة' },
-        research: { en: 'Research & Discovery', ar: 'البحث والاكتشاف' },
-        process: { en: 'Design Process', ar: 'عملية التصميم' },
-        solution: { en: 'The Solution', ar: 'الحل' },
-        media: { en: 'Walkthrough', ar: 'جولة' },
-        results: { en: 'Results & Impact', ar: 'النتائج والأثر' },
-        reflection: { en: 'Reflection', ar: 'تأملات' }
-      },
+      media: [],
     },
   ],
   global: {

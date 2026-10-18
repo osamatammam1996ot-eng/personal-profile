@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Navigation } from '../components/layout/Navigation';
 import { Hero } from '../components/sections/Hero';
@@ -44,25 +44,10 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
     document.documentElement.classList.toggle('dark', isDark);
   }, [isDark, themeLoaded]);
 
+  // The page falls back to built-in content when the CMS can't be reached; visitors don't need to know.
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'F12') {
-        e.preventDefault();
-      }
-      if (e.ctrlKey && e.shiftKey && ['i', 'I', 'j', 'J', 'c', 'C'].includes(e.key)) {
-        e.preventDefault();
-      }
-      if (e.ctrlKey && ['u', 'U', 's', 'S'].includes(e.key)) {
-        e.preventDefault();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
+    if (error) console.error('CMS error, using fallback content:', error);
+  }, [error]);
 
   useEffect(() => {
     // When the section order changes, DOM nodes are reordered.
@@ -92,30 +77,27 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
       {/* Global custom cursor */}
       <CustomCursor />
 
-      {error && (
-        <div className="p-4 bg-danger text-on-danger text-center font-medium">
-          CMS Error: {error.message}
-        </div>
-      )}
-
       <Navigation isDark={isDark} onToggleDark={() => setIsDark(d => !d)} />
 
       <main>
         {(cmsData.sectionOrder || ['hero', 'logoMarquee', 'whyHireMe', 'skills', 'portfolio', 'tools', 'contact', 'footer']).map(id => {
           if (!cmsData.sections[id as keyof typeof cmsData.sections]) return null;
-          
+
+          let section: ReactNode;
           switch(id) {
-            case 'hero': return <Hero key={id} isDark={isDark} />;
-            case 'logoMarquee': return <LogoMarquee key={id} isDark={isDark} />;
-            case 'whyHireMe': return <WhyHireMe key={id} isDark={isDark} />;
-            case 'skills': return <Skills key={id} isDark={isDark} />;
-            case 'portfolio': return <Portfolio key={id} isDark={isDark} onViewCase={handleViewCase} />;
-            case 'tools': return <Tools key={id} isDark={isDark} />;
-            case 'recommendations': return <Recommendations key={id} isDark={isDark} />;
-            case 'contact': return <Contact key={id} isDark={isDark} />;
-            case 'footer': return <Footer key={id} isDark={isDark} />;
+            case 'hero': section = <Hero isDark={isDark} />; break;
+            case 'logoMarquee': section = <LogoMarquee isDark={isDark} />; break;
+            case 'whyHireMe': section = <WhyHireMe isDark={isDark} />; break;
+            case 'skills': section = <Skills isDark={isDark} />; break;
+            case 'portfolio': section = <Portfolio isDark={isDark} onViewCase={handleViewCase} />; break;
+            case 'tools': section = <Tools isDark={isDark} />; break;
+            case 'recommendations': section = <Recommendations isDark={isDark} />; break;
+            case 'contact': section = <Contact isDark={isDark} />; break;
+            case 'footer': section = <Footer isDark={isDark} />; break;
             default: return null;
           }
+          // One section failing (e.g. a device that refuses WebGL) drops only that section, never the page
+          return <ErrorBoundary key={id} fallback={null}>{section}</ErrorBoundary>;
         })}
       </main>
 
