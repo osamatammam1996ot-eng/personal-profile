@@ -51,10 +51,10 @@ const NAV: NavSection[] = [
     icon: <FileText size={15} />,
     type: 'group',
     items: [
-      { id: 'cs-1', label: 'Nexus Analytics', icon: '🔵' },
-      { id: 'cs-2', label: 'Orion Enterprise', icon: '🟣' },
-      { id: 'cs-3', label: 'Lumina AI', icon: '🩵' },
-      { id: 'cs-4', label: 'HealthBridge', icon: '🔮' },
+      { id: 'cs-1', label: 'Case Study 1', icon: '🔵' },
+      { id: 'cs-2', label: 'Case Study 2', icon: '🟣' },
+      { id: 'cs-3', label: 'Case Study 3', icon: '🩵' },
+      { id: 'cs-4', label: 'Case Study 4', icon: '🔮' },
     ],
   },
   {
@@ -76,6 +76,13 @@ export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState('home-visibility');
   const [draft, setDraft] = useState<CmsData | null>(null);
   const [original, setOriginal] = useState<CmsData | null>(null);
+
+  // "cs-2" -> the English title of case study 2, as currently edited
+  const caseStudyTitle = (sectionId: string) => {
+    if (!sectionId.startsWith('cs-')) return '';
+    const title: unknown = draft?.caseStudies.find((c) => c.id === Number(sectionId.slice(3)))?.title;
+    return typeof title === 'string' ? title : (title as { en?: string } | undefined)?.en ?? '';
+  };
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -270,7 +277,7 @@ export default function AdminDashboard() {
                       >
                         <span className={`transition-colors duration-300 ${isActive ? 'text-brand-text' : 'text-admin-fg/40 group-hover:text-admin-fg/70'}`}>{item.icon}</span>
                         <span className="flex-1">
-                          {item.label}
+                          {caseStudyTitle(item.id) || item.label}
                         </span>
                         {vis === false && (
                           <EyeOff size={12} className="text-admin-fg/40" />
@@ -332,7 +339,7 @@ export default function AdminDashboard() {
             <span className="text-base text-admin-fg/50 tracking-wide">CMS</span>
             <ChevronRight size={14} className="text-admin-fg/30" />
             <span className="text-base font-bold text-admin-fg tracking-wide">
-              {getActiveSectionLabel(activeSection)}
+              {caseStudyTitle(activeSection) || getActiveSectionLabel(activeSection)}
             </span>
           </div>
 
@@ -472,10 +479,10 @@ function getActiveSectionLabel(id: string): string {
     'home-recommendations': 'Recommendations',
     'home-new-feedback': 'New Feedback',
     'home-contact': 'Contact',
-    'cs-1': 'Nexus Analytics Platform',
-    'cs-2': 'Orion Enterprise Suite',
-    'cs-3': 'Lumina AI Product',
-    'cs-4': 'HealthBridge Mobile App',
+    'cs-1': 'Case Study 1',
+    'cs-2': 'Case Study 2',
+    'cs-3': 'Case Study 3',
+    'cs-4': 'Case Study 4',
     'global-settings': 'Global Settings',
   };
   return labels[id] ?? id;

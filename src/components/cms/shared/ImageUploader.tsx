@@ -1,9 +1,35 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { uploadImageAction } from '../../../app/actions/cms';
+import { createClient } from '@supabase/supabase-js';
+import { createImageUploadAction, uploadImageLocallyAction } from '../../../app/actions/cms';
 import { Image as ImageIcon, Upload, X, Loader2 } from 'lucide-react';
 import { labelClasses, inputClasses } from './BilingualField';
+
+// Server actions accept at most 1 MB, which only matters for the local no-service-key fallback
+const LOCAL_LIMIT_BYTES = 1024 * 1024;
+
+/** Sends the file to storage and returns its public URL. Throws with a readable message. */
+async function uploadImage(file: File): Promise<string> {
+  const ticket = await createImageUploadAction({ name: file.name, type: file.type, size: file.size });
+  if ('error' in ticket) throw new Error(ticket.error);
+
+  if ('local' in ticket) {
+    if (file.size > LOCAL_LIMIT_BYTES) throw new Error('Locally (without the Supabase service key) images must be under 1 MB.');
+    const formData = new FormData();
+    formData.append('file', file);
+    const result = await uploadImageLocallyAction(formData);
+    if ('error' in result) throw new Error(result.error);
+    return result.url;
+  }
+
+  // Straight from the browser to Supabase with the one-time token, so size isn't capped by our server
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+  const { error } = await supabase.storage.from(ticket.bucket)
+    .uploadToSignedUrl(ticket.path, ticket.token, file, { contentType: file.type });
+  if (error) throw new Error(`Upload failed: ${error.message}`);
+  return ticket.publicUrl;
+}
 
 interface ImageUploaderProps {
   label: string;
@@ -27,19 +53,10 @@ export function ImageUploader({ label, value, onChange, helpText, placeholder = 
     setIsUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const result = await uploadImageAction(formData);
-
-      if (result.error) {
-        setError(result.error);
-      } else if (result.url) {
-        onChange(result.url);
-      }
+      onChange(await uploadImage(file));
     } catch (err) {
       console.error('Upload failed:', err);
-      setError('Upload failed unexpectedly.');
+      setError(err instanceof Error && err.message ? err.message : 'Upload failed. Please try again.');
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {

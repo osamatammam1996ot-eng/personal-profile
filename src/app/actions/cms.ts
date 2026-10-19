@@ -65,38 +65,55 @@ export async function saveCmsDataAction(data: CmsData) {
   }
 }
 
-/** Uploads an image for the admin panel and returns its public URL. */
-export async function uploadImageAction(formData: FormData) {
+const MAX_IMAGE_MB = 20;
+
+function imageFileName(original: string) {
+  const ext = original.split('.').pop()?.toLowerCase() || 'jpg';
+  return `cms-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
+}
+
+type UploadTicket =
+  | { bucket: string; path: string; token: string; publicUrl: string }
+  | { local: true }
+  | { error: string };
+
+/**
+ * Starts an admin image upload. Returns a one-time link the browser sends the file to directly,
+ * so big images never pass through this server (Next.js and Vercel both cap request bodies).
+ * Locally without the service key it returns `local`, and the file goes to uploadImageLocallyAction.
+ */
+export async function createImageUploadAction(file: { name: string; type: string; size: number }): Promise<UploadTicket> {
   if (!(await verifyAuthAction())) return { error: 'Unauthorized' };
-
-  try {
-    const file = formData.get('file');
-    if (!(file instanceof File)) return { error: 'No file provided' };
-
-    const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
-    const safeName = `cms-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
-
-    const client = getAdminClient();
-    if (client) {
-      const { data, error } = await client.storage.from(IMAGE_BUCKET).upload(safeName, file, { contentType: file.type, upsert: false });
-      if (error || !data) {
-        console.error('Image upload failed:', error?.message);
-        return { error: 'Image upload failed' };
-      }
-      return { url: client.storage.from(IMAGE_BUCKET).getPublicUrl(data.path).data.publicUrl, filename: safeName };
-    }
-
-    if (isDev) {
-      // Local development without the service key: keep uploads in public/uploads
-      const dir = path.join(process.cwd(), 'public', 'uploads');
-      fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(path.join(dir, safeName), Buffer.from(await file.arrayBuffer()));
-      return { url: `/uploads/${safeName}`, filename: safeName };
-    }
-
-    return { error: 'Uploads are not configured: set SUPABASE_SERVICE_ROLE_KEY in the Vercel environment variables.' };
-  } catch (e) {
-    console.error('Image upload failed:', e);
-    return { error: 'Image upload failed' };
+  if (!file.type.startsWith('image/')) return { error: 'Only image files can be uploaded.' };
+  if (file.size > MAX_IMAGE_MB * 1024 * 1024) {
+    return { error: `This image is ${(file.size / 1024 / 1024).toFixed(1)} MB; the limit is ${MAX_IMAGE_MB} MB.` };
   }
+
+  const client = getAdminClient();
+  if (!client) {
+    return isDev ? { local: true } : { error: 'Uploads are not configured: set SUPABASE_SERVICE_ROLE_KEY in the Vercel environment variables.' };
+  }
+
+  const { data, error } = await client.storage.from(IMAGE_BUCKET).createSignedUploadUrl(imageFileName(file.name));
+  if (error || !data) {
+    console.error('Could not start image upload:', error?.message);
+    return { error: 'Could not start the upload. Please try again.' };
+  }
+  const publicUrl = client.storage.from(IMAGE_BUCKET).getPublicUrl(data.path).data.publicUrl;
+  return { bucket: IMAGE_BUCKET, path: data.path, token: data.token, publicUrl };
+}
+
+/** Local development without the service key: keeps uploads in public/uploads. */
+export async function uploadImageLocallyAction(formData: FormData) {
+  if (!(await verifyAuthAction())) return { error: 'Unauthorized' };
+  if (!isDev) return { error: 'Local uploads only work in development.' };
+
+  const file = formData.get('file');
+  if (!(file instanceof File)) return { error: 'No file provided' };
+
+  const name = imageFileName(file.name);
+  const dir = path.join(process.cwd(), 'public', 'uploads');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, name), Buffer.from(await file.arrayBuffer()));
+  return { url: `/uploads/${name}` };
 }
