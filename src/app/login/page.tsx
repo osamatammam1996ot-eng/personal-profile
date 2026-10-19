@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { CTAButton } from '@/components/ui/cta-button';
 import { loginAction } from '@/app/actions/auth';
-import { Loader2 } from 'lucide-react';
+import {  } from 'lucide-react';
 import Home from '@/app/page';
 
 export default function LoginPage() {

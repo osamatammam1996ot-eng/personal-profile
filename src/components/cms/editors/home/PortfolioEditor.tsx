@@ -1,5 +1,5 @@
 import type { CmsData } from '../../../../types/cms';
-import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma, TagInput } from '../../../../components/cms/shared/BilingualField';
+import { BilingualField, cardClasses, labelClasses, inputClasses, TagInput } from '../../../../components/cms/shared/BilingualField';
 import { ImageUploader } from '../../../../components/cms/shared/ImageUploader';
 
 interface PortfolioEditorProps {

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Save, CheckCircle, AlertCircle, Loader2, LayoutDashboard, FileText,
-  Settings, ChevronRight, Eye, EyeOff, ArrowLeft, Menu, X, RefreshCw,
+  Settings, ChevronRight, EyeOff, ArrowLeft, Menu, X, RefreshCw,
 } from 'lucide-react';
 import type { CmsData } from '../../types/cms';
 import { DEFAULT_CMS_DATA } from '../../types/cms';

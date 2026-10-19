@@ -1,12 +1,14 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { CmsToolItem } from '../../../types/cms';
+import { IconButton } from '../../ui/icon-button';
+import { Tag } from '../../ui/tag';
+import { useLanguage } from '../../../contexts/LanguageContext';
 
 interface ActiveToolCardProps {
   tool: CmsToolItem | null;
   cardVisible: boolean;
   lang: 'en' | 'ar';
-  isRTL: boolean;
   clickHint: string;
   tools: CmsToolItem[];
   activeIdx: number;
@@ -16,9 +18,10 @@ interface ActiveToolCardProps {
 }
 
 export function ActiveToolCard({
-  tool, cardVisible, lang, isRTL, clickHint, tools, activeIdx,
+  tool, cardVisible, lang, clickHint, tools, activeIdx,
   goTo, prev, next,
 }: ActiveToolCardProps) {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col items-center flex-auto w-full min-w-[280px] max-w-[420px]">
       {/* ── Info Card ── */}
@@ -48,9 +51,7 @@ export function ActiveToolCard({
               </div>
               <div className="flex flex-wrap gap-[5px]">
                 {(tool.tags?.[lang] || tool.tags?.en || []).map((tag: string) => (
-                  <span key={tag} className="text-sm font-medium px-2 py-1 rounded-full bg-brand/10 text-brand-text border border-brand/20">
-                    {tag}
-                  </span>
+                  <Tag key={tag}>{tag}</Tag>
                 ))}
               </div>
             </motion.div>
@@ -60,17 +61,17 @@ export function ActiveToolCard({
 
       {/* ── Navigation ── */}
       <div className="relative z-10 flex items-center gap-4 mt-[30px]">
-        <NavArrow onClick={prev} label="Previous tool">
-          {isRTL ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
-        </NavArrow>
+        <IconButton tone="brand" size="md" onClick={prev} aria-label={t.tools.prevTool}>
+          <ArrowLeft size={16} className="rtl:-scale-x-100" />
+        </IconButton>
 
         {/* dots */}
         <div className="flex items-center gap-[7px]">
-          {tools.map((t, i) => (
+          {tools.map((item, i) => (
             <button
-              key={t.name}
+              key={item.name}
               onClick={() => goTo(i)}
-              aria-label={t.name}
+              aria-label={item.name}
               className={`h-1.5 p-0 border-none cursor-pointer transition-all duration-300 ${
                 i === activeIdx
                   ? 'w-[18px] rounded-[3px] bg-brand shadow-glow-brand'
@@ -80,9 +81,9 @@ export function ActiveToolCard({
           ))}
         </div>
 
-        <NavArrow onClick={next} label="Next tool">
-          {isRTL ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
-        </NavArrow>
+        <IconButton tone="brand" size="md" onClick={next} aria-label={t.tools.nextTool}>
+          <ArrowRight size={16} className="rtl:-scale-x-100" />
+        </IconButton>
       </div>
 
       <p className="mt-3.5 text-sm text-center relative z-10 tracking-wide text-text-faint">
@@ -92,16 +93,3 @@ export function ActiveToolCard({
   );
 }
 
-function NavArrow({ onClick, label, children }: {
-  onClick: () => void; label: string; children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      aria-label={label}
-      className="size-[38px] shrink-0 rounded-full flex items-center justify-center text-lg leading-none cursor-pointer text-text-primary border border-brand/20 bg-brand/5 hover:border-brand hover:bg-brand/20 hover:scale-[1.08] transition-[background-color,border-color,transform] duration-200"
-    >
-      {children}
-    </button>
-  );
-}

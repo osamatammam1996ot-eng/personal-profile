@@ -2,8 +2,8 @@ import { useRef, useCallback, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
 // Graded warm (oxblood shadows, bone highlights, crimson rim) to sit in the same world as the 3D avatar
 import imgPortrait from '../../assets/why-portrait.webp';
-import { useLanguage } from '../../contexts/LanguageContext';
-import { useCms } from '../../contexts/CmsContext';
+import { SectionTitle } from '../ui/section-title';
+import { useWhyHireMeContent } from '../../content/whyHireMe';
 
 interface WhyHireMeProps {
   isDark: boolean;
@@ -89,32 +89,8 @@ function TiltCard({ card }: { card: CardWithText; isDark: boolean }) {
 function CardsRow({ isDark }: { isDark: boolean }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const look = isDark ? HOVER_LOOK.dark : HOVER_LOOK.light;
-  const { lang } = useLanguage();
-  const { cmsData } = useCms();
-
-  const fallbackTitles = lang === 'en'
-    ? ['Systems Thinking', 'AI-Driven Process', 'Enterprise-Grade Execution', 'Conversion-Focused UX']
-    : ['التفكير النظامي', 'عملية مدفوعة بالذكاء الاصطناعي', 'التنفيذ على مستوى المؤسسة', 'UX المركزة على التحويل'];
-
-  const fallbackDescs = lang === 'en'
-    ? [
-        'Scalable design systems and component libraries that maintain consistency as your product grows across teams.',
-        'Leveraging cutting-edge AI tools to accelerate ideation, validate designs, and surface insights that manual research misses.',
-        'From complex SaaS dashboards to multi-platform enterprise tools — polished, production-ready, every time.',
-        'Every decision rooted in psychology and business metrics — crafting flows that turn visitors into loyal users.',
-      ]
-    : [
-        'أنظمة تصميم قابلة للتوسع ومكتبات مكونات تحافظ على الاتساق مع نمو المنتج عبر الفِرق.',
-        'الاستفادة من أحدث أدوات الذكاء الاصطناعي لتسريع الأفكار والتحقق من التصاميم والحصول على رؤى تفتقدها الأبحاث اليدوية.',
-        'من لوحات معلومات SaaS المعقدة إلى الأدوات متعددة المنصات للمؤسسات — مصقولة وجاهزة للإنتاج في كل مرة.',
-        'كل قرار متجذر في علم النفس والمقاييس التجارية — حرفة تحويل الزوار إلى مستخدمين مخلصين.',
-      ];
-
-  const CARDS = CARDS_VISUAL.map((v, i) => {
-    const title = cmsData.whyHireMe.cards[i]?.title?.[lang] || fallbackTitles[i] || v.id;
-    const desc = cmsData.whyHireMe.cards[i]?.desc?.[lang] || fallbackDescs[i] || '';
-    return { ...v, title, desc };
-  });
+  const { card } = useWhyHireMeContent();
+  const CARDS = CARDS_VISUAL.map((v, i) => ({ ...v, ...card(i, v.id) }));
   return (
     <div className="flex flex-col sm:flex-row gap-5 items-stretch justify-center">
       {CARDS.map((card, i) => {
@@ -153,12 +129,7 @@ function CardsRow({ isDark }: { isDark: boolean }) {
 
 // ── Main export ────────────────────────────────────────────────────────────
 export function WhyHireMe({ isDark }: WhyHireMeProps) {
-  const { fontHeading, isRTL, lang } = useLanguage();
-  const { cmsData } = useCms();
-
-  const word1 = cmsData.whyHireMe.word1[lang] || (lang === 'en' ? 'Why' : 'لماذا');
-  const word2 = cmsData.whyHireMe.word2[lang] || (lang === 'en' ? 'Hire' : 'توظيف');
-  const word3 = cmsData.whyHireMe.word3[lang] || (lang === 'en' ? 'Me' : 'أنا');
+  const { title } = useWhyHireMeContent();
 
   return (
     <section
@@ -169,24 +140,15 @@ export function WhyHireMe({ isDark }: WhyHireMeProps) {
       <div className="relative w-full flex flex-col items-center pt-[10vh] pb-0">
 
         {/* ── BIG TITLE ── */}
-        <motion.div
+        <SectionTitle
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
           className="select-none text-center mb-[7vh]"
         >
-          <div
-            className="font-bold text-[clamp(2rem,4vw,3.25rem)] leading-none tracking-tighter flex gap-[0.14em] items-baseline flex-wrap justify-center"
-            
-          >
-            <span className="text-text-primary">{word1}</span>
-            <span className="text-text-primary">
-              {word2}
-            </span>
-            {word3 && <span className="text-text-primary">{word3}</span>}
-          </div>
-        </motion.div>
+          {title}
+        </SectionTitle>
 
         {/* ── CARDS ROW ── */}
         <div

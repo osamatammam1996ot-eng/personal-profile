@@ -2,49 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
+import { PillButton } from '../ui/pill-button';
+import { SectionTitle } from '../ui/section-title';
+import { Tag } from '../ui/tag';
+import { scrollToSection } from '../../lib/scroll';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useCms } from '../../contexts/CmsContext';
+import { useProjects, type Project } from '../../content/portfolio';
 
 interface PortfolioProps {
-  isDark: boolean;
   onViewCase: (projectId: number, projectTitle: string) => void;
 }
 
-const PROJECTS_STATIC = [
-  {
-    id: 1,
-    title: 'Nexus Analytics Platform',
-    tags: ['SaaS', 'AI', 'Data Viz', 'B2B'],
-    image: 'https://images.unsplash.com/photo-1575388902449-6bca946ad549?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTYWFTJTIwZGFzaGJvYXJkJTIwVUklMjBkZXNpZ24lMjBkYXJrJTIwYXBwfGVufDF8fHx8MTc3NDEwMzQxOHww&ixlib=rb-4.1.0&q=80&w=1080',
-    accent: 'var(--color-brand)',
-  },
-  {
-    id: 2,
-    title: 'Orion Enterprise Suite',
-    tags: ['Enterprise', 'Design System', 'SaaS', 'Scale'],
-    image: 'https://images.unsplash.com/photo-1763568258367-1c52beb60be7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbnRlcnByaXNlJTIwc29mdHdhcmUlMjBpbnRlcmZhY2UlMjBwcm9kdWN0aXZpdHl8ZW58MXx8fHwxNzc0MTAzNDE5fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    accent: 'var(--color-brand)',
-  },
-  {
-    id: 3,
-    title: 'Lumina AI Product',
-    tags: ['AI Product', 'Startup', 'Product Strategy'],
-    image: 'https://images.unsplash.com/photo-1591381287254-b3349c60bf9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBSSUyMG1hY2hpbmUlMjBsZWFybmluZyUyMHByb2R1Y3QlMjBpbnRlcmZhY2UlMjBmdXR1cmlzdGljfGVufDF8fHx8MTc3NDEwMzQxOXww&ixlib=rb-4.1.0&q=80&w=1080',
-    accent: 'var(--color-brand)',
-  },
-  {
-    id: 4,
-    title: 'HealthBridge Mobile App',
-    tags: ['Mobile', 'Healthcare', 'Accessibility', 'UX Research'],
-    image: 'https://images.unsplash.com/photo-1767449441925-737379bc2c4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBVWCUyMGRlc2lnbiUyMGhlYWx0aGNhcmV8ZW58MXx8fHwxNzc0MTAzNDIwfDA&ixlib=rb-4.1.0&q=80&w=1080',
-    accent: 'var(--color-brand)',
-  },
-];
-
-type Project = typeof PROJECTS_STATIC[0] & { desc: string };
-
-const pillButton =
-  'inline-flex items-center gap-2 self-start rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors cursor-pointer';
 
 function ProjectCard({
   project,
@@ -79,12 +47,7 @@ function ProjectCard({
         </h3>
         <div className="mt-4 flex flex-wrap gap-2">
           {project.tags.slice(0, 4).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-on-media/20 bg-on-media/10 backdrop-blur-md px-3 py-1 text-sm font-medium text-on-media"
-            >
-              {tag}
-            </span>
+            <Tag key={tag} tone="media">{tag}</Tag>
           ))}
         </div>
       </div>
@@ -93,40 +56,8 @@ function ProjectCard({
 }
 
 export function Portfolio({ onViewCase }: PortfolioProps) {
-  const { lang, isRTL } = useLanguage();
-  const { cmsData } = useCms();
-
-  const projects: Project[] = (cmsData.projects || [])
-    .filter((project) => project.visible)
-    .map((project, idx) => ({
-      id: project.id,
-      title: project.title?.[lang] || project.title?.en || '',
-      tags: project.tags?.[lang] || project.tags?.en || [],
-      image: project.image || PROJECTS_STATIC[idx % PROJECTS_STATIC.length].image,
-      accent: project.accent || 'var(--color-brand)',
-      desc: project.desc?.[lang] || project.desc?.en || '',
-    }));
-
-  const fallbackProjects: Project[] = PROJECTS_STATIC.map((project, idx) => ({
-    ...project,
-    desc: lang === 'en' ? `Case study ${idx + 1} description` : `وصف دراسة الحالة ${idx + 1}`,
-  }));
-
-  const renderedProjects = projects.length ? projects : fallbackProjects;
-
-  const t = lang === 'en'
-    ? {
-        title: 'Selected Work',
-        desc: 'A selection of apps, platforms and dashboards I designed end to end.',
-        request: 'Request full portfolio',
-      }
-    : {
-        title: 'الأعمال المختارة',
-        desc: 'مجموعة من التطبيقات والمنصات ولوحات التحكم التي صممتها من البداية للنهاية.',
-        request: 'طلب معرض الأعمال الكامل',
-      };
-
-  const scrollToContact = () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  const { isRTL, t } = useLanguage();
+  const renderedProjects = useProjects();
 
   // ── Pinned horizontal scroll (desktop) ──
   // The section is as tall as the sideways distance the track needs to travel;
@@ -291,18 +222,12 @@ export function Portfolio({ onViewCase }: PortfolioProps) {
         >
           {/* Intro card */}
           <div className="h-full w-[80vw] md:w-[340px] shrink-0 snap-center flex flex-col rounded-3xl border border-border-default bg-surface-card p-7 md:p-8">
-            <h2 className="m-0 mt-auto font-bold text-[clamp(2rem,4vw,3.25rem)] text-text-primary tracking-[-0.02em] leading-[1.15]">
-              {t.title}
-            </h2>
-            <p className="m-0 mt-auto text-base text-text-secondary leading-relaxed">{t.desc}</p>
-            <button
-              type="button"
-              onClick={scrollToContact}
-              className={`${pillButton} mt-6 border-brand/40 bg-transparent text-text-primary hover:bg-brand/10`}
-            >
-              {t.request}
-              <ChevronRight size={16} className={isRTL ? '-scale-x-100' : ''} />
-            </button>
+            <SectionTitle className="mt-auto">{t.portfolio.title}</SectionTitle>
+            <p className="m-0 mt-auto text-base text-text-secondary leading-relaxed">{t.portfolio.desc}</p>
+            <PillButton tone="outline" onClick={() => scrollToSection('contact')} className="mt-6 self-start">
+              {t.portfolio.request}
+              <ChevronRight size={16} className="rtl:-scale-x-100" />
+            </PillButton>
           </div>
 
           {renderedProjects.map((project, index) => (

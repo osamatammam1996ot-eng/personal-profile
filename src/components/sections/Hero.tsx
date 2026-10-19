@@ -3,8 +3,10 @@ import { motion, useReducedMotion } from 'motion/react';
 import { HexGrid } from '../shared/HexGrid';
 import { ArrowRight, ArrowUpRight, Pause, Play } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useCms } from '../../contexts/CmsContext';
+import { useHeroContent } from '../../content/hero';
 import { CTAButton } from '../ui/cta-button';
+import { IconButton } from '../ui/icon-button';
+import { scrollToSection } from '../../lib/scroll';
 
 interface HeroProps {
   isDark: boolean;
@@ -16,23 +18,11 @@ const AVATAR_STILL = '/avatar-hex-still.webp';
 const AVATAR_MOTION_KEY = 'avatar-motion';
 
 export function Hero({ isDark }: HeroProps) {
-  const { lang, isRTL, fontHeading, fontBody } = useLanguage();
-  const { cmsData } = useCms();
-
-  const heroLabel = cmsData.hero.label[lang] || (lang === 'en' ? 'Osama Tammam · Cairo' : 'أسامة تمام · القاهرة');
-  const heroHeadline1 = cmsData.hero.headline1[lang] || (lang === 'en' ? 'Making hard products' : 'جعل المنتجات الصعبة');
-  const heroHeadline2 = cmsData.hero.headline2[lang] || (lang === 'en' ? 'feel inevitable.' : 'تبدو حتمية.');
-  const heroRoles = cmsData.hero.roles[lang]?.length
-    ? cmsData.hero.roles[lang]
-    : (lang === 'en'
-      ? ['Senior UX Designer', 'Senior UI Designer', 'AI Product Designer']
-      : ['مصمم UX كبير', 'مصمم UI كبير', 'مصمم منتجات AI']);
-  const heroDesc = cmsData.hero.desc[lang] || (lang === 'en'
-    ? "Seven years building products for teams that couldn't afford to ship the wrong thing."
-    : 'سبع سنوات لبناء منتجات للفِرق التي لم تستطع تحمل تكاليف شحن الشيء الخاطئ.');
-  const heroCta1 = cmsData.hero.cta1[lang] || (lang === 'en' ? 'See my work' : 'شاهد عملي');
-  const heroCta2 = cmsData.hero.cta2[lang] || (lang === 'en' ? "Let's talk" : 'هيا نتحدث');
-  const heroScroll = lang === 'en' ? 'Scroll' : 'مرر';
+  const { lang, isRTL, t } = useLanguage();
+  const {
+    label: heroLabel, headline1: heroHeadline1, headline2: heroHeadline2, roles: heroRoles,
+    desc: heroDesc, primaryCta: heroCta1, secondaryCta: heroCta2, order, show,
+  } = useHeroContent();
 
   const [displayText, setDisplayText] = useState('');
   const [textIndex, setTextIndex] = useState(0);
@@ -104,10 +94,7 @@ export function Hero({ isDark }: HeroProps) {
     setAvatarPlaying(true);
   };
 
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
+  const avatarToggleLabel = avatarPlaying ? t.hero.pauseAnimation : t.hero.playAnimation;
 
   const dark = isDark;
 
@@ -129,12 +116,12 @@ export function Hero({ isDark }: HeroProps) {
           Text elements keep the CMS order and visibility toggles; the avatar has its own column. */}
       <div className="relative z-20 w-full max-w-[1200px] mx-auto md:px-4 pt-28 pb-24 grid items-center gap-8 md:gap-12 md:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
         <div className="flex flex-col items-start text-start max-md:order-2">
-          {(cmsData.hero.elementOrder || ['avatar', 'label', 'headline', 'roles', 'desc', 'ctas'])
+          {order
             .filter((id) => id !== 'avatar')
             .map((id, renderIndex) => {
           const delay = 0.15 + (renderIndex * 0.08);
 
-          if (id === 'label' && cmsData.hero.showLabel !== false) {
+          if (id === 'label' && show.label) {
             return (
               <motion.p
                 key={`label-${heroLabel}`}
@@ -148,7 +135,7 @@ export function Hero({ isDark }: HeroProps) {
             );
           }
 
-          if (id === 'headline' && cmsData.hero.showHeadline !== false) {
+          if (id === 'headline' && show.headline) {
             return (
               <motion.h1
                 key={`h1-${heroHeadline1}`}
@@ -176,14 +163,14 @@ export function Hero({ isDark }: HeroProps) {
                 <span className={isRTL ? 'direction-rtl' : 'direction-ltr'}>
                   {displayText}
                   <span
-                    className={`typing-cursor bg-brand-light ${showCursor ? 'opacity-100' : 'opacity-0'} ${isRTL ? 'mr-1' : 'ml-1'}`}
+                    className={`typing-cursor bg-brand-light ${showCursor ? 'opacity-100' : 'opacity-0'} ms-1`}
                   />
                 </span>
               </motion.p>
             );
           }
 
-          if (id === 'desc' && cmsData.hero.showDesc !== false) {
+          if (id === 'desc' && show.desc) {
             return (
               <motion.p
                 key={`desc-${heroDesc}`}
@@ -209,7 +196,7 @@ export function Hero({ isDark }: HeroProps) {
                 <CTAButton onClick={() => scrollToSection('work')}>
                   <span className="flex items-center gap-2">
                     {heroCta1}
-                    <ArrowRight size={15} className={`transition-transform duration-200 ${isRTL ? '-scale-x-100' : ''}`} />
+                    <ArrowRight size={15} className="transition-transform duration-200 rtl:-scale-x-100" />
                   </span>
                 </CTAButton>
                 <button
@@ -218,7 +205,7 @@ export function Hero({ isDark }: HeroProps) {
                   className="inline-flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer font-semibold text-base text-text-primary hover:text-brand-text transition-colors"
                 >
                   {heroCta2}
-                  <ArrowUpRight size={16} className={isRTL ? '-scale-x-100' : ''} />
+                  <ArrowUpRight size={16} className="rtl:-scale-x-100" />
                 </button>
               </motion.div>
             );
@@ -228,7 +215,7 @@ export function Hero({ isDark }: HeroProps) {
             })}
         </div>
 
-        {cmsData.hero.showAvatar !== false && (
+        {show.avatar && (
           <motion.div
             key="hero-avatar"
             initial={{ opacity: 0, scale: 0.92, y: 16 }}
@@ -247,22 +234,18 @@ export function Hero({ isDark }: HeroProps) {
               className="block h-auto w-[130%] max-w-none pointer-events-none -my-[12%] -ms-[23%] md:-mx-[15%]"
             />
             {/* Sits in the empty corner beside the hex's lower edge, clear of the hands */}
-            <button
-              type="button"
+            <IconButton
+              tone="glass"
               onClick={toggleAvatar}
               aria-pressed={!avatarPlaying}
-              aria-label={avatarPlaying
-                ? (lang === 'en' ? 'Pause animation' : 'إيقاف الحركة')
-                : (lang === 'en' ? 'Play animation' : 'تشغيل الحركة')}
-              title={avatarPlaying
-                ? (lang === 'en' ? 'Pause animation' : 'إيقاف الحركة')
-                : (lang === 'en' ? 'Play animation' : 'تشغيل الحركة')}
-              className="absolute bottom-[2%] end-[-2%] z-10 inline-flex size-8 md:size-9 items-center justify-center rounded-full cursor-pointer bg-surface-glass backdrop-blur-md border border-text-primary/15 text-text-secondary shadow-[0_4px_16px_rgb(0_0_0/0.35)] hover:text-text-primary hover:border-text-primary/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              aria-label={avatarToggleLabel}
+              title={avatarToggleLabel}
+              className="absolute bottom-[2%] end-[-2%] z-10 max-md:size-8"
             >
               {avatarPlaying
                 ? <Pause size={14} fill="currentColor" strokeWidth={0} />
                 : <Play size={14} fill="currentColor" strokeWidth={0} className="translate-x-px" />}
-            </button>
+            </IconButton>
           </motion.div>
         )}
       </div>
@@ -275,7 +258,7 @@ export function Hero({ isDark }: HeroProps) {
         transition={{ delay: 1.4 }}
       >
         <p className="font-body text-xs tracking-widest text-text-faint">
-          {heroScroll}
+          {t.hero.scroll}
         </p>
         <motion.div
           className="w-px h-9 scroll-indicator-line"

@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
-import { useCms } from '../../contexts/CmsContext';
+import { useCaseStudy } from '../../content/caseStudy';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { IconButton, MotionIconButton } from '../ui/icon-button';
 
 // Prev/next arrows over the media viewer
-const NAV_BUTTON = 'absolute z-[210] flex items-center justify-center rounded-full bg-scrim/50 border border-on-media/10 text-on-media backdrop-blur-md cursor-pointer hover:bg-on-media/10 transition-colors bottom-[110px] md:bottom-auto md:top-1/2 md:-translate-y-1/2 size-12 md:size-14';
+// Placement of the prev/next arrows: under the media on phones, beside it on wider screens
+const NAV_PLACEMENT = 'absolute z-[210] bottom-[110px] md:bottom-auto md:top-1/2 md:-translate-y-1/2';
 
 interface CaseStudyProps {
   projectId: number;
@@ -15,17 +17,9 @@ interface CaseStudyProps {
 }
 
 export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
-  const { cmsData } = useCms();
-  const { lang, isRTL } = useLanguage();
-  
-  const rawData = cmsData.caseStudies?.find(c => c.id === projectId);
-  
-  const data = rawData ? {
-    ...rawData,
-    title: (rawData.title && typeof rawData.title === 'object' && ('en' in rawData.title || 'ar' in rawData.title)) 
-      ? (rawData.title[lang] || rawData.title.en || '') 
-      : rawData.title,
-  } : null;
+  const { isRTL, t } = useLanguage();
+
+  const data = useCaseStudy(projectId);
 
   const media = data?.media || [];
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -70,12 +64,9 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-[200] flex items-center justify-center bg-background"
       >
-        <button
-          onClick={onClose}
-          className="fixed top-8 right-8 size-10 rounded-lg flex items-center justify-center border-none cursor-pointer bg-brand/10 text-brand-text"
-        >
-          ✕
-        </button>
+        <IconButton tone="brand" size="md" onClick={onClose} aria-label={t.caseStudy.close} className="fixed top-8 end-8">
+          <X size={18} />
+        </IconButton>
         <p className="text-text-primary">Case study media not found.</p>
       </motion.div>
     );
@@ -105,28 +96,33 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
           </span>
         </div>
 
-        <motion.button
+        <MotionIconButton
+          tone="media"
+          size="lg"
           onClick={onClose}
+          aria-label={t.caseStudy.close}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          className="size-11 rounded-full flex items-center justify-center cursor-pointer text-text-primary bg-on-media/5 border border-on-media/10 hover:bg-on-media/10 transition-colors duration-200"
         >
           <X size={20} />
-        </motion.button>
+        </MotionIconButton>
       </div>
 
       {/* Main Slider Area */}
       <div className="flex-1 relative flex items-center justify-center">
 
         {media.length > 1 && (
-          <motion.button
+          <MotionIconButton
+            tone="media"
+            size="xl"
             onClick={isRTL ? handleNext : handlePrev}
+            aria-label={isRTL ? t.caseStudy.next : t.caseStudy.prev}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className={`${NAV_BUTTON} left-4 md:left-[32px]`}
+            className={`${NAV_PLACEMENT} left-4 md:left-[32px]`}
           >
             <ChevronLeft size={28} />
-          </motion.button>
+          </MotionIconButton>
         )}
 
         <div className={`absolute top-[80px] left-0 right-0 md:left-[100px] md:right-[100px] flex items-center justify-center ${media.length > 1 ? 'bottom-[170px] md:bottom-[120px]' : 'bottom-[40px]'}`}>
@@ -188,14 +184,17 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
         </div>
 
         {media.length > 1 && (
-          <motion.button
+          <MotionIconButton
+            tone="media"
+            size="xl"
             onClick={isRTL ? handlePrev : handleNext}
+            aria-label={isRTL ? t.caseStudy.prev : t.caseStudy.next}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className={`${NAV_BUTTON} right-4 md:right-[32px]`}
+            className={`${NAV_PLACEMENT} right-4 md:right-[32px]`}
           >
             <ChevronRight size={28} />
-          </motion.button>
+          </MotionIconButton>
         )}
       </div>
 

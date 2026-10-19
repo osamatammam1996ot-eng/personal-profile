@@ -9,13 +9,14 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { motion, useInView } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useCms } from '../../contexts/CmsContext';
+import { useToolsContent } from '../../content/tools';
 import type { CmsToolItem } from '../../types/cms';
 import { readToken, parseColor, tokenRgba, resolveColor, ensureContrast } from '../../lib/theme-tokens';
 import { getScenePalette } from '../../lib/scene-palette';
 import { createRenderer, releaseRenderer } from '../../lib/webgl';
 import { DustCanvas } from './tools/DustCanvas';
 import { ActiveToolCard } from './tools/ActiveToolCard';
+import { SectionTitle } from '../ui/section-title';
 import { FACE_NORMALS_NORMALIZED, rotForFace } from './tools/constants';
 
 interface ToolsProps { isDark?: boolean; }
@@ -72,9 +73,8 @@ const SCENE_LOOK = {
 
 /* ─── Main component ─────────────────────────────────────────────────────────── */
 export function Tools({ isDark = false }: ToolsProps) {
-  const { lang, isRTL } = useLanguage();
-  const { cmsData } = useCms();
-  const TOOLS = cmsData.tools.toolsList || [];
+  const { lang } = useLanguage();
+  const { title: toolsTitle, desc: toolsDesc, clickHint, list: TOOLS } = useToolsContent();
   const glRef        = useRef<HTMLCanvasElement>(null);
   const wrapRef      = useRef<HTMLDivElement>(null);
   const isInView     = useInView(wrapRef, { margin: "200px" });
@@ -351,9 +351,6 @@ export function Tools({ isDark = false }: ToolsProps) {
 
   const tool = TOOLS[activeIdx] ?? null;
 
-  const toolsTitle = cmsData.tools.title[lang] || (lang === 'en' ? 'My Arsenal!' : 'ترسانتي!');
-  const toolsDesc = cmsData.tools.desc[lang] || (lang === 'en' ? 'Twelve tools. One cohesive workflow.' : 'اثنا عشر أداة. سير عمل متماسك واحد.');
-  const clickHint = cmsData.tools.clickHint[lang] || (lang === 'en' ? 'Click any card to explore' : 'انقر على أي بطاقة للاستكشاف');
 
   return (
     <section
@@ -374,9 +371,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         transition={{ duration: 0.6, ease: [0.4,0,0.2,1] }}
         className="relative z-10 text-center mb-11"
       >
-        <h2 className="font-bold text-[clamp(2rem,4vw,3.25rem)] tracking-[-0.02em] leading-[1.15] text-text-primary m-0 mb-4">
-          <span>{toolsTitle}</span>
-        </h2>
+        <SectionTitle className="mb-4">{toolsTitle}</SectionTitle>
 
         <p className="text-lg font-normal text-text-muted leading-[1.75] max-w-[380px] md:max-w-none md:whitespace-nowrap mx-auto">
           {toolsDesc}
@@ -402,7 +397,6 @@ export function Tools({ isDark = false }: ToolsProps) {
           tool={tool}
           cardVisible={cardVisible}
           lang={lang}
-          isRTL={isRTL}
           clickHint={clickHint}
           tools={TOOLS}
           activeIdx={activeIdx}

@@ -1,10 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { useCms } from '../../contexts/CmsContext';
+import { useClientLogos } from '../../content/logos';
 import Image from 'next/image';
 import type { CmsLogo } from '../../types/cms';
-
-interface LogoMarqueeProps { isDark: boolean; }
 
 // Each logo occupies exactly this many pixels (image + left/right padding)
 const SLOT_PX = 200;
@@ -66,11 +64,9 @@ const LogoSlot = ({ logo }: { logo: CmsLogo }) => {
   );
 };
 
-export function LogoMarquee({ isDark }: LogoMarqueeProps) {
-  const { cmsData } = useCms();
+export function LogoMarquee() {
   const wrapRef = useRef<HTMLDivElement>(null);
-
-  const logos = (cmsData?.logoMarquee || []).filter((l) => l.visible);
+  const logos = useClientLogos();
 
   // Pad until we have enough logos to fill any screen (each slot = 200px, need > 2560px)
   let set = logos.length > 0 ? [...logos] : [];
@@ -102,7 +98,7 @@ export function LogoMarquee({ isDark }: LogoMarqueeProps) {
     return () => cancelAnimationFrame(rafId);
   }, [setWidth]);
 
-  if (!cmsData?.sections.logoMarquee || set.length === 0) return null;
+  if (set.length === 0) return null;
 
   return (
     <section dir="ltr" className="logo-strip w-full h-(--logo-strip-h) overflow-hidden py-7 relative bg-marquee-bg">

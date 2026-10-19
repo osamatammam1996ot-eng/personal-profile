@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, useReducedMotion } from 'motion/react';
 import { DecorativeShape } from '../shared/DecorativeShape';
+import { IconButton } from '../ui/icon-button';
+import { revealUp } from '../../lib/motion';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useCms } from '../../contexts/CmsContext';
-import { ArrowUpRight, Copy, CodeXml, ArrowRight } from 'lucide-react';
+import { useContactContent } from '../../content/contact';
+import { Copy, CodeXml, ArrowRight } from 'lucide-react';
 
 interface ContactProps {
   isDark: boolean;
@@ -50,9 +52,12 @@ const SOCIALS = [
   },
 ];
 
+/** Renders lines with <br /> between them */
+const withBreaks = (lines: string[]) =>
+  lines.map((line, i) => <React.Fragment key={i}>{i > 0 && <br />}{line}</React.Fragment>);
+
 export function Contact({ isDark }: ContactProps) {
-  const { lang, isRTL } = useLanguage();
-  const { cmsData } = useCms();
+  const { isRTL, t } = useLanguage();
   const [copied, setCopied] = useState(false);
 
   // --- 3D Hover Interaction ---
@@ -125,45 +130,8 @@ export function Contact({ isDark }: ContactProps) {
   };
   // -----------------------------
 
-  const email = cmsData?.contact?.email || 'osvartsarmen72604@gmail.com';
-  const availability = cmsData?.contact?.availability?.[lang] || (lang === 'en' ? 'Available for new projects' : 'متاح لمشاريع جديدة');
-  
-  // The CMS headline is three lines; built-in copy covers an empty CMS
-  const { headline1, headline2, headline3 } = cmsData.contact;
-  const headline = headline1[lang]
-    ? <>{headline1[lang]}<br/>{headline2[lang]}<br/>{headline3[lang]}</>
-    : (lang === 'en'
-        ? <>Got a problem<br/>worth solving?<br/>Let's talk about it.</>
-        : 'هل لديك مشكلة تستحق الحل؟ دعنا نتحدث.');
-    
-  const bodyText = cmsData?.contact?.body?.[lang] || (lang === 'en' 
-    ? 'I help product and engineering teams turn complex problems into intuitive digital experiences. Whether you have a clear roadmap or just an idea, I\'d love to hear about it and explore how we can build something impactful together.'
-    : 'أنا أساعد فرق المنتج والهندسة على تحويل المشاكل المعقدة إلى تجارب رقمية بديهية.');
-
-  const emailLabel = cmsData?.contact?.emailLabel?.[lang] || (lang === 'en' ? 'EMAIL ME' : 'البريد الإلكتروني');
-  
-  const bottomNote = cmsData?.contact?.note?.[lang] || (lang === 'en'
-    ? <>I typically respond within 24 hours.<br/>Looking forward to connecting!</>
-    : 'أرد عادة خلال 24 ساعة. أتطلع للتواصل معك!');
-
-  const meetingAction = cmsData?.contact?.meetingAction?.[lang] || (lang === 'en'
-    ? 'Prefer a quick call? Let\'s find a time that works for you.'
-    : 'تفضل مكالمة سريعة؟ دعنا نجد وقتًا يناسبك.');
-    
-  const meetingLink = cmsData?.contact?.meetingLink?.[lang] || (lang === 'en' ? 'Schedule a meeting' : 'حدد موعداً');
-
-  const makeAbsolute = (url: string) => {
-  if (!url) return '';
-  if (url.startsWith('http://') || url.startsWith('https://')) return url;
-  return `https://${url}`;
-};
-
-  const socialLinks = {
-    WhatsApp: cmsData?.contact?.socials?.whatsapp ? makeAbsolute(cmsData.contact.socials.whatsapp) : 'https://wa.me/1234567890',
-    Facebook: cmsData?.contact?.socials?.facebook ? makeAbsolute(cmsData.contact.socials.facebook) : 'https://facebook.com',
-    LinkedIn: cmsData?.contact?.socials?.linkedin ? makeAbsolute(cmsData.contact.socials.linkedin) : 'https://linkedin.com',
-    Behance: cmsData?.contact?.socials?.behance ? makeAbsolute(cmsData.contact.socials.behance) : 'https://behance.net',
-  };
+  const content = useContactContent();
+  const { email } = content;
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -184,10 +152,8 @@ export function Contact({ isDark }: ContactProps) {
         <div className="flex flex-col pt-4">
           
           {/* Availability Pill */}
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <motion.div
+            {...revealUp()}
             className="flex items-center gap-3 mb-6"
           >
             <span className="relative flex h-2.5 w-2.5">
@@ -195,44 +161,35 @@ export function Contact({ isDark }: ContactProps) {
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-success"></span>
             </span>
             <span className="text-base font-medium text-text-muted">
-              {availability}
+              {content.availability}
             </span>
           </motion.div>
           
           {/* Headline */}
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+          <motion.h2
+            {...revealUp(0.1)}
             className="text-[2.5rem] md:text-5xl lg:text-6xl font-heading font-bold text-foreground leading-[1.15] tracking-tight mb-8"
           >
-            {headline}
+            {withBreaks(content.headline)}
           </motion.h2>
 
           {/* Body Text */}
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+          <motion.p
+            {...revealUp(0.2)}
             className="text-lg font-normal text-text-secondary leading-relaxed max-w-md mb-12"
           >
-            {bodyText}
+            {content.body}
           </motion.p>
 
           {/* Meeting Box */}
-          {cmsData?.contact?.showMeetingAction !== false && (
+          {content.meetingAction && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
+              {...revealUp(0.3)}
               className="flex items-start gap-4 p-5 rounded-xl border border-border-default bg-surface/50 max-w-md"
             >
               <CodeXml className="w-5 h-5 text-brand-text shrink-0 mt-0.5" />
               <p className="text-base font-normal text-text-secondary leading-relaxed">
-                {meetingAction}
+                {content.meetingAction}
               </p>
             </motion.div>
           )}
@@ -278,7 +235,7 @@ export function Contact({ isDark }: ContactProps) {
               className="relative z-10 text-sm font-bold text-brand-text uppercase tracking-wider mb-6 block"
               style={shouldAnimate ? { z: zTitle } : undefined}
             >
-              {emailLabel}
+              {content.emailLabel}
             </motion.span>
             
             {/* Email Action: the copy icon always stays on the address's row. The address scales
@@ -295,17 +252,19 @@ export function Contact({ isDark }: ContactProps) {
               >
                 {email.includes('@') ? <>{email.split('@')[0]}@<wbr />{email.split('@').slice(1).join('@')}</> : email}
               </a>
-              <div className="flex items-center gap-4 text-text-muted shrink-0 pb-1">
-
-                <button onClick={handleCopy} aria-label="Copy email address" className="hover:text-foreground transition-colors relative outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-sm">
-                  <Copy className="w-5 h-5" />
-                  {copied && (
-                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-sm bg-foreground text-background px-2 py-1 rounded">
-                      Copied!
-                    </span>
-                  )}
-                </button>
-              </div>
+              {/* 36px tap target; the negative margins keep the icon where the 20px glyph sat */}
+              <IconButton
+                onClick={handleCopy}
+                aria-label={t.contact.copyEmail}
+                className="relative -mx-2 -mt-2 -mb-1"
+              >
+                <Copy className="size-5" />
+                {copied && (
+                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-sm bg-foreground text-background px-2 py-1 rounded">
+                    {t.contact.copied}
+                  </span>
+                )}
+              </IconButton>
             </motion.div>
 
             {/* Socials Grid */}
@@ -313,8 +272,8 @@ export function Contact({ isDark }: ContactProps) {
               className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10"
               style={shouldAnimate ? { z: zSocials } : undefined}
             >
-              {SOCIALS.map((social) => {
-                const url = socialLinks[social.name as keyof typeof socialLinks] || '#';
+              {content.socials.map(({ name, url }) => {
+                const social = SOCIALS.find((s) => s.name === name)!;
                 return (
                   <a 
                     key={social.name} 
@@ -342,7 +301,7 @@ export function Contact({ isDark }: ContactProps) {
               className="relative z-10 text-base font-normal text-text-muted leading-relaxed"
               style={shouldAnimate ? { z: zText } : undefined}
             >
-              {bottomNote}
+              {withBreaks(content.note)}
             </motion.p>
           </motion.div>
 

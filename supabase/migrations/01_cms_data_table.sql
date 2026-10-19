@@ -16,11 +16,8 @@ CREATE POLICY "Allow public read" ON cms_data
   FOR SELECT
   USING (true);
 
--- Allow full access via service role key (used by server actions)
-CREATE POLICY "Allow service role all" ON cms_data
-  FOR ALL
-  USING (true)
-  WITH CHECK (true);
+-- No write policy on purpose: the server writes with the service role key, which bypasses
+-- row-level security. A policy without a TO clause would apply to the public anon key too.
 
 -- Insert a default empty row so upsert works
 INSERT INTO cms_data (id, data) VALUES ('main', '{}'::jsonb)

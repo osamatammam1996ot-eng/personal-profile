@@ -4,36 +4,10 @@ import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { X, Check } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { CTAButton } from '../ui/cta-button';
+import { IconButton } from '../ui/icon-button';
 import { submitFeedbackAction } from '../../app/actions/feedback';
 
 const NAME_MIN = 2, COMMENT_MIN = 10, COMMENT_MAX = 1000;
-
-const COPY = {
-  en: {
-    title: 'Add your feedback',
-    sub: "Worked with Osama? Share a few words. He reads every one before it's published.",
-    name: 'Your name', namePh: 'e.g. Sarah Ahmed',
-    comment: 'Your feedback', commentPh: 'What was it like working together?',
-    cancel: 'Cancel', send: 'Send', sending: 'Sending…', close: 'Close',
-    thanks: (n: string) => `Thank you, ${n}!`,
-    sent: "Your feedback reached Osama. Once he approves it, it'll be published here.",
-    invalid: 'Please add your name and at least a sentence (10+ characters).',
-    rate_limited: "You've sent a few already. Please try again in an hour.",
-    unavailable: "Couldn't send right now. Please try again later.",
-  },
-  ar: {
-    title: 'أضف رأيك',
-    sub: 'عملت مع أسامة؟ شاركنا بكلمات قليلة. يقرأ كل رأي قبل نشره.',
-    name: 'اسمك', namePh: 'مثال: سارة أحمد',
-    comment: 'رأيك', commentPh: 'كيف كانت تجربة العمل معًا؟',
-    cancel: 'إلغاء', send: 'إرسال', sending: 'جارٍ الإرسال…', close: 'إغلاق',
-    thanks: (n: string) => `شكرًا، ${n}!`,
-    sent: 'وصل رأيك إلى أسامة. سيُنشر هنا بعد موافقته.',
-    invalid: 'يرجى كتابة اسمك وجملة واحدة على الأقل (10 أحرف أو أكثر).',
-    rate_limited: 'أرسلت عدة آراء بالفعل. حاول مرة أخرى بعد ساعة.',
-    unavailable: 'تعذّر الإرسال الآن. حاول لاحقًا.',
-  },
-};
 
 type Status = 'idle' | 'sending' | 'sent' | 'invalid' | 'rate_limited' | 'unavailable';
 
@@ -42,8 +16,7 @@ const fieldClasses =
   'outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/30';
 
 export function FeedbackDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { lang, isRTL } = useLanguage();
-  const t = COPY[lang];
+  const { isRTL, t } = useLanguage();
   const reduceMotion = useReducedMotion();
   const dialogRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -123,14 +96,9 @@ export function FeedbackDialog({ open, onClose }: { open: boolean; onClose: () =
             exit={reduceMotion ? undefined : { y: 16, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
           >
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label={t.close}
-              className="absolute top-4 end-4 inline-flex size-9 items-center justify-center rounded-full cursor-pointer bg-transparent border-none text-text-muted hover:text-text-primary hover:bg-text-primary/5 transition-colors"
-            >
+            <IconButton onClick={onClose} aria-label={t.feedback.close} className="absolute top-4 end-4">
               <X size={18} />
-            </button>
+            </IconButton>
 
             {status === 'sent' ? (
               <div className="flex flex-col items-start gap-4 pt-2" aria-live="polite">
@@ -138,20 +106,20 @@ export function FeedbackDialog({ open, onClose }: { open: boolean; onClose: () =
                   <Check size={22} />
                 </span>
                 <h2 id="feedback-title" className="m-0 font-heading font-bold text-2xl text-text-primary">
-                  {t.thanks(name.trim().split(' ')[0])}
+                  {t.feedback.thanks(name.trim().split(' ')[0])}
                 </h2>
-                <p className="m-0 text-base leading-relaxed text-text-secondary">{t.sent}</p>
-                <CTAButton onClick={onClose} className="mt-2">{t.close}</CTAButton>
+                <p className="m-0 text-base leading-relaxed text-text-secondary">{t.feedback.sent}</p>
+                <CTAButton onClick={onClose} className="mt-2">{t.feedback.close}</CTAButton>
               </div>
             ) : (
               <form onSubmit={send} noValidate className="flex flex-col gap-5">
                 <div className="pe-8">
-                  <h2 id="feedback-title" className="m-0 font-heading font-bold text-2xl text-text-primary">{t.title}</h2>
-                  <p className="m-0 mt-2 text-base leading-relaxed text-text-muted">{t.sub}</p>
+                  <h2 id="feedback-title" className="m-0 font-heading font-bold text-2xl text-text-primary">{t.feedback.title}</h2>
+                  <p className="m-0 mt-2 text-base leading-relaxed text-text-muted">{t.feedback.sub}</p>
                 </div>
 
                 <label className="flex flex-col gap-2">
-                  <span className="text-sm font-semibold text-text-secondary">{t.name}</span>
+                  <span className="text-sm font-semibold text-text-secondary">{t.feedback.name}</span>
                   <input
                     ref={nameRef}
                     type="text"
@@ -159,14 +127,14 @@ export function FeedbackDialog({ open, onClose }: { open: boolean; onClose: () =
                     maxLength={80}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder={t.namePh}
+                    placeholder={t.feedback.namePh}
                     className={fieldClasses}
                   />
                 </label>
 
                 <label className="flex flex-col gap-2">
                   <span className="flex items-baseline justify-between text-sm font-semibold text-text-secondary">
-                    {t.comment}
+                    {t.feedback.comment}
                     <span className="text-xs font-normal text-text-faint tabular-nums">{comment.length}/{COMMENT_MAX}</span>
                   </span>
                   <textarea
@@ -174,7 +142,7 @@ export function FeedbackDialog({ open, onClose }: { open: boolean; onClose: () =
                     maxLength={COMMENT_MAX}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    placeholder={t.commentPh}
+                    placeholder={t.feedback.commentPh}
                     className={`${fieldClasses} resize-none leading-relaxed`}
                   />
                 </label>
@@ -192,20 +160,15 @@ export function FeedbackDialog({ open, onClose }: { open: boolean; onClose: () =
                 />
 
                 {(status === 'invalid' || status === 'rate_limited' || status === 'unavailable') && (
-                  <p role="alert" className="m-0 text-sm text-danger">{t[status]}</p>
+                  <p role="alert" className="m-0 text-sm text-danger">{t.feedback[status]}</p>
                 )}
 
                 <div className="flex items-center justify-end gap-3 pt-1">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    disabled={status === 'sending'}
-                    className="px-5 py-3 rounded-xl cursor-pointer bg-transparent border border-text-primary/15 text-text-secondary font-semibold hover:text-text-primary hover:border-text-primary/30 transition-colors disabled:opacity-50"
-                  >
-                    {t.cancel}
-                  </button>
+                  <CTAButton type="button" variant="secondary" onClick={onClose} disabled={status === 'sending'}>
+                    {t.feedback.cancel}
+                  </CTAButton>
                   <CTAButton type="submit" disabled={!canSend} className="disabled:opacity-50 disabled:cursor-not-allowed">
-                    {status === 'sending' ? t.sending : t.send}
+                    {status === 'sending' ? t.feedback.sending : t.feedback.send}
                   </CTAButton>
                 </div>
               </form>

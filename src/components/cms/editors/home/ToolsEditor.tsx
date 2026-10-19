@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { CmsData } from '../../../../types/cms';
 import { parseColor, resolveColor } from '../../../../lib/theme-tokens';
-import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma, TagInput } from '../../../../components/cms/shared/BilingualField';
+import { BilingualField, cardClasses, labelClasses, inputClasses, TagInput } from '../../../../components/cms/shared/BilingualField';
 
 interface ToolsEditorProps {
   draft: CmsData;

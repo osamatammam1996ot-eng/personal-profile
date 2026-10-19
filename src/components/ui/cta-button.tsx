@@ -4,13 +4,13 @@ import { cn } from "./utils"
 
 export interface CTAButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  asChild?: boolean
   variant?: "primary" | "secondary"
 }
 
 const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
   ({ className, children, variant = "primary", ...props }, ref) => {
     
+    // Secondary: the quiet partner to the primary (e.g. Cancel next to Send). Same size, so a pair lines up.
     if (variant === "secondary") {
       return (
         <button
@@ -19,10 +19,9 @@ const CTAButton = React.forwardRef<HTMLButtonElement, CTAButtonProps>(
             "relative inline-flex items-center justify-center cursor-pointer outline-none",
             "font-medium text-base",
             "px-8 py-4 rounded-xl",
-            "border border-brand/30 dark:border-brand/40 text-brand-text dark:text-text-primary",
-            "bg-brand/5 dark:bg-brand/10",
-            "hover:bg-brand/15 dark:hover:bg-brand/20 hover:border-brand dark:hover:border-brand",
-            "transition-all duration-300",
+            "border border-text-primary/15 bg-transparent text-text-secondary",
+            "hover:text-text-primary hover:border-text-primary/30",
+            "transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
             "focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background",
             className
           )}

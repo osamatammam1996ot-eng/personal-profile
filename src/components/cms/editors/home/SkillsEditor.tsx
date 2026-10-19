@@ -1,5 +1,5 @@
 import type { CmsData } from '../../../../types/cms';
-import { BilingualField, cardClasses, labelClasses, inputClasses, splitComma, TagInput } from '../../../../components/cms/shared/BilingualField';
+import { BilingualField, cardClasses, TagInput } from '../../../../components/cms/shared/BilingualField';
 
 interface SkillsEditorProps {
   draft: CmsData;

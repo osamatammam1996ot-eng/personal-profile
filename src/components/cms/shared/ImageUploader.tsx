@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { uploadImageAction, deleteImageAction } from '../../../app/actions/cms';
+import { uploadImageAction } from '../../../app/actions/cms';
 import { Image as ImageIcon, Upload, X, Loader2 } from 'lucide-react';
 import { labelClasses, inputClasses } from './BilingualField';
 

@@ -2,11 +2,12 @@
 
 import { createHash, randomUUID } from 'crypto';
 import { headers } from 'next/headers';
-import { createClient } from '@supabase/supabase-js';
 import { verifyAuthAction } from '@/app/actions/auth';
+import { getAdminClient } from '@/lib/supabase-server';
+import { isDev, readDevStore, writeDevStore } from '@/lib/dev-store';
 
 // Visitor feedback from "Add yours". Submissions stay private (see
-// supabase/migrations/04_feedback_submissions.sql) until Osama copies an approved one
+// supabase/migrations/02_feedback_submissions.sql) until Osama copies an approved one
 // into the Recommendations content by hand.
 
 export interface FeedbackSubmission {
@@ -22,30 +23,11 @@ const COMMENT_MIN = 10, COMMENT_MAX = 1000;
 const PER_IP_PER_HOUR = 3;
 const INBOX_CAP = 300;
 
-function getAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key, { auth: { persistSession: false } });
-}
-
-// ── Dev-only local store, so the form works on localhost without the service role key ──
-const isDev = process.env.NODE_ENV === 'development';
-
-async function readLocal(): Promise<(FeedbackSubmission & { ip_hash: string })[]> {
-  const fs = await import('fs');
-  const path = await import('path');
-  const file = path.join(process.cwd(), 'node_modules', '.cache', 'feedback-inbox.json');
-  return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf-8')) : [];
-}
-
-async function writeLocal(rows: (FeedbackSubmission & { ip_hash: string })[]) {
-  const fs = await import('fs');
-  const path = await import('path');
-  const file = path.join(process.cwd(), 'node_modules', '.cache', 'feedback-inbox.json');
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, JSON.stringify(rows, null, 2));
-}
+// Dev-only local inbox, so the form works on localhost without the service role key
+type StoredSubmission = FeedbackSubmission & { ip_hash: string };
+const DEV_STORE = 'feedback-inbox';
+const readLocal = async () => readDevStore<StoredSubmission[]>(DEV_STORE) ?? [];
+const writeLocal = async (rows: StoredSubmission[]) => writeDevStore(DEV_STORE, rows);
 
 async function visitorHash() {
   const h = await headers();

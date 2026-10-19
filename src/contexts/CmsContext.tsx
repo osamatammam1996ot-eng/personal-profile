@@ -1,96 +1,60 @@
 "use client";
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { CmsData } from '../types/cms';
 import { DEFAULT_CMS_DATA } from '../types/cms';
 import { clone, normalizeCmsData } from '../lib/cms-normalize';
 
-type CmsContextType = {
-  cmsData: CmsData;
-  loading: boolean;
-  error: Error | null;
-  refetch: () => Promise<void>;
-  refresh: () => Promise<void>;
-};
+const CmsContext = createContext<CmsData | undefined>(undefined);
 
-const CmsContext = createContext<CmsContextType | undefined>(undefined);
-
+// Last good copy, so a visitor who loses the connection still sees real content
 const STORAGE_KEY = 'cms:portfolio:v2:local';
 
-export function CmsProvider({ children, initialData }: { children: React.ReactNode; initialData?: CmsData | null }) {
-  const [cmsData, setCmsData] = useState<CmsData>(() => initialData ? normalizeCmsData(initialData) : clone(DEFAULT_CMS_DATA));
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const applyCmsData = useCallback((rawData: unknown) => {
-    const nextCms = normalizeCmsData(rawData);
-    setCmsData(nextCms);
-    return nextCms;
-  }, []);
-
-  const fetchAllContent = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { getCmsDataAction } = await import('@/app/actions/cms');
-      const response = await getCmsDataAction();
-
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      if (response.data) {
-        const normalized = applyCmsData(response.data);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
-      } else {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          applyCmsData(JSON.parse(saved));
-        } else {
-          applyCmsData(initialData || DEFAULT_CMS_DATA);
-        }
-      }
-    } catch (fetchError) {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          applyCmsData(JSON.parse(saved));
-        } else {
-          applyCmsData(initialData || DEFAULT_CMS_DATA);
-        }
-      } catch {
-        applyCmsData(initialData || DEFAULT_CMS_DATA);
-      }
-
-      console.warn('CMS fetch failed, using local/default data:', fetchError);
-    } finally {
-      setLoading(false);
-    }
-  }, [applyCmsData, initialData]);
-
-  useEffect(() => {
-    fetchAllContent();
-  }, [fetchAllContent]);
-
-  return (
-    <CmsContext.Provider
-      value={{
-        cmsData,
-        loading,
-        error,
-        refetch: fetchAllContent,
-        refresh: fetchAllContent,
-      }}
-    >
-      {children}
-    </CmsContext.Provider>
-  );
+function readSavedCopy(): unknown {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
 }
 
+/**
+ * Holds the site content. It renders immediately with the server-provided data (or the
+ * defaults), then refreshes from the CMS; if that fails it falls back to the last good copy.
+ * Sections don't read this directly: they go through the hooks in src/content.
+ */
+export function CmsProvider({ children, initialData }: { children: React.ReactNode; initialData?: CmsData | null }) {
+  const [cmsData, setCmsData] = useState<CmsData>(() => initialData ? normalizeCmsData(initialData) : clone(DEFAULT_CMS_DATA));
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      let fresh: unknown = null;
+      try {
+        const { getCmsDataAction } = await import('@/app/actions/cms');
+        const response = await getCmsDataAction();
+        if (response.error) throw new Error(response.error);
+        fresh = response.data;
+      } catch (err) {
+        console.warn('CMS fetch failed, using saved/default content:', err);
+      }
+
+      const next = normalizeCmsData(fresh ?? readSavedCopy() ?? initialData ?? DEFAULT_CMS_DATA);
+      if (cancelled) return;
+      setCmsData(next);
+      if (fresh) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* storage full or blocked */ }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [initialData]);
+
+  return <CmsContext.Provider value={cmsData}>{children}</CmsContext.Provider>;
+}
+
+/** Raw CMS data. Use it from the content hooks in src/content, not from components. */
 export function useCms() {
-  const context = useContext(CmsContext);
-  if (!context) {
-    throw new Error('useCms must be used within CmsProvider');
-  }
-  return context;
+  const cmsData = useContext(CmsContext);
+  if (!cmsData) throw new Error('useCms must be used within CmsProvider');
+  return { cmsData };
 }

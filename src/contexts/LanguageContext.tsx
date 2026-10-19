@@ -7,10 +7,6 @@ interface LanguageContextValue {
   isRTL: boolean;
   t: Translations;
   toggleLang: () => void;
-  /** Font family for headings/display text */
-  fontHeading: string;
-  /** Font family for body text */
-  fontBody: string;
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
@@ -31,8 +27,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const t = translations[lang];
 
   const isRTL = lang === 'ar';
-  const fontHeading = isRTL ? 'Cairo, sans-serif' : 'Space Grotesk, sans-serif';
-  const fontBody = isRTL ? 'Cairo, sans-serif' : 'Inter, sans-serif';
 
   useEffect(() => {
     if (langLoaded) {
@@ -45,7 +39,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const toggleLang = () => setLang(l => (l === 'en' ? 'ar' : 'en'));
 
   return (
-    <LanguageContext.Provider value={{ lang, isRTL, t, toggleLang, fontHeading, fontBody }}>
+    <LanguageContext.Provider value={{ lang, isRTL, t, toggleLang }}>
       {children}
     </LanguageContext.Provider>
   );

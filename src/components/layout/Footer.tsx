@@ -1,20 +1,8 @@
-import { useLanguage } from '../../contexts/LanguageContext';
-import { useCms } from '../../contexts/CmsContext';
+import { useFooterContent } from '../../content/footer';
+import { scrollToSection } from '../../lib/scroll';
 
-interface FooterProps {
-  isDark: boolean;
-}
-
-const LINK_HREFS = ['#home', '#work', '#why-me', '#contact'];
-
-export function Footer({ isDark }: FooterProps) {
-  const { lang, fontBody, fontHeading } = useLanguage();
-  const { cmsData } = useCms();
-
-  const scrollTo = (href: string) => {
-    const el = document.getElementById(href.slice(1));
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
+export function Footer() {
+  const { copyright, links } = useFooterContent();
 
   return (
     <footer className="w-full py-7 bg-surface-raised">
@@ -27,16 +15,16 @@ export function Footer({ isDark }: FooterProps) {
             OT
           </div>
           <p className="text-base font-normal text-footer-text">
-            {cmsData.footer.copyright[lang] || (lang === 'en' ? '© 2026 Osama Tammam. All rights reserved.' : '© 2026 أسامة تمام. جميع الحقوق محفوظة.')}
+            {copyright}
           </p>
         </div>
 
         {/* Right */}
         <nav className="flex items-center gap-1">
-          {(cmsData.footer.links[lang] || (lang === 'en' ? ['Home', 'Work', 'About', 'Contact'] : ['الرئيسية', 'الأعمال', 'عني', 'تواصل'])).map((label, i) => (
+          {links.map(({ label, target }) => (
             <button
-              key={LINK_HREFS[i]}
-              onClick={() => scrollTo(LINK_HREFS[i])}
+              key={target}
+              onClick={() => scrollToSection(target)}
               className="px-3 py-1.5 rounded-lg transition-colors duration-150 text-base font-medium text-footer-link hover:text-nav-link-active"
             >
               {label}

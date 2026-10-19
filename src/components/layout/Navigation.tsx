@@ -2,54 +2,41 @@ import { useState, useEffect } from 'react';
 import { Sun, Moon, Menu, X, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useCms } from '../../contexts/CmsContext';
+import { SECTION_DOM_IDS, useVisibleSections } from '../../content/sections';
 import { LIGHT_MODE_ENABLED } from '../../config/features';
+import { IconButton, MotionIconButton } from '../ui/icon-button';
+import { scrollToSection } from '../../lib/scroll';
 
 interface NavigationProps {
   isDark: boolean;
   onToggleDark: () => void;
 }
 
-// Map CMS keys to actual DOM IDs used on the page
-const CMS_TO_DOM_IDS: Record<string, string> = {
+const CMS_TO_LABEL_KEY = {
   hero: 'home',
-  whyHireMe: 'why-me',
+  whyHireMe: 'whyMe',
   skills: 'skills',
   portfolio: 'work',
   recommendations: 'recommendations',
   tools: 'tools',
   contact: 'contact'
-};
+} as const;
 
 export function Navigation({ isDark, onToggleDark }: NavigationProps) {
-  const { lang, toggleLang, isRTL, fontBody, fontHeading, t } = useLanguage();
-  const { cmsData } = useCms();
+  const { lang, toggleLang, isRTL, t } = useLanguage();
+  const sections = useVisibleSections();
+  const NAV_LINKS = sections
+    .filter((k) => k in CMS_TO_LABEL_KEY && SECTION_DOM_IDS[k])
+    .map((k) => ({
+      label: t.nav[CMS_TO_LABEL_KEY[k as keyof typeof CMS_TO_LABEL_KEY]],
+      href: `#${SECTION_DOM_IDS[k]}`,
+    }));
+  const SECTION_IDS = NAV_LINKS.map((link) => link.href.slice(1));
 
-  const activeOrder = cmsData?.sectionOrder || ['hero', 'whyHireMe', 'skills', 'portfolio', 'recommendations', 'tools', 'contact'];
-  const SECTION_IDS = activeOrder
-    .filter(k => cmsData?.sections[k as keyof typeof cmsData.sections])
-    .map(k => CMS_TO_DOM_IDS[k])
-    .filter(Boolean);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState(SECTION_IDS[0] || 'home');
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const CMS_TO_LABEL_KEY: Record<string, keyof typeof t.nav> = {
-    hero: 'home',
-    whyHireMe: 'whyMe',
-    skills: 'skills',
-    portfolio: 'work',
-    recommendations: 'recommendations',
-    tools: 'tools',
-    contact: 'contact'
-  };
-
-  const NAV_LINKS = activeOrder
-    .filter(k => k !== 'footer' && CMS_TO_DOM_IDS[k] && cmsData?.sections[k as keyof typeof cmsData.sections])
-    .map(k => ({
-      label: t.nav[CMS_TO_LABEL_KEY[k]],
-      href: `#${CMS_TO_DOM_IDS[k]}`
-    }));
 
   useEffect(() => {
     const detect = () => {
@@ -83,9 +70,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
   }, [lang, SECTION_IDS.join(',')]);
 
   const scrollTo = (href: string) => {
-    const id = href.slice(1);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    scrollToSection(href);
     setMenuOpen(false);
   };
 
@@ -104,7 +89,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
             <img src="/logo-burgundy.png" alt="OT Logo" className="h-full w-auto object-contain" />
           </div>
           <span className="text-lg font-semibold transition-colors duration-300 text-foreground">
-            {isRTL ? 'أسامة تمام' : 'Osama Tammam'}
+            {t.nav.brand}
           </span>
         </motion.button>
 
@@ -140,7 +125,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-[color,background-color,box-shadow] duration-200 bg-brand-accent/10 border border-brand-accent/25 text-brand-accent dark:text-brand-light hover:shadow-glow-soft"
             whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.95 }}
-            title={isRTL ? 'Switch to English' : 'التبديل إلى العربية'}
+            title={t.nav.switchLang}
           >
             <Globe size={13} strokeWidth={2} />
             <AnimatePresence mode="wait">
@@ -152,30 +137,35 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
                 transition={{ duration: 0.18 }}
                 className={`text-sm font-bold ${isRTL ? 'font-[Inter,sans-serif] tracking-[0.04em]' : 'font-[Cairo,sans-serif] tracking-normal'}`}
               >
-                {isRTL ? 'عربي' : 'EN'}
+                {t.nav.langLabel}
               </motion.span>
             </AnimatePresence>
           </motion.button>
 
           {/* Dark mode toggle (hidden while light mode is disabled) */}
           {LIGHT_MODE_ENABLED && (
-            <motion.button
+            <MotionIconButton
+              tone="toolbar"
               onClick={onToggleDark}
-              className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200 bg-foreground/6 text-brand-accent dark:text-brand-light"
+              aria-label={isDark ? t.nav.lightMode : t.nav.darkMode}
+              className="text-brand-accent dark:text-brand-light"
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.95 }}
             >
               {isDark ? <Sun size={17} /> : <Moon size={17} />}
-            </motion.button>
+            </MotionIconButton>
           )}
 
           {/* Mobile menu toggle */}
-          <button
-            className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center bg-foreground/6 text-foreground"
+          <IconButton
+            tone="toolbar"
+            className="md:hidden"
             onClick={() => setMenuOpen(o => !o)}
+            aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
+            aria-expanded={menuOpen}
           >
             {menuOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
+          </IconButton>
         </div>
       </div>
 
@@ -193,7 +183,7 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
               <button
                 key={link.href}
                 onClick={() => scrollTo(link.href)}
-                className={`px-4 py-3 rounded-xl transition-colors duration-200 font-medium text-text-dim bg-foreground/4 hover:text-foreground hover:bg-foreground/8 ${isRTL ? 'text-right' : 'text-left'}`}
+                className={`px-4 py-3 rounded-xl transition-colors duration-200 font-medium text-text-dim bg-foreground/4 hover:text-foreground hover:bg-foreground/8 text-start`}
               >
                 {link.label}
               </button>

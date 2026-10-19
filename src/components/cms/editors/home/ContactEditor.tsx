@@ -82,34 +82,11 @@ export function ContactEditor({ draft, updateDraft }: ContactEditorProps) {
         <span className="text-sm text-text-muted">Show highlight box on the site</span>
       </label>
       <BilingualField
-        label="Meeting Link"
-        en={draft.contact.meetingLink?.en || ''}
-        ar={draft.contact.meetingLink?.ar || ''}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, meetingLink: { ...prev.contact.meetingLink, en: value, ar: prev.contact.meetingLink?.ar || '' } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, meetingLink: { ...prev.contact.meetingLink, ar: value, en: prev.contact.meetingLink?.en || '' } } }))}
-      />
-      <BilingualField
         label="Email Label"
         en={draft.contact.emailLabel.en}
         ar={draft.contact.emailLabel.ar}
         onChangeEn={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, emailLabel: { ...prev.contact.emailLabel, en: value } } }))}
         onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, emailLabel: { ...prev.contact.emailLabel, ar: value } } }))}
-      />
-      <BilingualField
-        label="Sign-off 1"
-        multiline
-        en={draft.contact.signoff1.en}
-        ar={draft.contact.signoff1.ar}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, signoff1: { ...prev.contact.signoff1, en: value } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, signoff1: { ...prev.contact.signoff1, ar: value } } }))}
-      />
-      <BilingualField
-        label="Sign-off 2"
-        multiline
-        en={draft.contact.signoff2.en}
-        ar={draft.contact.signoff2.ar}
-        onChangeEn={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, signoff2: { ...prev.contact.signoff2, en: value } } }))}
-        onChangeAr={(value) => updateDraft((prev) => ({ ...prev, contact: { ...prev.contact, signoff2: { ...prev.contact.signoff2, ar: value } } }))}
       />
 
       <div className={cardClasses}>

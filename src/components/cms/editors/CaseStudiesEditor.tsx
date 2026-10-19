@@ -1,6 +1,6 @@
-import { Button } from '../../ui/button';
+import {  } from '../../ui/button';
 import type { CmsData } from '../../../types/cms';
-import { Trash2, Plus, GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, Plus, ChevronUp, ChevronDown } from 'lucide-react';
 import { cardClasses, inputClasses, labelClasses } from '../../../components/cms/shared/BilingualField';
 import { ImageUploader } from '../../../components/cms/shared/ImageUploader';
 

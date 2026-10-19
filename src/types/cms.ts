@@ -45,9 +45,6 @@ export interface CmsContact {
   note: Bilingual;
   meetingAction?: Bilingual;
   showMeetingAction?: boolean;
-  meetingLink?: Bilingual;
-  signoff1: Bilingual;
-  signoff2: Bilingual;
   emailLabel: Bilingual;
   socials: {
     whatsapp: string;
@@ -156,10 +153,6 @@ export interface CmsData {
   global: CmsGlobal;
   updatedAt: string;
 }
-
-// Type aliases
-export type CmsDataRaw = CmsData;
-export type CmsCaseStudyRaw = CmsCaseStudy;
 
 // Default CMS data
 export const DEFAULT_CMS_DATA: CmsData = {
@@ -273,9 +266,6 @@ export const DEFAULT_CMS_DATA: CmsData = {
     body: { en: "I take on a small number of projects at a time \u2014 enough to give each one real attention. If you have something that needs clarity, a product stuck between good and great, or an idea you haven't been able to articulate yet, that's exactly the kind of thing I like to work on.", ar: '\u0623\u062a\u0648\u0644\u0649 \u0639\u062f\u062f\u0627\u064b \u0645\u062d\u062f\u0648\u062f\u0627\u064b \u0645\u0646 \u0627\u0644\u0645\u0634\u0627\u0631\u064a\u0639 \u0641\u064a \u0622\u0646\u064d \u0648\u0627\u062d\u062f \u2014 \u0645\u0627 \u064a\u0643\u0641\u064a \u0644\u0645\u0646\u062d \u0643\u0644\u064d \u0645\u0646\u0647\u0627 \u0627\u0647\u062a\u0645\u0627\u0645\u0627\u064b \u062d\u0642\u064a\u0642\u064a\u0627\u064b. \u0625\u0646 \u0643\u0627\u0646 \u0644\u062f\u064a\u0643 \u0645\u0627 \u064a\u062d\u062a\u0627\u062c \u0625\u0644\u0649 \u0648\u0636\u0648\u062d\u060c \u0623\u0648 \u0645\u0646\u062a\u062c \u0628\u064a\u0646 \u0627\u0644\u062c\u064a\u062f \u0648\u0627\u0644\u0631\u0627\u0626\u0639\u060c \u0623\u0648 \u0641\u0643\u0631\u0629 \u0644\u0645 \u062a\u0633\u062a\u0637\u0639 \u0635\u064a\u0627\u063a\u062a\u0647\u0627 \u0628\u0639\u062f\u060c \u0641\u0647\u0630\u0627 \u0628\u0627\u0644\u0636\u0628\u0637 \u0645\u0627 \u0623\u062d\u0628 \u0627\u0644\u0639\u0645\u0644 \u0639\u0644\u064a\u0647.' },
     note: { en: "No pitch decks needed. Just tell me what you're working on and where it's breaking down.", ar: '\u0644\u0627 \u062a\u062d\u062a\u0627\u062c \u0625\u0644\u0649 \u0639\u0631\u0648\u0636 \u062a\u0642\u062f\u064a\u0645\u064a\u0629. \u0641\u0642\u0637 \u0623\u062e\u0628\u0631\u0646\u064a \u0628\u0645\u0627 \u062a\u0639\u0645\u0644 \u0639\u0644\u064a\u0647 \u0648\u0623\u064a\u0646 \u062a\u0639\u062b\u0651\u0631.' },
     meetingAction: { en: "Prefer a quick call? Let's find a time that works for you.", ar: 'تفضل مكالمة سريعة؟ دعنا نجد وقتًا يناسبك.' },
-    meetingLink: { en: 'Schedule a meeting', ar: 'حدد موعداً' },
-    signoff1: { en: 'Based in Egypt\u00a0\u00b7\u00a0Works with clients worldwide.', ar: '\u0645\u0642\u064a\u0645 \u0641\u064a \u0645\u0635\u0631\u00a0\u00b7\u00a0\u064a\u0639\u0645\u0644 \u0645\u0639 \u0639\u0645\u0644\u0627\u0621 \u062d\u0648\u0644 \u0627\u0644\u0639\u0627\u0644\u0645.' },
-    signoff2: { en: 'No agencies. No middlemen. Just me.', ar: '\u0644\u0627 \u0648\u0643\u0627\u0644\u0627\u062a. \u0644\u0627 \u0648\u0633\u0637\u0627\u0621. \u0623\u0646\u0627 \u0641\u0642\u0637.' },
     emailLabel: { en: 'Email', ar: '\u0627\u0644\u0628\u0631\u064a\u062f \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a' },
     socials: {
       whatsapp: '',
