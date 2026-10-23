@@ -29,6 +29,7 @@ function ProjectCard({
       onClick={() => onViewCase(project.id, project.title)}
       onMouseEnter={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: true }))}
       onMouseLeave={() => window.dispatchEvent(new CustomEvent('portfolioHover', { detail: false }))}
+      style={{ '--project-accent': project.accent } as React.CSSProperties}
       className="group relative h-full w-[85vw] md:w-auto md:aspect-[3/2] shrink-0 snap-center overflow-hidden rounded-3xl text-start cursor-none border-none p-0 bg-surface-raised"
     >
       <Image
@@ -39,6 +40,8 @@ function ProjectCard({
         priority={index < 2}
         className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
       />
+      {/* The project's own color washes over the image on hover, under the scrim so the title stays readable */}
+      <div aria-hidden="true" className="absolute inset-0 bg-[var(--project-accent)] opacity-0 transition-opacity duration-500 group-hover:opacity-30 group-focus-visible:opacity-30" />
       <div className="absolute inset-0 bg-gradient-to-t from-scrim/80 via-scrim/15 to-transparent" />
 
       <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
@@ -51,6 +54,8 @@ function ProjectCard({
           ))}
         </div>
       </div>
+
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-3xl shadow-[inset_0_0_0_2px_var(--project-accent)] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
     </button>
   );
 }

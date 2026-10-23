@@ -7,6 +7,8 @@ export interface Testimonial {
   name: string;
   comment: string;
   position: string;
+  /** Photo URL, or '' when there is none */
+  avatar: string;
 }
 
 /** Testimonials marked visible in the CMS, in the current language. */
@@ -21,5 +23,6 @@ export function useTestimonials(): Testimonial[] {
       name: r.name,
       comment: localized(r.comment, lang),
       position: localized(r.position, lang),
+      avatar: r.avatar?.trim() || '',
     }));
 }

@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTestimonials, type Testimonial } from '../../content/recommendations';
@@ -10,6 +11,29 @@ import { revealUp } from '../../lib/motion';
 
 const initials = (name: string) =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+
+/** The person's photo, or their initials when there is none or it fails to load. */
+function Avatar({ name, src }: { name: string; src: string }) {
+  const [failed, setFailed] = useState(false);
+  if (src && !failed) {
+    return (
+      <Image
+        src={src}
+        alt=""
+        width={48}
+        height={48}
+        sizes="48px"
+        onError={() => setFailed(true)}
+        className="size-12 shrink-0 rounded-full object-cover bg-surface-raised"
+      />
+    );
+  }
+  return (
+    <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-text-primary text-surface text-sm font-bold">
+      {initials(name)}
+    </span>
+  );
+}
 
 function FeedbackCard({ rec, animate }: { rec: Testimonial; animate: boolean }) {
   const ref = useRef<HTMLElement>(null);
@@ -30,9 +54,7 @@ function FeedbackCard({ rec, animate }: { rec: Testimonial; animate: boolean }) 
 
       <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-text-primary text-surface text-sm font-bold">
-            {initials(rec.name)}
-          </span>
+          <Avatar name={rec.name} src={rec.avatar} />
           <span className="font-bold text-text-primary">{rec.name}</span>
         </div>
         <span className="text-base font-medium text-brand-text">{rec.position}</span>

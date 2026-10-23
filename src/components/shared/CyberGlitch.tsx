@@ -1,12 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+
+// The admin panel and its login are work tools: no click glitch there
+const isAdminPath = (path: string | null) => !!path && (path.startsWith('/admin') || path.startsWith('/login'));
 
 export function CyberGlitch() {
   const [isGlitching, setIsGlitching] = useState(false);
   const [glitchPosition, setGlitchPosition] = useState({ x: 0, y: 0 });
+  const disabled = isAdminPath(usePathname());
 
   useEffect(() => {
+    if (disabled) return;
+
     const handleMouseDown = (e: MouseEvent) => {
       // Don't trigger if we clicked an interactive element
       const target = e.target as HTMLElement;
@@ -54,9 +61,9 @@ export function CyberGlitch() {
         window.removeEventListener('mousedown', handleMouseDown);
         window.removeEventListener('contextmenu', handleContextMenu);
     };
-  }, []);
+  }, [disabled]);
 
-  if (!isGlitching) return null;
+  if (disabled || !isGlitching) return null;
 
   return (
     <>
