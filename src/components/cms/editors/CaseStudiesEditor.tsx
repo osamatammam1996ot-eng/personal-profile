@@ -1,4 +1,3 @@
-import {  } from '../../ui/button';
 import type { CmsData } from '../../../types/cms';
 import { Trash2, Plus, ChevronUp, ChevronDown } from 'lucide-react';
 import { cardClasses, inputClasses, labelClasses } from '../../../components/cms/shared/BilingualField';
@@ -7,16 +6,17 @@ import { ImageUploader } from '../../../components/cms/shared/ImageUploader';
 interface CaseStudiesEditorProps {
   draft: CmsData;
   updateDraft: (updater: (prev: CmsData) => CmsData) => void;
-  activeCsId: number;
+  projectId: number;
 }
 
-export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudiesEditorProps) {
-  const index = draft.caseStudies.findIndex((item) => item.id === activeCsId);
+/** The gallery that opens from a project card: its heading and its images/videos, in order. */
+export function CaseStudiesEditor({ draft, updateDraft, projectId }: CaseStudiesEditorProps) {
+  const index = draft.caseStudies.findIndex((item) => item.id === projectId);
   const rawCaseStudy = draft.caseStudies[index];
 
   // Fallback structure in case it's missing or legacy
   const caseStudy = {
-    id: activeCsId,
+    id: projectId,
     visible: rawCaseStudy?.visible ?? true,
     title: rawCaseStudy?.title || { en: '', ar: '' },
     media: rawCaseStudy?.media || [],
@@ -25,7 +25,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
   const updateCaseStudy = (updater: (value: typeof caseStudy) => typeof caseStudy) => {
     updateDraft((prev) => {
       const caseStudies = [...prev.caseStudies];
-      const currentIndex = caseStudies.findIndex((item) => item.id === activeCsId);
+      const currentIndex = caseStudies.findIndex((item) => item.id === projectId);
       if (currentIndex >= 0) {
         caseStudies[currentIndex] = updater(caseStudies[currentIndex] as typeof caseStudy);
       } else {
@@ -75,12 +75,10 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
 
   return (
     <div className="grid gap-3">
-      <h2 className="text-admin-fg mt-0 mb-4">Case Study {activeCsId} — Media Gallery</h2>
-
       <div className={cardClasses}>
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
-            <label className={labelClasses}>Project Title (EN)</label>
+            <label className={labelClasses}>Gallery heading (EN)</label>
             <input
               className={inputClasses}
               value={caseStudy.title.en}
@@ -88,7 +86,7 @@ export function CaseStudiesEditor({ draft, updateDraft, activeCsId }: CaseStudie
             />
           </div>
           <div>
-            <label className={labelClasses}>Project Title (AR)</label>
+            <label className={labelClasses}>Gallery heading (AR)</label>
             <input
               className={inputClasses}
               dir="rtl"

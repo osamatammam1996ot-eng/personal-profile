@@ -1,9 +1,10 @@
 import { MetadataRoute } from 'next';
 import { siteConfig } from '../config/seo';
-import { DEFAULT_CMS_DATA } from '../types/cms';
+import { getPublishedContent } from '../lib/published-content';
+import { publishedProjects } from '../lib/cms-projects';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseSitemap: MetadataRoute.Sitemap = [
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const home: MetadataRoute.Sitemap = [
     {
       url: siteConfig.productionOrigin,
       lastModified: new Date(),
@@ -12,14 +13,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const caseStudySitemap: MetadataRoute.Sitemap = DEFAULT_CMS_DATA.caseStudies
-    .filter((study) => study.visible !== false)
-    .map((study) => ({
-      url: `${siteConfig.productionOrigin}/case-study/${study.id}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    }));
+  // One entry per project that has its own page, read from the live content
+  const projects: MetadataRoute.Sitemap = publishedProjects(await getPublishedContent()).map((project) => ({
+    url: `${siteConfig.productionOrigin}/case-study/${project.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }));
 
-  return [...baseSitemap, ...caseStudySitemap];
+  return [...home, ...projects];
 }

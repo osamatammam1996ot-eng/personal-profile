@@ -3,14 +3,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Save, CheckCircle, AlertCircle, Loader2, LayoutDashboard, FileText,
+  Save, CheckCircle, AlertCircle, Loader2, LayoutDashboard,
   Settings, ChevronRight, EyeOff, ArrowLeft, Menu, X, RefreshCw,
 } from 'lucide-react';
 import type { CmsData } from '../../types/cms';
 import { DEFAULT_CMS_DATA } from '../../types/cms';
 import { normalizeCmsData } from '../../lib/cms-normalize';
 import { HomeEditor } from '../../components/cms/editors/HomeEditor';
-import { CaseStudiesEditor } from '../../components/cms/editors/CaseStudiesEditor';
+import { ProjectEditor } from '../../components/cms/editors/ProjectEditor';
+import { ProjectsNav, projectIdFromSection, projectSectionId } from '../../components/cms/ProjectsNav';
+import { addProject, moveProject, projectName, removeProject } from '../../lib/cms-projects';
 import { GlobalSettingsEditor } from '../../components/cms/editors/GlobalSettingsEditor';
 import { RecommendationsEditor } from '../../components/cms/editors/RecommendationsEditor';
 import { FeedbackInboxEditor } from '../../components/cms/editors/FeedbackInboxEditor';
@@ -39,22 +41,9 @@ const NAV: NavSection[] = [
       { id: 'home-whyhireme', label: 'Why Hire Me', icon: '⭐' },
       { id: 'home-skills', label: 'Skills (Craft Engine)', icon: '🔮' },
       { id: 'home-tools', label: 'Tools', icon: '🛠️' },
-      { id: 'home-portfolio', label: 'Portfolio Projects', icon: '💼' },
       { id: 'home-recommendations', label: 'Recommendations', icon: '💬' },
       { id: 'home-new-feedback', label: 'New Feedback', icon: '📥' },
       { id: 'home-contact', label: 'Contact', icon: '✉️' },
-    ],
-  },
-  {
-    id: 'casestudies',
-    label: 'Case Studies',
-    icon: <FileText size={15} />,
-    type: 'group',
-    items: [
-      { id: 'cs-1', label: 'Case Study 1', icon: '🔵' },
-      { id: 'cs-2', label: 'Case Study 2', icon: '🟣' },
-      { id: 'cs-3', label: 'Case Study 3', icon: '🩵' },
-      { id: 'cs-4', label: 'Case Study 4', icon: '🔮' },
     ],
   },
   {
@@ -76,18 +65,11 @@ export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState('home-visibility');
   const [draft, setDraft] = useState<CmsData | null>(null);
   const [original, setOriginal] = useState<CmsData | null>(null);
-
-  // "cs-2" -> the English title of case study 2, as currently edited
-  const caseStudyTitle = (sectionId: string) => {
-    if (!sectionId.startsWith('cs-')) return '';
-    const title: unknown = draft?.caseStudies.find((c) => c.id === Number(sectionId.slice(3)))?.title;
-    return typeof title === 'string' ? title : (title as { en?: string } | undefined)?.en ?? '';
-  };
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['home', 'casestudies', 'global']));
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['home', 'projects', 'global']));
   // Fetch CMS data
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -207,21 +189,32 @@ export default function AdminDashboard() {
     if (id === 'home-hero') return draft.sections.hero;
     if (id === 'home-logo-marquee') return draft.sections.logoMarquee;
     if (id === 'home-whyhireme') return draft.sections.whyHireMe;
-    if (id === 'home-portfolio') return draft.sections.portfolio;
     if (id === 'home-recommendations') return draft.sections.recommendations;
     if (id === 'home-contact') return draft.sections.contact;
-    if (id === 'cs-1') return draft.caseStudies.find(c => c.id === 1)?.visible ?? true;
-    if (id === 'cs-2') return draft.caseStudies.find(c => c.id === 2)?.visible ?? true;
-    if (id === 'cs-3') return draft.caseStudies.find(c => c.id === 3)?.visible ?? true;
-    if (id === 'cs-4') return draft.caseStudies.find(c => c.id === 4)?.visible ?? true;
     return null;
   };
 
-  // Get active cs id
-  const getActiveCsId = (): number => {
-    const match = activeSection.match(/^cs-(\d+)$/);
-    return match ? parseInt(match[1]) : 1;
+  // Projects: the one being edited, and adding/removing/reordering them
+  const activeProjectId = projectIdFromSection(activeSection);
+
+  const handleAddProject = () => {
+    if (!draft) return;
+    const { data, id } = addProject(draft);
+    setDraft(data);
+    setActiveSection(projectSectionId(id));
   };
+
+  const handleDeleteProject = (id: number) => {
+    if (!draft) return;
+    const index = draft.projects.findIndex((p) => p.id === id);
+    const remaining = removeProject(draft, id);
+    setDraft(remaining);
+    // Land on the neighbouring project, or the section list if none are left
+    const next = remaining.projects[Math.min(index, remaining.projects.length - 1)];
+    setActiveSection(next ? projectSectionId(next.id) : 'home-visibility');
+  };
+
+  const handleMoveProject = (from: number, to: number) => updateDraft((prev) => moveProject(prev, from, to));
 
   return (
     <div className="flex h-screen bg-transparent overflow-hidden font-body relative z-0 p-4 lg:p-6 gap-4 lg:gap-6">
@@ -247,7 +240,8 @@ export default function AdminDashboard() {
         {/* Nav */}
         <nav className="flex-1 overflow-auto py-4 custom-scrollbar">
           {NAV.map(group => (
-            <div key={group.id} className="mb-2">
+            <div key={group.id}>
+            <div className="mb-2">
               {/* Group header */}
               <button
                 onClick={() => toggleGroup(group.id)}
@@ -277,7 +271,7 @@ export default function AdminDashboard() {
                       >
                         <span className={`transition-colors duration-300 ${isActive ? 'text-brand-text' : 'text-admin-fg/40 group-hover:text-admin-fg/70'}`}>{item.icon}</span>
                         <span className="flex-1">
-                          {caseStudyTitle(item.id) || item.label}
+                          {item.label}
                         </span>
                         {vis === false && (
                           <EyeOff size={12} className="text-admin-fg/40" />
@@ -287,6 +281,18 @@ export default function AdminDashboard() {
                   })}
                 </div>
               )}
+            </div>
+            {group.id === 'home' && (
+              <ProjectsNav
+                draft={draft}
+                activeSection={activeSection}
+                expanded={expandedGroups.has('projects')}
+                onToggle={() => toggleGroup('projects')}
+                onSelect={setActiveSection}
+                onAdd={handleAddProject}
+                onMove={handleMoveProject}
+              />
+            )}
             </div>
           ))}
         </nav>
@@ -339,7 +345,7 @@ export default function AdminDashboard() {
             <span className="text-base text-admin-fg/50 tracking-wide">CMS</span>
             <ChevronRight size={14} className="text-admin-fg/30" />
             <span className="text-base font-bold text-admin-fg tracking-wide">
-              {caseStudyTitle(activeSection) || getActiveSectionLabel(activeSection)}
+              {draft && activeProjectId !== null ? projectName(draft, activeProjectId) : getActiveSectionLabel(activeSection)}
             </span>
           </div>
 
@@ -445,11 +451,13 @@ export default function AdminDashboard() {
                   />
                 )}
                 {activeSection === 'home-new-feedback' && <FeedbackInboxEditor />}
-                {activeSection.startsWith('cs-') && (
-                  <CaseStudiesEditor
+                {activeProjectId !== null && (
+                  <ProjectEditor
+                    key={activeProjectId}
                     draft={draft}
                     updateDraft={updateDraft}
-                    activeCsId={getActiveCsId()}
+                    projectId={activeProjectId}
+                    onDelete={() => handleDeleteProject(activeProjectId)}
                   />
                 )}
                 {activeSection === 'global-settings' && (
@@ -475,14 +483,9 @@ function getActiveSectionLabel(id: string): string {
     'home-whyhireme': 'Why Hire Me',
     'home-skills': 'Skills (Craft Engine)',
     'home-tools': 'Tools',
-    'home-portfolio': 'Portfolio Projects',
     'home-recommendations': 'Recommendations',
     'home-new-feedback': 'New Feedback',
     'home-contact': 'Contact',
-    'cs-1': 'Case Study 1',
-    'cs-2': 'Case Study 2',
-    'cs-3': 'Case Study 3',
-    'cs-4': 'Case Study 4',
     'global-settings': 'Global Settings',
   };
   return labels[id] ?? id;

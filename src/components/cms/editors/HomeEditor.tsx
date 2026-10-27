@@ -3,7 +3,6 @@ import type { CmsData } from '../../../types/cms';
 import { VisibilityEditor } from './home/VisibilityEditor';
 import { HeroEditor } from './home/HeroEditor';
 import { WhyHireMeEditor } from './home/WhyHireMeEditor';
-import { PortfolioEditor } from './home/PortfolioEditor';
 import { SkillsEditor } from './home/SkillsEditor';
 import { ToolsEditor } from './home/ToolsEditor';
 import { ContactEditor } from './home/ContactEditor';
@@ -15,23 +14,6 @@ interface HomeEditorProps {
 }
 
 export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProps) {
-  const updateProject = (index: number, updater: (project: CmsData['projects'][number]) => CmsData['projects'][number]) => {
-    updateDraft((prev) => {
-      const projects = [...prev.projects];
-      const base = projects[index] ?? {
-        id: index + 1,
-        visible: true,
-        title: { en: '', ar: '' },
-        image: '',
-        tags: { en: [], ar: [] },
-        desc: { en: '', ar: '' },
-        accent: 'var(--color-brand)',
-      };
-      projects[index] = updater(base);
-      return { ...prev, projects };
-    });
-  };
-
   const updateWhyCard = (index: number, updater: (card: CmsData['whyHireMe']['cards'][number]) => CmsData['whyHireMe']['cards'][number]) => {
     updateDraft((prev) => {
       const cards = [...prev.whyHireMe.cards];
@@ -119,10 +101,6 @@ export function HomeEditor({ draft, updateDraft, activeSection }: HomeEditorProp
 
   if (activeSection === 'home-whyhireme') {
     return <WhyHireMeEditor draft={draft} updateDraft={updateDraft} updateWhyCard={updateWhyCard} />;
-  }
-
-  if (activeSection === 'home-portfolio') {
-    return <PortfolioEditor draft={draft} updateProject={updateProject} />;
   }
 
   if (activeSection === 'home-skills') {
