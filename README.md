@@ -55,4 +55,4 @@ Run the files in `supabase/migrations/` in order in the Supabase SQL editor:
 1. `01_cms_data_table.sql`: the content table (one JSON row, `main`).
 2. `02_feedback_submissions.sql`: the private feedback inbox.
 
-Images go in a public storage bucket named `cms-images`.
+Images go in a public storage bucket named `cms-images`. The resume PDF goes in `cms-documents`, which the admin creates by itself on the first upload.
