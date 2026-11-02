@@ -25,7 +25,9 @@ export function ScrollProgress() {
 
   // A full-width bar slid in from the start edge
   const x = useTransform(progress, (p) => `${(isRTL ? 1 : -1) * (1 - p) * 100}%`);
-  const trackOpacity = useTransform(scrollYProgress, [0, FADE_IN_UNTIL], [0, 1]);
+  // A function, not a [0, 0.02] -> [0, 1] range: motion hands range transforms of scroll
+  // progress to the browser's scroll timeline, which stretched this fade over the whole page
+  const trackOpacity = useTransform(scrollYProgress, (p) => Math.min(p / FADE_IN_UNTIL, 1));
 
   const speed = useSpring(
     useTransform(useVelocity(scrollYProgress), (v) => Math.min(Math.abs(v) / FAST_SCROLL, 1)),
