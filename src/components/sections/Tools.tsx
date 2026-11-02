@@ -14,6 +14,7 @@ import type { CmsToolItem } from '../../types/cms';
 import { readToken, parseColor, tokenRgba, resolveColor, ensureContrast } from '../../lib/theme-tokens';
 import { getScenePalette } from '../../lib/scene-palette';
 import { createRenderer, releaseRenderer } from '../../lib/webgl';
+import { CLICKABLE_ATTR } from '../../lib/clickable';
 import { DustCanvas } from './tools/DustCanvas';
 import { ActiveToolCard } from './tools/ActiveToolCard';
 import { SectionTitle } from '../ui/section-title';
@@ -268,10 +269,14 @@ export function Tools({ isDark = false }: ToolsProps) {
       if (idx === hoveredIdx) return;
       hoveredIdx = idx;
       canvas!.style.cursor = idx === null ? '' : 'pointer';
+      // Marks the canvas as clickable while over a face, so the click glitch skips it
+      canvas!.toggleAttribute(CLICKABLE_ATTR, idx !== null);
       window.dispatchEvent(new CustomEvent('cursorLinkHover', { detail: idx !== null }));
     }
 
     const onPointerMove = (e: PointerEvent) => setHovered(faceAt(e));
+    // Touch has no hover: hit-test on press too, before the page-level mousedown runs
+    const onPointerDown = (e: PointerEvent) => setHovered(faceAt(e));
     const onPointerLeave = () => setHovered(null);
     const onClick = (e: MouseEvent) => {
       const idx = faceAt(e);
@@ -281,6 +286,7 @@ export function Tools({ isDark = false }: ToolsProps) {
       resetAuto();
     };
     canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerdown', onPointerDown);
     canvas.addEventListener('pointerleave', onPointerLeave);
     canvas.addEventListener('click', onClick);
 
@@ -349,6 +355,7 @@ export function Tools({ isDark = false }: ToolsProps) {
       resetAutoRef.current = null;
       window.removeEventListener('resize', onResize);
       canvas.removeEventListener('pointermove', onPointerMove);
+      canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('pointerleave', onPointerLeave);
       canvas.removeEventListener('click', onClick);
       if (hoveredIdx !== null) window.dispatchEvent(new CustomEvent('cursorLinkHover', { detail: false }));

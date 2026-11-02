@@ -83,6 +83,7 @@ export function FeedbackDialog({ open, onClose }: { open: boolean; onClose: () =
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
+          data-clickable // clicking the backdrop closes the dialog, so it never glitches
           onMouseDown={(e) => { if (e.target === e.currentTarget && status !== 'sending') onClose(); }}
         >
           <motion.div

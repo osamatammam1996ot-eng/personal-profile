@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
+import { isClickable } from "../../lib/clickable";
 
 export function CustomCursor() {
   const [portfolioHoverVisible, setPortfolioHoverVisible] = useState(false);
@@ -24,12 +25,7 @@ export function CustomCursor() {
     };
 
     const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('a, button, input, textarea, select, [role="button"], [role="tab"]')) {
-        setIsHoveringLink(true);
-      } else {
-        setIsHoveringLink(false);
-      }
+      setIsHoveringLink(isClickable(e.target));
     };
 
     const handlePortfolioHover = (e: Event) => {
