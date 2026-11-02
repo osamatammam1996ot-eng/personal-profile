@@ -140,6 +140,10 @@ const en = {
     note: ['I typically respond within 24 hours.', 'Looking forward to connecting!'],
   },
 
+  resume: {
+    download: 'Download Resume',
+  },
+
   footer: {
     copyright: '© 2026 Osama Tammam. All rights reserved.',
     links: ['Home', 'Work', 'About', 'Contact'],
@@ -288,6 +292,10 @@ const ar: typeof en = {
     copyEmail: 'نسخ البريد الإلكتروني',
     copied: 'تم النسخ!',
     note: ['أرد عادة خلال 24 ساعة. أتطلع للتواصل معك!'],
+  },
+
+  resume: {
+    download: 'تحميل السيرة الذاتية',
   },
 
   footer: {

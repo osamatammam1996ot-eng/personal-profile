@@ -14,6 +14,7 @@ import { Footer } from '../components/layout/Footer';
 import { LogoMarquee } from '../components/sections/LogoMarquee';
 import { CaseStudy } from '../components/shared/CaseStudy';
 import { CustomCursor } from '../components/shared/CustomCursor';
+import { ResumeIsland } from '../components/shared/ResumeIsland';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useVisibleSections } from '../content/sections';
 import { ErrorBoundary } from '../components/layout/ErrorBoundary';
@@ -94,6 +95,9 @@ export default function Home({ initialCaseStudy = null }: { initialCaseStudy?: {
           return <ErrorBoundary key={id} fallback={null}>{section}</ErrorBoundary>;
         })}
       </main>
+
+      {/* Floating "Download Resume" island (hidden until a resume is uploaded in the admin) */}
+      <ResumeIsland />
 
       {/* Case Study overlay */}
       <AnimatePresence>

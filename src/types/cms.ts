@@ -137,6 +137,17 @@ export interface CmsGlobal {
   footerTagline: string;
 }
 
+/** The downloadable resume behind the floating "Download Resume" island */
+export interface CmsResume {
+  visible: boolean;
+  /** Public URL of the uploaded PDF; the island stays hidden while it's empty */
+  url: string;
+  /** Name the file is saved under on the visitor's computer */
+  fileName: string;
+  /** Button text; empty falls back to the built-in "Download Resume" */
+  label: Bilingual;
+}
+
 export interface CmsData {
   sectionOrder: string[];
   sections: CmsSections;
@@ -151,6 +162,7 @@ export interface CmsData {
   caseStudies: CmsCaseStudy[];
   recommendations: CmsRecommendation[];
   global: CmsGlobal;
+  resume: CmsResume;
   updatedAt: string;
 }
 
@@ -335,6 +347,12 @@ export const DEFAULT_CMS_DATA: CmsData = {
       media: [],
     },
   ],
+  resume: {
+    visible: true,
+    url: '',
+    fileName: '',
+    label: { en: '', ar: '' },
+  },
   global: {
     seoTitle: 'Osama Tammam \u2014 Product Designer',
     seoDescription: 'Senior UX/UI Designer based in Cairo, crafting hard products into inevitable experiences.',

@@ -164,6 +164,8 @@
   --shadow-cta-hover: 0 0 20px color-mix(in srgb, var(--brand) 30%, transparent), inset 0 1px 1px rgba(255, 255, 255, 0.15);
   --shadow-glow-brand: 0 0 10px color-mix(in srgb, var(--brand) 70%, transparent);
   --shadow-glow-soft: 0 0 16px color-mix(in srgb, var(--brand) 30%, transparent);
+  --shadow-island: 0 12px 40px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --shadow-island-hover: 0 16px 50px color-mix(in srgb, var(--brand) 45%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 
   /* Canvas & WebGL (read at runtime by src/lib/theme-tokens.ts — plain colors only) */
   --canvas-halo: rgba(255, 255, 255, 0.8);
@@ -255,6 +257,7 @@
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.3);
   --shadow-floating: 0 16px 40px rgba(0, 0, 0, 0.6);
   --shadow-tilt-card: 0 8px 40px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-island: 0 12px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
   --canvas-halo: rgba(0, 0, 0, 0.8);
 }
@@ -365,6 +368,8 @@
   --shadow-cta-hover: var(--shadow-cta-hover);
   --shadow-glow-brand: var(--shadow-glow-brand);
   --shadow-glow-soft: var(--shadow-glow-soft);
+  --shadow-island: var(--shadow-island);
+  --shadow-island-hover: var(--shadow-island-hover);
   --drop-shadow-cursor: 0 0 8px var(--cursor-glow), 0 0 20px var(--cursor-glow);
 }
 
@@ -614,6 +619,21 @@
     mask-composite: exclude;
   }
 
+  /* Resume island: flowing brand fill and a highlight that follows the pointer (--glow-x) */
+  .resume-island-fill {
+    background: linear-gradient(110deg, var(--brand-accent), var(--brand), var(--brand-light), var(--brand), var(--brand-accent));
+    background-size: 250% 100%;
+    animation: island-flow 3.5s linear infinite;
+  }
+
+  .resume-island-glow {
+    background: radial-gradient(140px circle at var(--glow-x, 50%) 50%, color-mix(in srgb, var(--brand-light) 40%, transparent), transparent 70%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .resume-island-fill { animation: none; }
+  }
+
   /* Click glitch effect */
   .glitch-scanlines {
     background: repeating-linear-gradient(0deg, var(--glitch-scanline) 0px, var(--glitch-scanline) 1px, transparent 1px, transparent 3px);
@@ -736,6 +756,11 @@ body:has(.admin-root) {
 body.cyber-glitch-active {
   animation: glitch-shake 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
   filter: url(#cyber-glitch-filter) contrast(1.15) brightness(1.1);
+}
+
+@keyframes island-flow {
+  from { background-position: 0% 50%; }
+  to { background-position: 250% 50%; }
 }
 
 @keyframes glitch-shake {
