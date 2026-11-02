@@ -12,7 +12,6 @@ import type { CmsData } from '@/types/cms';
 const TABLE = 'cms_data';
 const ROW_ID = 'main';
 const DEV_STORE = 'cms-data';
-const UPLOAD_BUCKET = 'cms-images'; // public bucket for every admin upload (images and the resume PDF)
 
 /** Published content, or `data: null` when there's none yet (the site then shows its defaults). */
 export async function getCmsDataAction() {
@@ -65,10 +64,20 @@ export async function saveCmsDataAction(data: CmsData) {
   }
 }
 
-/** What each kind of admin upload accepts. Documents (the resume) share the image bucket. */
+/**
+ * What each kind of admin upload accepts, and the public storage bucket it goes to.
+ * Images use `cms-images` (created by hand, see the README). Documents get their own
+ * bucket, created on first upload, so the image bucket's file-type limits never block a PDF.
+ */
 const UPLOAD_RULES = {
-  image: { maxMb: 20, accepts: (type: string) => type.startsWith('image/'), typeError: 'Only image files can be uploaded.', fallbackExt: 'jpg' },
-  document: { maxMb: 10, accepts: (type: string) => type === 'application/pdf', typeError: 'Only PDF files can be uploaded.', fallbackExt: 'pdf' },
+  image: {
+    bucket: 'cms-images', autoCreate: false, maxMb: 20, mimeTypes: null,
+    accepts: (type: string) => type.startsWith('image/'), typeError: 'Only image files can be uploaded.', fallbackExt: 'jpg',
+  },
+  document: {
+    bucket: 'cms-documents', autoCreate: true, maxMb: 10, mimeTypes: ['application/pdf'],
+    accepts: (type: string) => type === 'application/pdf', typeError: 'Only PDF files can be uploaded.', fallbackExt: 'pdf',
+  },
 } as const;
 
 type UploadKind = keyof typeof UPLOAD_RULES;
@@ -76,6 +85,27 @@ type UploadKind = keyof typeof UPLOAD_RULES;
 function storedFileName(original: string, kind: UploadKind) {
   const ext = original.split('.').pop()?.toLowerCase() || UPLOAD_RULES[kind].fallbackExt;
   return `cms-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
+}
+
+type AdminClient = NonNullable<ReturnType<typeof getAdminClient>>;
+
+/** Creates the kind's public bucket if it doesn't exist yet. Returns an error message, or null when ready. */
+async function ensureBucket(client: AdminClient, kind: UploadKind): Promise<string | null> {
+  const rules = UPLOAD_RULES[kind];
+  if (!rules.autoCreate) return null;
+  if (!(await client.storage.getBucket(rules.bucket)).error) return null;
+
+  const { error } = await client.storage.createBucket(rules.bucket, {
+    public: true,
+    allowedMimeTypes: [...(rules.mimeTypes ?? [])],
+    fileSizeLimit: `${rules.maxMb}MB`,
+  });
+  // Another upload may have created it a moment ago
+  if (error && !/already exists/i.test(error.message)) {
+    console.error(`Could not create the ${rules.bucket} bucket:`, error.message);
+    return 'Could not prepare file storage. Please try again.';
+  }
+  return null;
 }
 
 type UploadTicket =
@@ -104,13 +134,17 @@ export async function createUploadAction(
     return isDev ? { local: true } : { error: 'Uploads are not configured: set SUPABASE_SERVICE_ROLE_KEY in the Vercel environment variables.' };
   }
 
-  const { data, error } = await client.storage.from(UPLOAD_BUCKET).createSignedUploadUrl(storedFileName(file.name, kind));
+  const bucketError = await ensureBucket(client, kind);
+  if (bucketError) return { error: bucketError };
+
+  const { bucket } = rules;
+  const { data, error } = await client.storage.from(bucket).createSignedUploadUrl(storedFileName(file.name, kind));
   if (error || !data) {
     console.error('Could not start upload:', error?.message);
     return { error: 'Could not start the upload. Please try again.' };
   }
-  const publicUrl = client.storage.from(UPLOAD_BUCKET).getPublicUrl(data.path).data.publicUrl;
-  return { bucket: UPLOAD_BUCKET, path: data.path, token: data.token, publicUrl };
+  const publicUrl = client.storage.from(bucket).getPublicUrl(data.path).data.publicUrl;
+  return { bucket, path: data.path, token: data.token, publicUrl };
 }
 
 /** Local development without the service key: keeps uploads in public/uploads. */
