@@ -37,12 +37,19 @@ export function CustomCursor() {
       setPortfolioHoverVisible(customEvent.detail);
     };
 
+    // Elements that aren't DOM links (e.g. clickable shapes in a WebGL canvas) report hover themselves
+    const handleLinkHover = (e: Event) => {
+      setIsHoveringLink((e as CustomEvent<boolean>).detail);
+    };
+
     window.addEventListener("mousemove", moveCursor);
+    window.addEventListener("cursorLinkHover", handleLinkHover);
     window.addEventListener("mouseover", handleMouseOver);
     window.addEventListener("portfolioHover", handlePortfolioHover);
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
+      window.removeEventListener("cursorLinkHover", handleLinkHover);
       window.removeEventListener("mouseover", handleMouseOver);
       window.removeEventListener("portfolioHover", handlePortfolioHover);
     };
