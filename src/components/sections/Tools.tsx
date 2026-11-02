@@ -14,6 +14,7 @@ import type { CmsToolItem } from '../../types/cms';
 import { readToken, parseColor, tokenRgba, resolveColor, ensureContrast } from '../../lib/theme-tokens';
 import { getScenePalette } from '../../lib/scene-palette';
 import { createRenderer, releaseRenderer } from '../../lib/webgl';
+import { CLICKABLE_ATTR } from '../../lib/clickable';
 import { DustCanvas } from './tools/DustCanvas';
 import { ActiveToolCard } from './tools/ActiveToolCard';
 import { SectionTitle } from '../ui/section-title';
@@ -22,8 +23,18 @@ import { FACE_NORMALS_NORMALIZED, rotForFace } from './tools/constants';
 interface ToolsProps { isDark?: boolean; }
 
 /* ─── Face sprite builder ───────────────────────────────────────────────────── */
+const SPRITE_PX = 256;
+const DISC_RADIUS_PX = 92;
+/* Disc radius in sprite UV space: clicks outside the round label don't count */
+const DISC_RADIUS_UV = DISC_RADIUS_PX / SPRITE_PX;
+/* Faded labels below this opacity are on the far side and can't be clicked */
+const CLICKABLE_MIN_OPACITY = 0.08;
+/* How visible a faded label becomes while hovered, so it reads as clickable */
+const HOVER_OPACITY = 0.7;
+const HOVER_SCALE = 1.04;
+
 function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar'): THREE.Sprite {
-  const SZ = 256;
+  const SZ = SPRITE_PX;
   const cv = document.createElement('canvas');
   cv.width = SZ; cv.height = SZ;
   const cx = cv.getContext('2d')!;
@@ -34,7 +45,7 @@ function makeFaceSprite(tool: CmsToolItem, lang: 'en' | 'ar'): THREE.Sprite {
   const [rr, gg, bb] = parseColor(toolColor);
 
   // Solid disc behind the label so the text never sits on the red gem itself
-  cx.beginPath(); cx.arc(128,128,92,0,Math.PI*2);
+  cx.beginPath(); cx.arc(128,128,DISC_RADIUS_PX,0,Math.PI*2);
   cx.fillStyle = disc;
   cx.fill();
   cx.strokeStyle = `rgba(${rr},${gg},${bb},0.85)`;
@@ -230,6 +241,55 @@ export function Tools({ isDark = false }: ToolsProps) {
     }
     resetAutoRef.current = resetAuto;
 
+    /* ── Click a faded (non-active) label to bring it to the front ── */
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let hoveredIdx: number | null = null;
+
+    // The visible, non-active face under the pointer, or null.
+    // The frontmost visible label wins, so the active disc blocks faces behind it.
+    function faceAt(e: PointerEvent | MouseEvent): number | null {
+      const rect = canvas!.getBoundingClientRect();
+      pointer.set(
+        ((e.clientX - rect.left) / rect.width) * 2 - 1,
+        -((e.clientY - rect.top) / rect.height) * 2 + 1,
+      );
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(PANELS.map(p => p.sprite), false);
+      for (const hit of hits) {
+        const panel = PANELS.find(p => p.sprite === hit.object);
+        if (!panel || panel.sprite.material.opacity < CLICKABLE_MIN_OPACITY) continue;
+        if (hit.uv && Math.hypot(hit.uv.x - 0.5, hit.uv.y - 0.5) > DISC_RADIUS_UV) continue;
+        return panel.idx === currentIdxRef.current ? null : panel.idx;
+      }
+      return null;
+    }
+
+    function setHovered(idx: number | null) {
+      if (idx === hoveredIdx) return;
+      hoveredIdx = idx;
+      canvas!.style.cursor = idx === null ? '' : 'pointer';
+      // Marks the canvas as clickable while over a face, so the click glitch skips it
+      canvas!.toggleAttribute(CLICKABLE_ATTR, idx !== null);
+      window.dispatchEvent(new CustomEvent('cursorLinkHover', { detail: idx !== null }));
+    }
+
+    const onPointerMove = (e: PointerEvent) => setHovered(faceAt(e));
+    // Touch has no hover: hit-test on press too, before the page-level mousedown runs
+    const onPointerDown = (e: PointerEvent) => setHovered(faceAt(e));
+    const onPointerLeave = () => setHovered(null);
+    const onClick = (e: MouseEvent) => {
+      const idx = faceAt(e);
+      if (idx === null) return;
+      setHovered(null);
+      goTo(idx);
+      resetAuto();
+    };
+    canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointerleave', onPointerLeave);
+    canvas.addEventListener('click', onClick);
+
     const clock = new THREE.Clock();
     let elapsed = 0;
     let rafId = 0;
@@ -260,7 +320,8 @@ export function Tools({ isDark = false }: ToolsProps) {
         const ty = wy * cosX - wz * sinX, tz1 = wy * sinX + wz * cosX;
         wy = ty; wz = tz1;
 
-        const targetScale = isActive ? 1.08 : 1.0;
+        const isHovered = ri === hoveredIdx;
+        const targetScale = isActive ? 1.08 : isHovered ? HOVER_SCALE : 1.0;
         const curS = PANELS[ri].grp.scale.x;
         PANELS[ri].grp.scale.setScalar(curS + (targetScale - curS) * 0.09);
 
@@ -272,6 +333,7 @@ export function Tools({ isDark = false }: ToolsProps) {
         } else {
           targetO = 0.0;
         }
+        if (isHovered) targetO = Math.max(targetO, HOVER_OPACITY);
         if (panelsRef.current[ri]) {
           const sp = panelsRef.current[ri].sprite;
           sp.material.opacity += (targetO - sp.material.opacity) * 0.10;
@@ -292,6 +354,11 @@ export function Tools({ isDark = false }: ToolsProps) {
       sceneGoToRef.current = null;
       resetAutoRef.current = null;
       window.removeEventListener('resize', onResize);
+      canvas.removeEventListener('pointermove', onPointerMove);
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      canvas.removeEventListener('pointerleave', onPointerLeave);
+      canvas.removeEventListener('click', onClick);
+      if (hoveredIdx !== null) window.dispatchEvent(new CustomEvent('cursorLinkHover', { detail: false }));
       releaseRenderer(renderer);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps

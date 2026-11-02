@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { isClickable } from '../../lib/clickable';
 
 // The admin panel and its login are work tools: no click glitch there
 const isAdminPath = (path: string | null) => !!path && (path.startsWith('/admin') || path.startsWith('/login'));
@@ -15,16 +16,8 @@ export function CyberGlitch() {
     if (disabled) return;
 
     const handleMouseDown = (e: MouseEvent) => {
-      // Don't trigger if we clicked an interactive element
-      const target = e.target as HTMLElement;
-      
-      const isInteractive = target.closest(
-        'a, button, input, textarea, select, [role="button"], [role="link"], [tabindex]:not([tabindex="-1"])'
-      );
-
-      if (isInteractive) {
-        return;
-      }
+      // Only empty space glitches: anything with a click action is left alone
+      if (isClickable(e.target)) return;
 
       // Allow both left and right clicks
       if (e.button !== 0 && e.button !== 2) return;
@@ -46,13 +39,7 @@ export function CyberGlitch() {
     };
 
     const handleContextMenu = (e: MouseEvent) => {
-        const target = e.target as HTMLElement;
-        const isInteractive = target.closest(
-          'a, button, input, textarea, select, [role="button"], [role="link"], [tabindex]:not([tabindex="-1"])'
-        );
-        if (!isInteractive) {
-            e.preventDefault();
-        }
+        if (!isClickable(e.target)) e.preventDefault();
     };
 
     window.addEventListener('mousedown', handleMouseDown);
