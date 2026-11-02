@@ -1,4 +1,13 @@
 import * as THREE from 'three';
+import { isPhone } from './device';
+
+/** Highest pixel ratio 3D scenes render at on phones: their GPUs can't afford 2-3x screens */
+const PHONE_MAX_PIXEL_RATIO = 1.25;
+
+/** Pixel ratio for a 3D scene: the screen's, capped at `desktopMax`, and lower on phones. */
+export function scenePixelRatio(desktopMax: number): number {
+  return Math.min(window.devicePixelRatio || 1, isPhone() ? PHONE_MAX_PIXEL_RATIO : desktopMax);
+}
 
 /**
  * Creates a WebGL renderer, or returns null when the browser won't hand out a context

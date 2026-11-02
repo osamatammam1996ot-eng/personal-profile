@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
-import { useInView } from 'motion/react';
 import { parseColor, readToken } from '../../../lib/theme-tokens';
+import { runWhileVisible } from '../../../lib/visible-loop';
 
 interface DustCanvasProps {
   isDark: boolean;
@@ -9,7 +9,6 @@ interface DustCanvasProps {
 
 export function DustCanvas({ isDark, className = '' }: DustCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const isInView = useInView(canvasRef, { margin: "200px" });
 
   useEffect(() => {
     const cv = canvasRef.current;
@@ -17,7 +16,7 @@ export function DustCanvas({ isDark, className = '' }: DustCanvasProps) {
     const cx = cv.getContext('2d');
     if (!cx) return;
 
-    let W = 0, H = 0, rafId = 0;
+    let W = 0, H = 0;
     const pts: { x:number; y:number; r:number; vx:number; vy:number; a:number }[] = [];
 
     function resize() {
@@ -37,14 +36,7 @@ export function DustCanvas({ isDark, className = '' }: DustCanvasProps) {
       }
     }
     
-    // Only draw and request next frame if in view
     function draw() {
-      if (!isInView) {
-        // Just queue the next frame without doing math or drawing,
-        // or actually, we can just stop requesting animation frame
-        // and let the useEffect dependency re-trigger it.
-        return;
-      }
       cx!.clearRect(0, 0, W, H);
       for (const p of pts) {
         p.x += p.vx; p.y += p.vy;
@@ -55,26 +47,24 @@ export function DustCanvas({ isDark, className = '' }: DustCanvasProps) {
         cx!.fillStyle = `rgba(${dustColor},${p.a})`;
         cx!.fill();
       }
-      rafId = requestAnimationFrame(draw);
     }
 
     // Dust takes the brand-hover color; re-read whenever the theme changes
     const dustColor = parseColor(readToken('--brand-hover')).slice(0, 3).join(',');
 
     function onResize() { resize(); make(); }
-    resize(); make(); 
-    
-    if (isInView) {
-      draw();
-    }
-    
+    resize(); make();
+
+    // Drifts only while the section is on screen
+    const stopLoop = runWhileVisible(cv, draw);
+
     window.addEventListener('resize', onResize);
     return () => {
-      cancelAnimationFrame(rafId);
+      stopLoop();
       window.removeEventListener('resize', onResize);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvasRef, isDark, isInView]);
+  }, [isDark]);
 
   return <canvas ref={canvasRef} className={className} />;
 }

@@ -1,7 +1,10 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { parseColor, readToken, tokenRgba } from '../../lib/theme-tokens';
+import { isPhone } from '../../lib/device';
 
 const HEX_SIZE = 24;
+/* The grid sits under a 4px blur, so phones draw it at 1x: same look, a fraction of the pixels */
+const PHONE_PIXEL_RATIO = 1;
 const SQRT3 = Math.sqrt(3);
 
 function hexToPixel(q: number, r: number) {
@@ -61,16 +64,9 @@ export function HexGrid({ isDark }: HexGridProps) {
   const animFrameRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
   const cssSize = useRef({ w: 0, h: 0 });
+  const pixelRatio = useRef(1);
   // Colors come from the theme tokens; refreshed whenever the theme flips
   const colorsRef = useRef({ line: '', glow: '', edge: '' });
-
-  useEffect(() => {
-    colorsRef.current = {
-      line: tokenRgba('--border-default', 0.8),
-      glow: parseColor(readToken('--brand')).slice(0, 3).join(','),
-      edge: parseColor(readToken('--brand-hover')).slice(0, 3).join(','),
-    };
-  }, [isDark]);
 
   const setHoverTargets = useCallback((q: number | null, r: number | null) => {
     // Decay all existing
@@ -107,7 +103,7 @@ export function HexGrid({ isDark }: HexGridProps) {
     if (!ctx) return;
     const { w, h } = cssSize.current;
     if (!w || !h) return;
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = pixelRatio.current;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
@@ -157,6 +153,8 @@ export function HexGrid({ isDark }: HexGridProps) {
     }
   }, []);
 
+  // The grid only changes while a hexagon fades in or out, so it's drawn on demand:
+  // a frame loop runs during a fade and stops as soon as every hexagon has settled.
   const animate = useCallback((timestamp: number) => {
     const dt = Math.min(timestamp - lastTimeRef.current, 50);
     lastTimeRef.current = timestamp;
@@ -176,8 +174,24 @@ export function HexGrid({ isDark }: HexGridProps) {
     toDelete.forEach((k) => intensityMap.current.delete(k));
 
     draw();
-    animFrameRef.current = requestAnimationFrame(animate);
+    const fading = [...intensityMap.current.values()].some((state) => state.intensity !== state.target);
+    animFrameRef.current = fading ? requestAnimationFrame(animate) : 0;
   }, [draw]);
+
+  const startFading = useCallback(() => {
+    if (animFrameRef.current) return;
+    lastTimeRef.current = performance.now();
+    animFrameRef.current = requestAnimationFrame(animate);
+  }, [animate]);
+
+  useEffect(() => {
+    colorsRef.current = {
+      line: tokenRgba('--border-default', 0.8),
+      glow: parseColor(readToken('--brand')).slice(0, 3).join(','),
+      edge: parseColor(readToken('--brand-hover')).slice(0, 3).join(','),
+    };
+    draw();
+  }, [isDark, draw]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -185,7 +199,8 @@ export function HexGrid({ isDark }: HexGridProps) {
     if (!canvas || !wrapper) return;
 
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = isPhone() ? PHONE_PIXEL_RATIO : window.devicePixelRatio || 1;
+      pixelRatio.current = dpr;
       const w = wrapper.clientWidth;
       const h = wrapper.clientHeight;
       cssSize.current = { w, h };
@@ -193,14 +208,12 @@ export function HexGrid({ isDark }: HexGridProps) {
       canvas.height = Math.round(h * dpr);
       canvas.style.width = w + 'px';
       canvas.style.height = h + 'px';
+      draw(); // resizing clears the canvas
     };
 
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(wrapper);
-
-    lastTimeRef.current = performance.now();
-    animFrameRef.current = requestAnimationFrame(animate);
 
     // Window-level mouse tracking so hex works even when hovering content layers
     const handleWindowMouseMove = (e: MouseEvent) => {
@@ -208,7 +221,7 @@ export function HexGrid({ isDark }: HexGridProps) {
       if (!c) return;
       const rect = c.getBoundingClientRect();
       if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
-        if (hoveredHex.current !== null) { hoveredHex.current = null; setHoverTargets(null, null); }
+        if (hoveredHex.current !== null) { hoveredHex.current = null; setHoverTargets(null, null); startFading(); }
         return;
       }
       const px = e.clientX - rect.left - cssSize.current.w / 2;
@@ -218,6 +231,7 @@ export function HexGrid({ isDark }: HexGridProps) {
       if (!prev || prev.q !== q || prev.r !== r) {
         hoveredHex.current = { q, r };
         setHoverTargets(q, r);
+        startFading();
       }
     };
 
@@ -226,9 +240,10 @@ export function HexGrid({ isDark }: HexGridProps) {
     return () => {
       ro.disconnect();
       cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = 0;
       window.removeEventListener('mousemove', handleWindowMouseMove);
     };
-  }, [animate, setHoverTargets]);
+  }, [draw, startFading, setHoverTargets]);
 
   return (
     <div ref={wrapperRef} className="absolute inset-0 overflow-hidden pointer-events-none">
