@@ -6,6 +6,7 @@ import { SECTION_DOM_IDS, useVisibleSections } from '../../content/sections';
 import { LIGHT_MODE_ENABLED } from '../../config/features';
 import { IconButton, MotionIconButton } from '../ui/icon-button';
 import { scrollToSection } from '../../lib/scroll';
+import { ScrollProgress } from './ScrollProgress';
 
 interface NavigationProps {
   isDark: boolean;
@@ -168,6 +169,9 @@ export function Navigation({ isDark, onToggleDark }: NavigationProps) {
           </IconButton>
         </div>
       </div>
+
+      {/* Reading progress along the header's bottom edge */}
+      <ScrollProgress />
 
       {/* Mobile menu */}
       <AnimatePresence>

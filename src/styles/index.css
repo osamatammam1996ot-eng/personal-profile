@@ -640,15 +640,43 @@
   .resume-island-fill {
     background: linear-gradient(110deg, var(--brand-accent), var(--brand), var(--brand-light), var(--brand), var(--brand-accent));
     background-size: 250% 100%;
-    animation: island-flow 3.5s linear infinite;
+    animation: brand-flow 3.5s linear infinite;
   }
 
   .resume-island-glow {
     background: radial-gradient(140px circle at var(--glow-x, 50%) 50%, color-mix(in srgb, var(--brand-light) 40%, transparent), transparent 70%);
   }
 
+  /* Header scroll progress: flowing brand line with a glowing tip */
+  .scroll-progress-fill {
+    background: linear-gradient(90deg, var(--brand), var(--brand-light), var(--brand-hover), var(--brand-light), var(--brand));
+    background-size: 250% 100%;
+    animation: brand-flow 4s linear infinite;
+    box-shadow: 0 0 12px color-mix(in srgb, var(--brand-light) 45%, transparent);
+  }
+
+  /* Comet trail: the line brightens toward the tip */
+  .scroll-progress-fill::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    width: min(160px, 40vw);
+    background: linear-gradient(to right, transparent, color-mix(in srgb, var(--on-brand) 85%, transparent));
+  }
+
+  [dir="rtl"] .scroll-progress-fill::after {
+    background: linear-gradient(to left, transparent, color-mix(in srgb, var(--on-brand) 85%, transparent));
+  }
+
+  .scroll-progress-tip {
+    background: radial-gradient(circle, var(--on-brand) 0%, var(--on-brand) 22%, var(--brand-light) 48%, transparent 72%);
+    box-shadow: 0 0 18px 4px color-mix(in srgb, var(--brand-light) 60%, transparent);
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .resume-island-fill { animation: none; }
+    .resume-island-fill,
+    .scroll-progress-fill { animation: none; }
   }
 
   /* Click glitch effect */
@@ -775,7 +803,8 @@ body.cyber-glitch-active {
   filter: url(#cyber-glitch-filter) contrast(1.15) brightness(1.1);
 }
 
-@keyframes island-flow {
+/* Slides a 250%-wide gradient across its element (resume island, scroll progress) */
+@keyframes brand-flow {
   from { background-position: 0% 50%; }
   to { background-position: 250% 50%; }
 }
