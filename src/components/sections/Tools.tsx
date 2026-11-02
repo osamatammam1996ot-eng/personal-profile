@@ -7,13 +7,14 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { motion, useInView } from 'motion/react';
+import { motion } from 'motion/react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useToolsContent } from '../../content/tools';
 import type { CmsToolItem } from '../../types/cms';
 import { readToken, parseColor, tokenRgba, resolveColor, ensureContrast } from '../../lib/theme-tokens';
 import { getScenePalette } from '../../lib/scene-palette';
-import { createRenderer, releaseRenderer } from '../../lib/webgl';
+import { createRenderer, releaseRenderer, scenePixelRatio } from '../../lib/webgl';
+import { runWhileVisible } from '../../lib/visible-loop';
 import { CLICKABLE_ATTR } from '../../lib/clickable';
 import { DustCanvas } from './tools/DustCanvas';
 import { ActiveToolCard } from './tools/ActiveToolCard';
@@ -88,9 +89,6 @@ export function Tools({ isDark = false }: ToolsProps) {
   const { title: toolsTitle, desc: toolsDesc, clickHint, list: TOOLS } = useToolsContent();
   const glRef        = useRef<HTMLCanvasElement>(null);
   const wrapRef      = useRef<HTMLDivElement>(null);
-  const isInView     = useInView(wrapRef, { margin: "200px" });
-  const isInViewRef  = useRef(isInView);
-  useEffect(() => { isInViewRef.current = isInView; }, [isInView]);
 
   const [activeIdx, setActiveIdx]     = useState(0);
   const [cardVisible, setCardVisible] = useState(false);
@@ -119,7 +117,7 @@ export function Tools({ isDark = false }: ToolsProps) {
 
     // Null when WebGL is unavailable: the tool card and its navigation keep working, only the 3D is skipped
     const renderer = createRenderer(canvas);
-    renderer?.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer?.setPixelRatio(scenePixelRatio(2));
     renderer?.setClearAlpha(0);
 
     const scene  = new THREE.Scene();
@@ -290,17 +288,11 @@ export function Tools({ isDark = false }: ToolsProps) {
     canvas.addEventListener('pointerleave', onPointerLeave);
     canvas.addEventListener('click', onClick);
 
-    const clock = new THREE.Clock();
     let elapsed = 0;
-    let rafId = 0;
 
-    function loop() {
-      rafId = requestAnimationFrame(loop);
-
-      const delta = clock.getDelta();
-      if (!isInViewRef.current) return; // Pause calculations and rendering when off-screen
-
-      elapsed += delta;
+    // Runs only while the shape is on screen
+    function loop(dt: number) {
+      elapsed += dt / 1000;
       const t = elapsed;
 
       // Gentle vertical float only — no sway that fights the target rotation
@@ -346,10 +338,10 @@ export function Tools({ isDark = false }: ToolsProps) {
 
     goTo(0);
     resetAuto();
-    if (renderer) loop();
+    const stopLoop = renderer ? runWhileVisible(wrap, loop) : null;
 
     return () => {
-      cancelAnimationFrame(rafId);
+      stopLoop?.();
       if (autoTimer) clearTimeout(autoTimer);
       sceneGoToRef.current = null;
       resetAutoRef.current = null;

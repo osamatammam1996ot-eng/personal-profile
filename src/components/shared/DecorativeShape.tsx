@@ -18,7 +18,7 @@
 import { useRef, useEffect, memo } from 'react';
 import * as THREE from 'three';
 import { getDecorPalette } from '../../lib/scene-palette';
-import { createRenderer, releaseRenderer } from '../../lib/webgl';
+import { createRenderer, releaseRenderer, scenePixelRatio } from '../../lib/webgl';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
 type ShapeType = 'icosahedron' | 'octahedron' | 'dodecahedron' | 'torusKnot';
@@ -190,8 +190,7 @@ export const DecorativeShape = memo(function DecorativeShape({
     let effectiveSize = getEffectiveSize();
 
     // ── Three.js init ──
-    const dpr = Math.min(window.devicePixelRatio, 1.5);
-    renderer.setPixelRatio(dpr);
+    renderer.setPixelRatio(scenePixelRatio(1.5));
     renderer.setClearAlpha(0);
     renderer.setSize(effectiveSize, effectiveSize, false);
 

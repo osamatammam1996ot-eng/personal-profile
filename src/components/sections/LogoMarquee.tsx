@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useClientLogos } from '../../content/logos';
 import Image from 'next/image';
 import type { CmsLogo } from '../../types/cms';
+import { runWhileVisible } from '../../lib/visible-loop';
 
 // Each logo occupies exactly this many pixels (image + left/right padding)
 const SLOT_PX = 200;
@@ -75,27 +76,15 @@ export function LogoMarquee() {
   const setWidth = set.length * SLOT_PX; // exact pixel width of one set
 
   useEffect(() => {
-    if (!wrapRef.current || setWidth === 0) return;
+    const track = wrapRef.current;
+    if (!track || setWidth === 0) return;
 
     let x = 0;
-    let last: number | null = null;
-    let rafId: number;
-
-    const tick = (now: number) => {
-      if (last !== null) {
-        x -= SPEED * (now - last) / 1000;
-        // Use modulo to safely wrap even after huge tab suspension time jumps
-        x %= setWidth;
-      }
-      last = now;
-      if (wrapRef.current) {
-        wrapRef.current.style.transform = 'translateX(' + x.toFixed(2) + 'px)';
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
+    // Scrolls only while the strip is on screen; watch the static frame, not the moving track
+    return runWhileVisible(track.parentElement ?? track, (dt) => {
+      x = (x - SPEED * dt / 1000) % setWidth;
+      track.style.transform = 'translateX(' + x.toFixed(2) + 'px)';
+    });
   }, [setWidth]);
 
   if (set.length === 0) return null;

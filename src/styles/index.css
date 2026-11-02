@@ -144,6 +144,7 @@
 
   /* Navigation & footer */
   --nav-bg-scrolled: rgba(245, 245, 250, 0.85);
+  --nav-blur: 20px;
   --nav-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
   --nav-link-active: var(--burgundy-600);
   --nav-link-inactive: rgba(0, 0, 0, 0.55);
@@ -260,6 +261,22 @@
   --shadow-island: 0 12px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
   --canvas-halo: rgba(0, 0, 0, 0.8);
+}
+
+/* ─── 2b. PHONES — lighter glass ─────────────────────────────────────────────
+   Background blur is one of the most expensive effects for a phone GPU, worst
+   while scrolling. Phones get a smaller blur radius for every glass surface
+   (Tailwind's backdrop-blur-* sizes and the nav): same frosted look, much
+   cheaper. Same query as PHONE_MEDIA_QUERY in src/lib/device.ts. */
+@media (pointer: coarse) and (max-width: 1024px) {
+  :root {
+    --blur-sm: 4px;
+    --blur-md: 6px;
+    --blur-xl: 8px;
+    --blur-2xl: 10px;
+    --blur-3xl: 12px;
+    --nav-blur: 10px;
+  }
 }
 
 /* ─── 3. TAILWIND MAPPING ────────────────────────────────────────────────── */
@@ -398,7 +415,7 @@
 
   .glass-nav {
     background: var(--nav-bg-scrolled);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(var(--nav-blur));
     box-shadow: var(--nav-shadow);
   }
 

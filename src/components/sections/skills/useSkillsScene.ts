@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getScenePalette } from '../../../lib/scene-palette';
-import { createRenderer, releaseRenderer } from '../../../lib/webgl';
+import { createRenderer, releaseRenderer, scenePixelRatio } from '../../../lib/webgl';
+import { runWhileVisible } from '../../../lib/visible-loop';
 import { LAST_CHAPTER, setupChapterStepper } from '../../../lib/chapter-stepper';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -70,7 +71,7 @@ export function useSkillsScene({ canvasRef, containerRef, isDark, isRTL }: {
     // Check prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const dpr = Math.min(window.devicePixelRatio, 1.5);
+    const dpr = scenePixelRatio(1.5);
     // Null when WebGL is unavailable: the chapters still scroll, only the 3D is skipped
     const renderer = createRenderer(canvas);
     renderer?.setPixelRatio(dpr);
@@ -238,10 +239,8 @@ export function useSkillsScene({ canvasRef, containerRef, isDark, isRTL }: {
     };
     window.addEventListener('mousemove', onPointerMove);
 
-    // Animation Loop
-    let rafId: number;
+    // Animation loop: runs only while the section is on screen
     const loop = () => {
-      rafId = requestAnimationFrame(loop);
 
       // Base idle rotations
       if (!prefersReducedMotion) {
@@ -262,10 +261,10 @@ export function useSkillsScene({ canvasRef, containerRef, isDark, isRTL }: {
       root.position.x = offset.x * xDirRef.current;
       renderer?.render(scene, camera);
     };
-    if (renderer) loop();
+    const stopLoop = renderer ? runWhileVisible(container, loop) : null;
 
     return () => {
-      cancelAnimationFrame(rafId);
+      stopLoop?.();
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onPointerMove);
       releaseRenderer(renderer);
