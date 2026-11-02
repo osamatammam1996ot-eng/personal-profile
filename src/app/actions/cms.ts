@@ -12,7 +12,7 @@ import type { CmsData } from '@/types/cms';
 const TABLE = 'cms_data';
 const ROW_ID = 'main';
 const DEV_STORE = 'cms-data';
-const IMAGE_BUCKET = 'cms-images';
+const UPLOAD_BUCKET = 'cms-images'; // public bucket for every admin upload (images and the resume PDF)
 
 /** Published content, or `data: null` when there's none yet (the site then shows its defaults). */
 export async function getCmsDataAction() {
@@ -65,10 +65,16 @@ export async function saveCmsDataAction(data: CmsData) {
   }
 }
 
-const MAX_IMAGE_MB = 20;
+/** What each kind of admin upload accepts. Documents (the resume) share the image bucket. */
+const UPLOAD_RULES = {
+  image: { maxMb: 20, accepts: (type: string) => type.startsWith('image/'), typeError: 'Only image files can be uploaded.', fallbackExt: 'jpg' },
+  document: { maxMb: 10, accepts: (type: string) => type === 'application/pdf', typeError: 'Only PDF files can be uploaded.', fallbackExt: 'pdf' },
+} as const;
 
-function imageFileName(original: string) {
-  const ext = original.split('.').pop()?.toLowerCase() || 'jpg';
+type UploadKind = keyof typeof UPLOAD_RULES;
+
+function storedFileName(original: string, kind: UploadKind) {
+  const ext = original.split('.').pop()?.toLowerCase() || UPLOAD_RULES[kind].fallbackExt;
   return `cms-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
 }
 
@@ -78,15 +84,19 @@ type UploadTicket =
   | { error: string };
 
 /**
- * Starts an admin image upload. Returns a one-time link the browser sends the file to directly,
- * so big images never pass through this server (Next.js and Vercel both cap request bodies).
- * Locally without the service key it returns `local`, and the file goes to uploadImageLocallyAction.
+ * Starts an admin upload (an image, or a PDF document). Returns a one-time link the browser sends the
+ * file to directly, so big files never pass through this server (Next.js and Vercel both cap request bodies).
+ * Locally without the service key it returns `local`, and the file goes to uploadFileLocallyAction.
  */
-export async function createImageUploadAction(file: { name: string; type: string; size: number }): Promise<UploadTicket> {
+export async function createUploadAction(
+  file: { name: string; type: string; size: number },
+  kind: UploadKind = 'image',
+): Promise<UploadTicket> {
   if (!(await verifyAuthAction())) return { error: 'Unauthorized' };
-  if (!file.type.startsWith('image/')) return { error: 'Only image files can be uploaded.' };
-  if (file.size > MAX_IMAGE_MB * 1024 * 1024) {
-    return { error: `This image is ${(file.size / 1024 / 1024).toFixed(1)} MB; the limit is ${MAX_IMAGE_MB} MB.` };
+  const rules = UPLOAD_RULES[kind];
+  if (!rules.accepts(file.type)) return { error: rules.typeError };
+  if (file.size > rules.maxMb * 1024 * 1024) {
+    return { error: `This file is ${(file.size / 1024 / 1024).toFixed(1)} MB; the limit is ${rules.maxMb} MB.` };
   }
 
   const client = getAdminClient();
@@ -94,24 +104,25 @@ export async function createImageUploadAction(file: { name: string; type: string
     return isDev ? { local: true } : { error: 'Uploads are not configured: set SUPABASE_SERVICE_ROLE_KEY in the Vercel environment variables.' };
   }
 
-  const { data, error } = await client.storage.from(IMAGE_BUCKET).createSignedUploadUrl(imageFileName(file.name));
+  const { data, error } = await client.storage.from(UPLOAD_BUCKET).createSignedUploadUrl(storedFileName(file.name, kind));
   if (error || !data) {
-    console.error('Could not start image upload:', error?.message);
+    console.error('Could not start upload:', error?.message);
     return { error: 'Could not start the upload. Please try again.' };
   }
-  const publicUrl = client.storage.from(IMAGE_BUCKET).getPublicUrl(data.path).data.publicUrl;
-  return { bucket: IMAGE_BUCKET, path: data.path, token: data.token, publicUrl };
+  const publicUrl = client.storage.from(UPLOAD_BUCKET).getPublicUrl(data.path).data.publicUrl;
+  return { bucket: UPLOAD_BUCKET, path: data.path, token: data.token, publicUrl };
 }
 
 /** Local development without the service key: keeps uploads in public/uploads. */
-export async function uploadImageLocallyAction(formData: FormData) {
+export async function uploadFileLocallyAction(formData: FormData, kind: UploadKind = 'image') {
   if (!(await verifyAuthAction())) return { error: 'Unauthorized' };
   if (!isDev) return { error: 'Local uploads only work in development.' };
 
   const file = formData.get('file');
   if (!(file instanceof File)) return { error: 'No file provided' };
+  if (!UPLOAD_RULES[kind].accepts(file.type)) return { error: UPLOAD_RULES[kind].typeError };
 
-  const name = imageFileName(file.name);
+  const name = storedFileName(file.name, kind);
   const dir = path.join(process.cwd(), 'public', 'uploads');
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, name), Buffer.from(await file.arrayBuffer()));

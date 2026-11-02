@@ -14,6 +14,7 @@ import { ProjectEditor } from '../../components/cms/editors/ProjectEditor';
 import { ProjectsNav, projectIdFromSection, projectSectionId } from '../../components/cms/ProjectsNav';
 import { addProject, moveProject, projectName, removeProject } from '../../lib/cms-projects';
 import { GlobalSettingsEditor } from '../../components/cms/editors/GlobalSettingsEditor';
+import { ResumeEditor } from '../../components/cms/editors/ResumeEditor';
 import { RecommendationsEditor } from '../../components/cms/editors/RecommendationsEditor';
 import { FeedbackInboxEditor } from '../../components/cms/editors/FeedbackInboxEditor';
 import { LogoMarqueeEditor } from '../../components/cms/editors/LogoMarqueeEditor';
@@ -53,6 +54,7 @@ const NAV: NavSection[] = [
     type: 'group',
     items: [
       { id: 'global-settings', label: 'SEO & Owner', icon: '⚙️' },
+      { id: 'global-resume', label: 'Resume', icon: '📄' },
     ],
   },
 ];
@@ -460,6 +462,12 @@ export default function AdminDashboard() {
                     onDelete={() => handleDeleteProject(activeProjectId)}
                   />
                 )}
+                {activeSection === 'global-resume' && (
+                  <ResumeEditor
+                    draft={draft}
+                    updateDraft={updateDraft}
+                  />
+                )}
                 {activeSection === 'global-settings' && (
                   <GlobalSettingsEditor
                     draft={draft}
@@ -487,6 +495,7 @@ function getActiveSectionLabel(id: string): string {
     'home-new-feedback': 'New Feedback',
     'home-contact': 'Contact',
     'global-settings': 'Global Settings',
+    'global-resume': 'Resume',
   };
   return labels[id] ?? id;
 }
