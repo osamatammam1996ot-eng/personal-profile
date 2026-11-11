@@ -50,7 +50,7 @@ export default async function CaseStudyPage({ params }: Props) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdCreativeWork) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdCreativeWork).replace(/</g, '\u003c') }} />
       <Home initialCaseStudy={{ id: project.id, title: project.name }} />
     </>
   );

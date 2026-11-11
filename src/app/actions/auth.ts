@@ -5,6 +5,8 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import jwt from 'jsonwebtoken';
+import { visitorHash } from '@/lib/visitor';
+import { loginLocked, recordFailedLogin } from '@/lib/login-guard';
 
 const COOKIE_NAME = 'admin_session';
 
@@ -36,13 +38,20 @@ export async function loginAction(formData: FormData) {
     return { error: 'Admin login is not configured. See "Forgot password?" below.' };
   }
 
+  // Too many wrong passwords recently: refuse without even checking this one
+  const visitor = await visitorHash();
+  if (await loginLocked(visitor)) {
+    return { error: 'Too many wrong attempts. Please wait 15 minutes and try again.' };
+  }
+
   const password = formData.get('password');
   if (typeof password !== 'string' || !passwordMatches(password, secret)) {
+    await recordFailedLogin(visitor);
     return { error: 'Invalid password' };
   }
 
   // Create a secure token
-  const token = jwt.sign({ admin: true }, secret, { expiresIn: '7d' });
+  const token = jwt.sign({ admin: true }, secret, { expiresIn: '7d', algorithm: 'HS256' });
 
   // Set the HTTP-only cookie
   const cookieStore = await cookies();
@@ -73,8 +82,8 @@ export async function verifyAuthAction() {
   if (!token || !secret) return false;
 
   try {
-    jwt.verify(token, secret);
-    return true;
+    const payload = jwt.verify(token, secret, { algorithms: ['HS256'] });
+    return typeof payload === 'object' && payload.admin === true;
   } catch (error) {
     return false;
   }

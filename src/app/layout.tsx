@@ -91,7 +91,7 @@ export default async function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLdWebsite, jsonLdPerson, jsonLdProfilePage]) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLdWebsite, jsonLdPerson, jsonLdProfilePage]).replace(/</g, '\u003c') }}
         />
       </head>
       <body className={`${cairo.className} bg-background text-foreground antialiased`}>

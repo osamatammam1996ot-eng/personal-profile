@@ -1,10 +1,10 @@
 'use server';
 
-import { createHash, randomUUID } from 'crypto';
-import { headers } from 'next/headers';
+import { randomUUID } from 'crypto';
 import { verifyAuthAction } from '@/app/actions/auth';
 import { getAdminClient } from '@/lib/supabase-server';
 import { isDev, readDevStore, writeDevStore } from '@/lib/dev-store';
+import { visitorHash } from '@/lib/visitor';
 
 // Visitor feedback from "Add yours". Submissions stay private (see
 // supabase/migrations/02_feedback_submissions.sql) until Osama copies an approved one
@@ -28,13 +28,6 @@ type StoredSubmission = FeedbackSubmission & { ip_hash: string };
 const DEV_STORE = 'feedback-inbox';
 const readLocal = async () => readDevStore<StoredSubmission[]>(DEV_STORE) ?? [];
 const writeLocal = async (rows: StoredSubmission[]) => writeDevStore(DEV_STORE, rows);
-
-async function visitorHash() {
-  const h = await headers();
-  const ip = h.get('x-forwarded-for')?.split(',')[0]?.trim() || h.get('x-real-ip') || 'unknown';
-  const salt = process.env.ADMIN_SECRET || 'feedback';
-  return createHash('sha256').update(`${salt}:${ip}`).digest('hex').slice(0, 32);
-}
 
 type SubmitResult = { success: true } | { error: 'invalid' | 'rate_limited' | 'unavailable' };
 

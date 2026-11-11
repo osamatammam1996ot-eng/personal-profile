@@ -8,6 +8,7 @@ import { Tag } from '../ui/tag';
 import { scrollToSection } from '../../lib/scroll';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useProjects, type Project } from '../../content/portfolio';
+import { canOptimize } from '../../lib/image-hosts';
 
 interface PortfolioProps {
   onViewCase: (projectId: number, projectTitle: string) => void;
@@ -34,6 +35,7 @@ function ProjectCard({
     >
       <Image
         src={project.image}
+        unoptimized={!canOptimize(project.image)}
         alt=""
         fill
         sizes="(max-width: 768px) 85vw, 60vw"

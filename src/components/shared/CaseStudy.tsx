@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { canOptimize } from '../../lib/image-hosts';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useCaseStudy } from '../../content/caseStudy';
@@ -146,6 +147,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
                   <div className="relative size-full">
                     <Image
                       src={currentMedia.url}
+                      unoptimized={!canOptimize(currentMedia.url)}
                       alt={`${data.title} media ${currentIndex + 1}`}
                       fill
                       sizes="100vw"
@@ -211,7 +213,7 @@ export function CaseStudy({ projectId, onClose }: CaseStudyProps) {
             >
               {item.type === 'image' ? (
                 <div className="relative size-full">
-                  <Image src={item.url} alt="thumbnail" fill sizes="60px" className="object-cover" />
+                  <Image src={item.url} unoptimized={!canOptimize(item.url)} alt="thumbnail" fill sizes="60px" className="object-cover" />
                 </div>
               ) : (
                 <div className="size-full flex items-center justify-center bg-surface-elevated">

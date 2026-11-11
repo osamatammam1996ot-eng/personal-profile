@@ -8,6 +8,7 @@ import { FeedbackDialog } from '../shared/FeedbackDialog';
 import { PillButton } from '../ui/pill-button';
 import { SectionTitle } from '../ui/section-title';
 import { revealUp } from '../../lib/motion';
+import { canOptimize } from '../../lib/image-hosts';
 
 const initials = (name: string) =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
@@ -19,6 +20,7 @@ function Avatar({ name, src }: { name: string; src: string }) {
     return (
       <Image
         src={src}
+        unoptimized={!canOptimize(src)}
         alt=""
         width={48}
         height={48}
